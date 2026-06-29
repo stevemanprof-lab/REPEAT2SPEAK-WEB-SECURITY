@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Cyber Voice Lab · NSE 4 Trainer</title>
+  <title>Cyber Voice Lab · NSE 4 + Intro</title>
   <style>
     /* ============================================================
        RESET & BASE – DARK CYBER THEME
@@ -26,7 +26,7 @@
       color: #d0dbea;
     }
 
-    /* Subtle grid overlay for tech feel */
+    /* Subtle grid overlay */
     body::before {
       content: "";
       position: fixed;
@@ -34,7 +34,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-image: 
+      background-image:
         linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
       background-size: 40px 40px;
@@ -51,7 +51,7 @@
     }
 
     /* ============================================================
-       HEADER – SLEEK & MINIMAL
+       HEADER
        ============================================================ */
     .header {
       background: rgba(12, 20, 32, 0.85);
@@ -99,7 +99,7 @@
     }
 
     /* ============================================================
-       HOME SCREEN – GLASS CARDS
+       HOME SCREEN
        ============================================================ */
     .home-screen {
       background: rgba(12, 20, 32, 0.70);
@@ -185,6 +185,210 @@
       margin-top: 4px;
     }
 
+    /* Grammar Button */
+    .home-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid #1a3144;
+      padding-top: 20px;
+    }
+
+    #grammarBtn {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid #2a4058;
+      color: #b0cbe0;
+      padding: 12px 32px;
+      border-radius: 40px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #grammarBtn:hover {
+      border-color: #00d4ff;
+      color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.08);
+    }
+
+    /* ============================================================
+       GRAMMAR MODAL – EXPANDED
+       ============================================================ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #0b111b;
+      border: 1px solid #2a4058;
+      border-top: 4px solid #00d4ff;
+      border-radius: 24px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 36px 32px 28px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9);
+      color: #d0dbea;
+      position: relative;
+    }
+
+    .modal-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    .modal-content::-webkit-scrollbar-track {
+      background: #1a2a3a;
+      border-radius: 10px;
+    }
+    .modal-content::-webkit-scrollbar-thumb {
+      background: #00d4ff;
+      border-radius: 10px;
+    }
+
+    .modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      background: none;
+      border: 1px solid #2a4058;
+      color: #7a96b0;
+      font-size: 1.4rem;
+      padding: 4px 16px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      margin-bottom: 10px;
+      backdrop-filter: blur(4px);
+      z-index: 10;
+    }
+    .modal-close:hover {
+      border-color: #ff6b6b;
+      color: #ff6b6b;
+    }
+
+    .modal-content h2 {
+      color: #00d4ff;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      font-size: 1.6rem;
+      border-bottom: 1px solid #1a3144;
+      padding-bottom: 12px;
+    }
+
+    .grammar-block {
+      margin-bottom: 28px;
+    }
+
+    .grammar-block h3 {
+      color: #e0ecf5;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .grammar-block h3 i {
+      color: #ffaa33;
+      font-style: normal;
+      font-size: 1.2rem;
+    }
+
+    .grammar-block p {
+      color: #b0cbe0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .grammar-block ul {
+      list-style: none;
+      padding-left: 8px;
+    }
+
+    .grammar-block ul li {
+      padding: 6px 0 6px 24px;
+      border-bottom: 1px solid #0f1a26;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .grammar-block ul li::before {
+      content: "▹";
+      color: #00d4ff;
+      position: absolute;
+      left: 4px;
+    }
+
+    .grammar-block ul li strong {
+      color: #ffaa33;
+    }
+
+    .grammar-block .example {
+      color: #aaccee;
+      background: rgba(0, 212, 255, 0.04);
+      border-left: 3px solid #00d4ff;
+      padding: 6px 14px;
+      margin-top: 4px;
+      font-size: 0.85rem;
+      border-radius: 0 8px 8px 0;
+      font-family: inherit;
+    }
+
+    .grammar-block .example strong {
+      color: #ffaa33;
+    }
+
+    .grammar-block .badge {
+      display: inline-block;
+      background: rgba(255, 170, 51, 0.12);
+      color: #ffaa33;
+      font-size: 0.7rem;
+      padding: 1px 10px;
+      border-radius: 20px;
+      border: 1px solid #ffaa3344;
+      margin-left: 8px;
+      font-weight: 400;
+    }
+
+    .grammar-tip {
+      background: rgba(0, 212, 255, 0.04);
+      border: 1px dashed #2a5a7a;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #8ab4d0;
+    }
+
+    .grammar-tip strong {
+      color: #00d4ff;
+    }
+
     /* ============================================================
        PRACTICE SCREEN
        ============================================================ */
@@ -249,9 +453,6 @@
       font-style: normal;
     }
 
-    /* ============================================================
-       SENTENCE BOX – TERMINAL STYLE
-       ============================================================ */
     .sentence-box {
       background: #0b111b;
       border-left: 4px solid #00d4ff;
@@ -295,9 +496,6 @@
       font-weight: 700;
     }
 
-    /* ============================================================
-       CONTROLS – NEON BUTTONS
-       ============================================================ */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -342,16 +540,10 @@
       border-color: #1a2a3a;
     }
 
-    #playBtn {
-      border-color: #0077be;
-      color: #5ac8fa;
-    }
+    #playBtn { border-color: #0077be; color: #5ac8fa; }
     #playBtn:hover { background: #003a5c; }
 
-    #repeatBtn {
-      border-color: #ffaa33;
-      color: #ffaa33;
-    }
+    #repeatBtn { border-color: #ffaa33; color: #ffaa33; }
     #repeatBtn:hover { background: #332200; }
     #repeatBtn.recording {
       border-color: #ff4444;
@@ -360,10 +552,7 @@
       background: #220000;
     }
 
-    #nextBtn {
-      border-color: #00e676;
-      color: #00e676;
-    }
+    #nextBtn { border-color: #00e676; color: #00e676; }
     #nextBtn:hover { background: #002200; }
     #nextBtn.success {
       background: #00e676;
@@ -371,15 +560,9 @@
       border-color: #00e676;
     }
 
-    #resetBtn {
-      border-color: #ff6b6b;
-      color: #ff6b6b;
-    }
+    #resetBtn { border-color: #ff6b6b; color: #ff6b6b; }
     #resetBtn:hover { background: #330000; }
 
-    /* ============================================================
-       VISUALIZER – CYBER WAVES
-       ============================================================ */
     .visualizer {
       background: #060a12;
       border-radius: 16px;
@@ -406,18 +589,9 @@
       letter-spacing: 0.5px;
     }
 
-    .status.listening {
-      color: #ff6b6b;
-      animation: pulse 1s infinite;
-    }
+    .status.listening { color: #ff6b6b; animation: pulse 1s infinite; }
+    .status.success { color: #00e676; }
 
-    .status.success {
-      color: #00e676;
-    }
-
-    /* ============================================================
-       PROGRESS
-       ============================================================ */
     .progress-bar {
       height: 8px;
       background: #131f2e;
@@ -444,9 +618,6 @@
       color: #6a8aa5;
     }
 
-    /* ============================================================
-       FEEDBACK
-       ============================================================ */
     .feedback {
       margin-top: 18px;
       padding: 16px 20px;
@@ -460,33 +631,11 @@
       backdrop-filter: blur(4px);
     }
 
-    .feedback-success {
-      border-color: #00e676;
-      background: rgba(0, 230, 118, 0.08);
-      color: #b0f0c0;
-    }
+    .feedback-success { border-color: #00e676; background: rgba(0, 230, 118, 0.08); color: #b0f0c0; }
+    .feedback-error { border-color: #ff4444; background: rgba(255, 68, 68, 0.08); color: #ffb0b0; }
+    .feedback-warning { border-color: #ffaa33; background: rgba(255, 170, 51, 0.08); color: #f0d080; }
+    .feedback-info { border-color: #00d4ff; background: rgba(0, 212, 255, 0.06); color: #90c8e0; }
 
-    .feedback-error {
-      border-color: #ff4444;
-      background: rgba(255, 68, 68, 0.08);
-      color: #ffb0b0;
-    }
-
-    .feedback-warning {
-      border-color: #ffaa33;
-      background: rgba(255, 170, 51, 0.08);
-      color: #f0d080;
-    }
-
-    .feedback-info {
-      border-color: #00d4ff;
-      background: rgba(0, 212, 255, 0.06);
-      color: #90c8e0;
-    }
-
-    /* ============================================================
-       MIC STATUS
-       ============================================================ */
     .mic-status {
       background: rgba(8, 16, 26, 0.8);
       backdrop-filter: blur(4px);
@@ -500,16 +649,8 @@
       border: 1px solid #1a3144;
     }
 
-    .mic-status.error {
-      border-color: #ff4444;
-      color: #ff6b6b;
-      background: rgba(255, 68, 68, 0.05);
-    }
-
-    .mic-status.waiting {
-      border-color: #ffaa33;
-      color: #ffaa33;
-    }
+    .mic-status.error { border-color: #ff4444; color: #ff6b6b; background: rgba(255, 68, 68, 0.05); }
+    .mic-status.waiting { border-color: #ffaa33; color: #ffaa33; }
 
     .compat-warning {
       background: #1a1a00;
@@ -523,27 +664,19 @@
       text-align: center;
       display: none;
     }
+    .compat-warning.show { display: block; }
 
-    .compat-warning.show {
-      display: block;
-    }
-
-    /* ============================================================
-       ANIMATIONS
-       ============================================================ */
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 600px) {
       .header h1 { font-size: 1.2rem; }
       .sentence-text { font-size: 1.1rem; }
       .controls button { min-width: 70px; padding: 10px 14px; font-size: 0.75rem; }
       .text-grid { grid-template-columns: 1fr; }
+      .modal-content { padding: 24px 16px; }
     }
   </style>
 </head>
@@ -569,6 +702,235 @@
     <h2>📂 Select <i>NSE 4</i> Module</h2>
     <div class="text-grid" id="textGrid">
       <!-- Generated dynamically -->
+    </div>
+
+    <div class="home-actions">
+      <button id="grammarBtn">📘 Grammar Reference</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+  GRAMMAR MODAL – EXPANDED VERSION
+  ============================================================ -->
+  <div id="grammarModal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="grammarCloseBtn" class="modal-close">✕</button>
+      <h2>📘 Essential Grammar for Cybersecurity Engineers</h2>
+
+      <!-- 1. Present Simple vs Continuous -->
+      <div class="grammar-block">
+        <h3><i>1.</i> Present Simple vs. Present Continuous</h3>
+        <p><strong>Present Simple</strong> – facts, routines, and permanent states.</p>
+        <div class="example">"I <strong>configure</strong> firewalls every day."</div>
+        <div class="example">"The firewall <strong>blocks</strong> malicious traffic."</div>
+        <p style="margin-top:6px;"><strong>Present Continuous</strong> – actions happening right now or temporary situations.</p>
+        <div class="example">"I <strong>am configuring</strong> the VPN at the moment."</div>
+        <div class="example">"We <strong>are testing</strong> the new IPS signatures this week."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Use Simple for facts ("The system runs on FortiOS 7.2"), Continuous for ongoing tasks ("I am troubleshooting a connectivity issue").</div>
+      </div>
+
+      <!-- 2. Present Perfect -->
+      <div class="grammar-block">
+        <h3><i>2.</i> Present Perfect (Past → Present)</h3>
+        <p>Used for past experiences with present relevance, or actions that started in the past and continue.</p>
+        <div class="example">"I <strong>have configured</strong> this policy before."</div>
+        <div class="example">"We <strong>have been working</strong> on this project for three months."</div>
+        <div class="example">"The administrator <strong>has already applied</strong> the patch."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Use "has/have + past participle". Very common in status reports: "The issue has been resolved."</div>
+      </div>
+
+      <!-- 3. Past Simple vs Past Perfect -->
+      <div class="grammar-block">
+        <h3><i>3.</i> Past Simple vs. Past Perfect</h3>
+        <p><strong>Past Simple</strong> – completed actions in the past.</p>
+        <div class="example">"I <strong>configured</strong> the interface yesterday."</div>
+        <p><strong>Past Perfect</strong> – an action that happened <em>before</em> another past action.</p>
+        <div class="example">"I <strong>had already saved</strong> the config before I rebooted the device."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Use Past Perfect to show sequence in troubleshooting: "The log showed that the user <strong>had attempted</strong> to log in three times."</div>
+      </div>
+
+      <!-- 4. Conditionals -->
+      <div class="grammar-block">
+        <h3><i>4.</i> Conditionals (If / When / Unless)</h3>
+        <p><strong>Zero Conditional (General facts):</strong></p>
+        <div class="example">"If the traffic matches the policy, it <strong>is allowed</strong>."</div>
+        <p><strong>First Conditional (Real future possibility):</strong></p>
+        <div class="example">"If we <strong>enable</strong> this rule, the system <strong>will block</strong> the attack."</div>
+        <div class="example">"<strong>Unless</strong> we update the signatures, we <strong>won't detect</strong> the new malware."</div>
+        <p><strong>Second Conditional (Hypothetical / unlikely):</strong></p>
+        <div class="example">"If I <strong>had</strong> more bandwidth, I <strong>would</strong> reduce the latency."</div>
+        <p><strong>Third Conditional (Past hypothetical):</strong></p>
+        <div class="example">"If we <strong>had applied</strong> the patch earlier, the breach <strong>would not have happened</strong>."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> In IT documentation, First and Zero conditionals appear most frequently.</div>
+      </div>
+
+      <!-- 5. Passive Voice -->
+      <div class="grammar-block">
+        <h3><i>5.</i> Passive Voice (Very common in tech)</h3>
+        <p>Used when the action is more important than the doer, or the doer is unknown.</p>
+        <div class="example">"The firewall <strong>is configured</strong> by the admin."</div>
+        <div class="example">"The logs <strong>are reviewed</strong> daily."</div>
+        <div class="example">"The patch <strong>was applied</strong> last night."</div>
+        <div class="example">"The vulnerability <strong>has been patched</strong>."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Be careful: Passive voice can sound impersonal. Use it when the actor is obvious ("The route was added.") or unknown ("The system was breached.").</div>
+      </div>
+
+      <!-- 6. Modal Verbs -->
+      <div class="grammar-block">
+        <h3><i>6.</i> Modal Verbs (Obligation, Possibility, Ability)</h3>
+        <ul>
+          <li><strong>Must</strong> – strong obligation: "You <strong>must</strong> enable 2FA."</li>
+          <li><strong>Must not</strong> – prohibition: "You <strong>must not</strong> expose the admin interface to the internet."</li>
+          <li><strong>Should</strong> – recommendation: "You <strong>should</strong> back up the config before the upgrade."</li>
+          <li><strong>Might / Could</strong> – possibility: "The issue <strong>might</strong> be related to DNS." / "It <strong>could</strong> be a routing problem."</li>
+          <li><strong>Can / Could</strong> – ability or request: "I <strong>can</strong> troubleshoot this." / "<strong>Could</strong> you check the logs?"</li>
+          <li><strong>May</strong> – formal permission or possibility: "The system <strong>may</strong> reboot after the update."</li>
+          <li><strong>Need to</strong> – necessity: "We <strong>need to</strong> review the firewall rules."</li>
+        </ul>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> "Must" is stronger than "should". In incident reports, use "must" for critical actions.</div>
+      </div>
+
+      <!-- 7. Prepositions of Place, Time & Direction -->
+      <div class="grammar-block">
+        <h3><i>7.</i> Prepositions (Place, Time, Direction)</h3>
+        <ul>
+          <li><strong>On</strong> – surface / device: "I work <strong>on</strong> the firewall." / "The error is <strong>on</strong> the dashboard."</li>
+          <li><strong>In</strong> – inside / context: "The error is <strong>in</strong> the log file." / "<strong>In</strong> this case, we block the traffic."</li>
+          <li><strong>To</strong> – direction: "I send traffic <strong>to</strong> the gateway." / "Navigate <strong>to</strong> the CLI."</li>
+          <li><strong>For</strong> – purpose / duration: "I am responsible <strong>for</strong> security." / "The session is valid <strong>for</strong> 8 hours."</li>
+          <li><strong>At</strong> – specific point: "Look <strong>at</strong> the packet capture." / "The meeting is <strong>at</strong> 3 PM."</li>
+          <li><strong>With</strong> – using / accompanied by: "I configured it <strong>with</strong> the CLI."</li>
+          <li><strong>From</strong> – origin: "The traffic originates <strong>from</strong> the internal network."</li>
+        </ul>
+      </div>
+
+      <!-- 8. Articles (a / an / the) -->
+      <div class="grammar-block">
+        <h3><i>8.</i> Articles – <span class="badge">Common mistakes</span></h3>
+        <p><strong>A / An</strong> – first mention, non-specific.</p>
+        <div class="example">"I configured <strong>a</strong> firewall policy." (first time mentioned)</div>
+        <p><strong>The</strong> – specific, already known.</p>
+        <div class="example">"I configured <strong>the</strong> firewall policy we discussed." (both know which one)</div>
+        <p><strong>Zero article</strong> – plural / general concepts.</p>
+        <div class="example">"<strong>Firewalls</strong> are essential for network security." (general)</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Use "the" when there is only one (e.g., <em>the internet</em>, <em>the administrator</em>).</div>
+      </div>
+
+      <!-- 9. Relative Clauses -->
+      <div class="grammar-block">
+        <h3><i>9.</i> Relative Clauses (who, which, that, whose)</h3>
+        <p>Used to add extra information about a person, object, or situation.</p>
+        <div class="example">"The engineer <strong>who</strong> configured the network is on leave." (person)</div>
+        <div class="example">"The policy <strong>that</strong> blocks port 443 caused the issue." (object/defining)</div>
+        <div class="example">"The IPS signature, <strong>which</strong> was updated yesterday, detected the attack." (non-defining – with commas)</div>
+        <div class="example">"The device <strong>whose</strong> IP address is 10.0.0.1 is offline." (possession)</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> In technical writing, "that" is preferred for essential information (no commas). Use "which" with commas for extra, non-essential info.</div>
+      </div>
+
+      <!-- 10. Future Forms -->
+      <div class="grammar-block">
+        <h3><i>10.</i> Future Forms (Will / Going to / Present Continuous)</h3>
+        <p><strong>Will</strong> – spontaneous decisions, predictions, promises.</p>
+        <div class="example">"The system <strong>will</strong> reboot automatically after the update." (prediction)</div>
+        <div class="example">"I <strong>will</strong> check the logs right now." (spontaneous decision)</div>
+        <p><strong>Going to</strong> – plans or intentions.</p>
+        <div class="example">"We <strong>are going to</strong> deploy the patch next week." (plan)</div>
+        <p><strong>Present Continuous</strong> – fixed arrangements.</p>
+        <div class="example">"The meeting <strong>is starting</strong> at 10 AM." (schedule)</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> In incident response, use "will" for immediate actions ("I will investigate") and "going to" for planned changes.</div>
+      </div>
+
+      <!-- 11. Phrasal Verbs (Very common in IT) -->
+      <div class="grammar-block">
+        <h3><i>11.</i> Phrasal Verbs – <span class="badge">Essential</span></h3>
+        <ul>
+          <li><strong>Set up</strong> – configure: "I need to <strong>set up</strong> the VPN."</li>
+          <li><strong>Log in / Log on</strong> – authenticate: "Please <strong>log in</strong> to the FortiGate."</li>
+          <li><strong>Shut down</strong> – power off: "We <strong>shut down</strong> the server for maintenance."</li>
+          <li><strong>Roll back</strong> – revert to a previous state: "We <strong>rolled back</strong> the firmware update."</li>
+          <li><strong>Wipe out</strong> – delete completely: "The attack <strong>wiped out</strong> the database."</li>
+          <li><strong>Carry out</strong> – perform: "We <strong>carry out</strong> security assessments quarterly."</li>
+          <li><strong>Break down</strong> – stop working: "The service <strong>broke down</strong> after the upgrade."</li>
+          <li><strong>Filter out</strong> – remove: "We <strong>filter out</strong> malicious payloads."</li>
+        </ul>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Phrasal verbs are very common in spoken IT English. Use them to sound more natural.</div>
+      </div>
+
+      <!-- 12. Question Formation -->
+      <div class="grammar-block">
+        <h3><i>12.</i> Asking Questions (Politely & Directly)</h3>
+        <p><strong>Direct questions</strong> (informal / urgent):</p>
+        <div class="example">"<strong>How do you</strong> configure NAT?"</div>
+        <div class="example">"<strong>Why is</strong> the interface down?"</div>
+        <p><strong>Indirect / Polite questions</strong> (formal / to managers):</p>
+        <div class="example">"<strong>Could you explain</strong> how to configure the SD-WAN?"</div>
+        <div class="example">"<strong>I was wondering if</strong> you could check the logs."</div>
+        <div class="example">"<strong>Would you mind</strong> reviewing the policy?"</div>
+        <p><strong>Question tags</strong> (checking understanding):</p>
+        <div class="example">"We need to apply the patch, <strong>don't we</strong>?"</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> In emails and meetings with stakeholders, use indirect questions to sound more professional.</div>
+      </div>
+
+      <!-- 13. Adverbs of Frequency & Degree -->
+      <div class="grammar-block">
+        <h3><i>13.</i> Adverbs of Frequency & Degree</h3>
+        <p><strong>Frequency</strong> – how often:</p>
+        <div class="example">"I <strong>always</strong> verify the logs before applying changes." (100%)</div>
+        <div class="example">"We <strong>usually</strong> perform updates on Sundays." (80%)</div>
+        <div class="example">"The system <strong>sometimes</strong> crashes during peak hours." (50%)</div>
+        <div class="example">"They <strong>rarely</strong> change the default settings." (20%)</div>
+        <div class="example">"He <strong>never</strong> connects without the VPN." (0%)</div>
+        <p><strong>Degree</strong> – intensity:</p>
+        <div class="example">"It is <strong>very</strong> important to enable 2FA."</div>
+        <div class="example">"The firewall is <strong>extremely</strong> sensitive to this rule."</div>
+        <div class="example">"This version is <strong>slightly</strong> faster than the previous one."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Place frequency adverbs before the main verb ("I always check") but after "to be" ("The system is usually stable").</div>
+      </div>
+
+      <!-- 14. Comparative & Superlative -->
+      <div class="grammar-block">
+        <h3><i>14.</i> Comparative & Superlative</h3>
+        <p><strong>Comparative</strong> – comparing two things:</p>
+        <div class="example">"AES-256 is <strong>more secure than</strong> DES."</div>
+        <div class="example">"This interface is <strong>faster than</strong> the old one."</div>
+        <div class="example">"The new firmware is <strong>less stable</strong> than the previous version."</div>
+        <p><strong>Superlative</strong> – the highest degree (three or more):</p>
+        <div class="example">"This is the <strong>most efficient</strong> method we have."</div>
+        <div class="example">"FortiGate is the <strong>best</strong> solution for our network."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> For short adjectives (fast, slow, big), add "-er" and "-est" (faster, fastest). For longer ones (secure, efficient), use "more" and "most".</div>
+      </div>
+
+      <!-- 15. Countable vs. Uncountable -->
+      <div class="grammar-block">
+        <h3><i>15.</i> Countable vs. Uncountable Nouns – <span class="badge">IT warning</span></h3>
+        <p><strong>Countable</strong> – can be counted (plural possible):</p>
+        <div class="example">"firewall<strong>s</strong>", "policy<strong>s</strong>", "log<strong>s</strong>", "device<strong>s</strong>"</div>
+        <div class="example">"The <strong>logs</strong> are stored in the database." (countable plural)</div>
+        <p><strong>Uncountable</strong> – no plural, use singular verb:</p>
+        <div class="example">"<strong>Data</strong> is stored on the server." (not "datas")</div>
+        <div class="example">"<strong>Traffic</strong> is flowing through the interface."</div>
+        <div class="example">"<strong>Equipment</strong> needs to be replaced." (no plural)</div>
+        <div class="example">"<strong>Software</strong> is installed on the system."</div>
+        <div class="example">"<strong>Information</strong> is confidential."</div>
+        <div class="grammar-tip">💡 <strong>Tip:</strong> Common mistakes: "Datas" (❌) → "Data" (✅), "Informations" (❌) → "Information" (✅). Use "a piece of information" or "a log entry" to count them.</div>
+      </div>
+
+      <!-- BONUS: Common Mistakes -->
+      <div class="grammar-block" style="border-top: 2px solid #ffaa3344; padding-top: 20px; margin-top: 10px;">
+        <h3><i>⚠️</i> Quick Fix – Common Mistakes</h3>
+        <ul>
+          <li><strong>❌ Explain me</strong> → ✅ <strong>Explain to me</strong> / <strong>Explain how</strong> (never "explain me").</li>
+          <li><strong>❌ I am agree</strong> → ✅ <strong>I agree</strong> (no "am").</li>
+          <li><strong>❌ It depends of</strong> → ✅ <strong>It depends on</strong>.</li>
+          <li><strong>❌ We are discussing about</strong> → ✅ <strong>We are discussing</strong> (no "about").</li>
+          <li><strong>❌ We need to discuss about the policy</strong> → ✅ <strong>We need to discuss the policy</strong>.</li>
+          <li><strong>❌ The system is more better</strong> → ✅ <strong>better</strong> or <strong>more reliable</strong> (avoid double comparatives).</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 20px; border-top: 1px solid #1a3144; padding-top: 16px; text-align: right; color: #5a7a94; font-size: 0.8rem;">
+        💡 Practice these structures out loud to build fluency. Use the Voice Lab to train!
+      </div>
     </div>
   </div>
 
@@ -623,13 +985,39 @@
 </div>
 
 <!-- ============================================================
-JAVASCRIPT – NSE 4 ADAPTED DATA
+JAVASCRIPT – IDENTICAL TO PREVIOUS (KEEP DATA)
 ============================================================ -->
 <script>
   // =============================================================
-  // 1. NSE 4 DATA – 10 UNITS, 15 SENTENCES EACH
+  // 1. NSE 4 DATA – INTRO + 10 TECHNICAL UNITS
   // =============================================================
   const textsData = {
+    intro: {
+      title: "Professional Introductions",
+      tag: "👔 Intro",
+      sentences: [
+        { en: "My name is [Name] and I am a cyber security engineer.", fr: "Je m'appelle [Nom] et je suis ingénieur en cybersécurité." },
+        { en: "I specialize in network security and firewall management.", fr: "Je me spécialise dans la sécurité réseau et la gestion des pare-feu." },
+        { en: "I have over five years of experience in the IT industry.", fr: "J'ai plus de cinq ans d'expérience dans le secteur informatique." },
+        { en: "My primary responsibility is to protect the corporate network.", fr: "Ma responsabilité principale est de protéger le réseau d'entreprise." },
+        { en: "I am currently preparing for the NSE 4 certification.", fr: "Je prépare actuellement la certification NSE 4." },
+        { en: "I work closely with the security operations center.", fr: "Je travaille en étroite collaboration avec le centre des opérations de sécurité." },
+        { en: "I enjoy troubleshooting complex network issues.", fr: "J'aime résoudre des problèmes réseau complexes." },
+        { en: "My goal is to become a certified Fortinet specialist.", fr: "Mon objectif est de devenir un spécialiste certifié Fortinet." },
+        { en: "I am proficient in configuring firewall policies.", fr: "Je maîtrise la configuration des politiques de pare-feu." },
+        { en: "I collaborate with my team to implement security measures.", fr: "Je collabore avec mon équipe pour mettre en œuvre les mesures de sécurité." },
+        { en: "I am responsible for maintaining high availability.", fr: "Je suis responsable du maintien de la haute disponibilité." },
+        { en: "I regularly conduct security assessments.", fr: "Je réalise régulièrement des évaluations de sécurité." },
+        { en: "I believe in continuous learning and professional development.", fr: "Je crois en l'apprentissage continu et au développement professionnel." },
+        { en: "I communicate with stakeholders about security risks.", fr: "Je communique avec les parties prenantes sur les risques de sécurité." },
+        { en: "I am excited to start this training programme.", fr: "Je suis ravi de commencer ce programme de formation." },
+        { en: "I work in a fast-paced and dynamic environment.", fr: "Je travaille dans un environnement dynamique et en constante évolution." },
+        { en: "I use various tools to monitor network traffic.", fr: "J'utilise divers outils pour surveiller le trafic réseau." },
+        { en: "I document all configurations for audit purposes.", fr: "Je documente toutes les configurations à des fins d'audit." },
+        { en: "I often participate in incident response meetings.", fr: "Je participe souvent à des réunions de réponse aux incidents." },
+        { en: "I look forward to learning from this course.", fr: "Je me réjouis d'apprendre grâce à ce cours." }
+      ]
+    },
     unit1: {
       title: "Firewall Policies & NAT",
       tag: "🔐 Security",
@@ -873,6 +1261,11 @@ JAVASCRIPT – NSE 4 ADAPTED DATA
   const progressText = document.getElementById('progressText');
   const micStatus = document.getElementById('micStatus');
   const compatWarning = document.getElementById('compatWarning');
+
+  // Grammar modal
+  const grammarModal = document.getElementById('grammarModal');
+  const grammarBtn = document.getElementById('grammarBtn');
+  const grammarCloseBtn = document.getElementById('grammarCloseBtn');
 
   // =============================================================
   // 3. UTILITIES
@@ -1249,7 +1642,17 @@ JAVASCRIPT – NSE 4 ADAPTED DATA
     stopListening();
   };
 
+  // Grammar modal events
+  grammarBtn.onclick = () => grammarModal.classList.add('active');
+  grammarCloseBtn.onclick = () => grammarModal.classList.remove('active');
+  grammarModal.onclick = (e) => { if (e.target === grammarModal) grammarModal.classList.remove('active'); };
+
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
+    if (grammarModal.classList.contains('active')) {
+      if (e.key === 'Escape') grammarModal.classList.remove('active');
+      return;
+    }
     if (practiceScreen.style.display !== 'block') return;
     if (e.key === ' ' || e.key === 'Space') { e.preventDefault(); playCurrent(); }
     if (e.key === 'r' || e.key === 'R') { e.preventDefault(); repeatSequence(); }
