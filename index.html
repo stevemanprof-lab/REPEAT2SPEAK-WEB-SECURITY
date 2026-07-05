@@ -51,6 +51,126 @@
     }
 
     /* ============================================================
+       LOGIN OVERLAY
+       ============================================================ */
+    #authOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(7, 10, 16, 0.95);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      transition: opacity 0.3s ease;
+    }
+
+    #authOverlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #authBox {
+      background: rgba(12, 20, 32, 0.85);
+      border: 1px solid #2a3f5a;
+      border-top: 4px solid #00d4ff;
+      border-radius: 24px;
+      padding: 40px 36px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8);
+    }
+
+    #authBox h2 {
+      color: #00d4ff;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 1.6rem;
+    }
+
+    #authBox label {
+      display: block;
+      color: #b0cbe0;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    #authBox input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0b111b;
+      border: 1px solid #1a3144;
+      border-radius: 12px;
+      color: #e8f0f8;
+      font-family: inherit;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+
+    #authBox input:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.06);
+    }
+
+    #authBox button {
+      width: 100%;
+      padding: 14px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid #00d4ff;
+      border-radius: 40px;
+      color: #00d4ff;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #authBox button:hover {
+      background: rgba(0, 212, 255, 0.2);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+    }
+
+    #authBox .error-msg {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 12px;
+      min-height: 1.5em;
+    }
+
+    .logout-btn {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      background: rgba(12, 20, 32, 0.8);
+      border: 1px solid #2a4058;
+      color: #b0cbe0;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .logout-btn:hover {
+      border-color: #ff6b6b;
+      color: #ff6b6b;
+    }
+
+    /* ============================================================
        HEADER
        ============================================================ */
     .header {
@@ -682,1033 +802,1094 @@
 </head>
 <body>
 
-  <!-- AUTH BOX -->
-  <div id="authBox">
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button id="loginBtn">Login</button>
-  </div>
-
-  <!-- Your existing app UI continues below -->
-
-<div class="container">
-
   <!-- ============================================================
-  HEADER
+  LOGIN OVERLAY
   ============================================================ -->
-  <div class="header">
-    <h1>
-      🛡️ CYBER VOICE LAB
-      <span>NSE 4 · SPEAK</span>
-    </h1>
-    <p>🎧 Listen → 🎤 Speak → ✅ Repeat & Validate</p>
-  </div>
+  <div id="authOverlay">
+    <div id="authBox">
+      <h2>🔐 Sign In</h2>
+      <form id="loginForm" autocomplete="off">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="your@email.com" required>
 
-  <!-- ============================================================
-  HOME SCREEN
-  ============================================================ -->
-  <div id="homeScreen" class="home-screen">
-    <h2>📂 Select <i>NSE 4</i> Module</h2>
-    <div class="text-grid" id="textGrid">
-      <!-- Generated dynamically -->
-    </div>
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="••••••••" required>
 
-    <div class="home-actions">
-      <button id="grammarBtn">📘 Grammar Reference</button>
+        <button type="submit">Login</button>
+        <div id="loginError" class="error-msg"></div>
+      </form>
     </div>
   </div>
 
   <!-- ============================================================
-  GRAMMAR MODAL – EXPANDED VERSION
+  LOGOUT BUTTON (visible after login)
   ============================================================ -->
-  <div id="grammarModal" class="modal-overlay">
-    <div class="modal-content">
-      <button id="grammarCloseBtn" class="modal-close">✕</button>
-      <h2>📘 Essential Grammar for Cybersecurity Engineers</h2>
-
-      <!-- 1. Present Simple vs Continuous -->
-      <div class="grammar-block">
-        <h3><i>1.</i> Present Simple vs. Present Continuous</h3>
-        <p><strong>Present Simple</strong> – facts, routines, and permanent states.</p>
-        <div class="example">"I <strong>configure</strong> firewalls every day."</div>
-        <div class="example">"The firewall <strong>blocks</strong> malicious traffic."</div>
-        <p style="margin-top:6px;"><strong>Present Continuous</strong> – actions happening right now or temporary situations.</p>
-        <div class="example">"I <strong>am configuring</strong> the VPN at the moment."</div>
-        <div class="example">"We <strong>are testing</strong> the new IPS signatures this week."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Use Simple for facts ("The system runs on FortiOS 7.2"), Continuous for ongoing tasks ("I am troubleshooting a connectivity issue").</div>
-      </div>
-
-      <!-- 2. Present Perfect -->
-      <div class="grammar-block">
-        <h3><i>2.</i> Present Perfect (Past → Present)</h3>
-        <p>Used for past experiences with present relevance, or actions that started in the past and continue.</p>
-        <div class="example">"I <strong>have configured</strong> this policy before."</div>
-        <div class="example">"We <strong>have been working</strong> on this project for three months."</div>
-        <div class="example">"The administrator <strong>has already applied</strong> the patch."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Use "has/have + past participle". Very common in status reports: "The issue has been resolved."</div>
-      </div>
-
-      <!-- 3. Past Simple vs Past Perfect -->
-      <div class="grammar-block">
-        <h3><i>3.</i> Past Simple vs. Past Perfect</h3>
-        <p><strong>Past Simple</strong> – completed actions in the past.</p>
-        <div class="example">"I <strong>configured</strong> the interface yesterday."</div>
-        <p><strong>Past Perfect</strong> – an action that happened <em>before</em> another past action.</p>
-        <div class="example">"I <strong>had already saved</strong> the config before I rebooted the device."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Use Past Perfect to show sequence in troubleshooting: "The log showed that the user <strong>had attempted</strong> to log in three times."</div>
-      </div>
-
-      <!-- 4. Conditionals -->
-      <div class="grammar-block">
-        <h3><i>4.</i> Conditionals (If / When / Unless)</h3>
-        <p><strong>Zero Conditional (General facts):</strong></p>
-        <div class="example">"If the traffic matches the policy, it <strong>is allowed</strong>."</div>
-        <p><strong>First Conditional (Real future possibility):</strong></p>
-        <div class="example">"If we <strong>enable</strong> this rule, the system <strong>will block</strong> the attack."</div>
-        <div class="example">"<strong>Unless</strong> we update the signatures, we <strong>won't detect</strong> the new malware."</div>
-        <p><strong>Second Conditional (Hypothetical / unlikely):</strong></p>
-        <div class="example">"If I <strong>had</strong> more bandwidth, I <strong>would</strong> reduce the latency."</div>
-        <p><strong>Third Conditional (Past hypothetical):</strong></p>
-        <div class="example">"If we <strong>had applied</strong> the patch earlier, the breach <strong>would not have happened</strong>."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> In IT documentation, First and Zero conditionals appear most frequently.</div>
-      </div>
-
-      <!-- 5. Passive Voice -->
-      <div class="grammar-block">
-        <h3><i>5.</i> Passive Voice (Very common in tech)</h3>
-        <p>Used when the action is more important than the doer, or the doer is unknown.</p>
-        <div class="example">"The firewall <strong>is configured</strong> by the admin."</div>
-        <div class="example">"The logs <strong>are reviewed</strong> daily."</div>
-        <div class="example">"The patch <strong>was applied</strong> last night."</div>
-        <div class="example">"The vulnerability <strong>has been patched</strong>."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Be careful: Passive voice can sound impersonal. Use it when the actor is obvious ("The route was added.") or unknown ("The system was breached.").</div>
-      </div>
-
-      <!-- 6. Modal Verbs -->
-      <div class="grammar-block">
-        <h3><i>6.</i> Modal Verbs (Obligation, Possibility, Ability)</h3>
-        <ul>
-          <li><strong>Must</strong> – strong obligation: "You <strong>must</strong> enable 2FA."</li>
-          <li><strong>Must not</strong> – prohibition: "You <strong>must not</strong> expose the admin interface to the internet."</li>
-          <li><strong>Should</strong> – recommendation: "You <strong>should</strong> back up the config before the upgrade."</li>
-          <li><strong>Might / Could</strong> – possibility: "The issue <strong>might</strong> be related to DNS." / "It <strong>could</strong> be a routing problem."</li>
-          <li><strong>Can / Could</strong> – ability or request: "I <strong>can</strong> troubleshoot this." / "<strong>Could</strong> you check the logs?"</li>
-          <li><strong>May</strong> – formal permission or possibility: "The system <strong>may</strong> reboot after the update."</li>
-          <li><strong>Need to</strong> – necessity: "We <strong>need to</strong> review the firewall rules."</li>
-        </ul>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> "Must" is stronger than "should". In incident reports, use "must" for critical actions.</div>
-      </div>
-
-      <!-- 7. Prepositions of Place, Time & Direction -->
-      <div class="grammar-block">
-        <h3><i>7.</i> Prepositions (Place, Time, Direction)</h3>
-        <ul>
-          <li><strong>On</strong> – surface / device: "I work <strong>on</strong> the firewall." / "The error is <strong>on</strong> the dashboard."</li>
-          <li><strong>In</strong> – inside / context: "The error is <strong>in</strong> the log file." / "<strong>In</strong> this case, we block the traffic."</li>
-          <li><strong>To</strong> – direction: "I send traffic <strong>to</strong> the gateway." / "Navigate <strong>to</strong> the CLI."</li>
-          <li><strong>For</strong> – purpose / duration: "I am responsible <strong>for</strong> security." / "The session is valid <strong>for</strong> 8 hours."</li>
-          <li><strong>At</strong> – specific point: "Look <strong>at</strong> the packet capture." / "The meeting is <strong>at</strong> 3 PM."</li>
-          <li><strong>With</strong> – using / accompanied by: "I configured it <strong>with</strong> the CLI."</li>
-          <li><strong>From</strong> – origin: "The traffic originates <strong>from</strong> the internal network."</li>
-        </ul>
-      </div>
-
-      <!-- 8. Articles (a / an / the) -->
-      <div class="grammar-block">
-        <h3><i>8.</i> Articles – <span class="badge">Common mistakes</span></h3>
-        <p><strong>A / An</strong> – first mention, non-specific.</p>
-        <div class="example">"I configured <strong>a</strong> firewall policy." (first time mentioned)</div>
-        <p><strong>The</strong> – specific, already known.</p>
-        <div class="example">"I configured <strong>the</strong> firewall policy we discussed." (both know which one)</div>
-        <p><strong>Zero article</strong> – plural / general concepts.</p>
-        <div class="example">"<strong>Firewalls</strong> are essential for network security." (general)</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Use "the" when there is only one (e.g., <em>the internet</em>, <em>the administrator</em>).</div>
-      </div>
-
-      <!-- 9. Relative Clauses -->
-      <div class="grammar-block">
-        <h3><i>9.</i> Relative Clauses (who, which, that, whose)</h3>
-        <p>Used to add extra information about a person, object, or situation.</p>
-        <div class="example">"The engineer <strong>who</strong> configured the network is on leave." (person)</div>
-        <div class="example">"The policy <strong>that</strong> blocks port 443 caused the issue." (object/defining)</div>
-        <div class="example">"The IPS signature, <strong>which</strong> was updated yesterday, detected the attack." (non-defining – with commas)</div>
-        <div class="example">"The device <strong>whose</strong> IP address is 10.0.0.1 is offline." (possession)</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> In technical writing, "that" is preferred for essential information (no commas). Use "which" with commas for extra, non-essential info.</div>
-      </div>
-
-      <!-- 10. Future Forms -->
-      <div class="grammar-block">
-        <h3><i>10.</i> Future Forms (Will / Going to / Present Continuous)</h3>
-        <p><strong>Will</strong> – spontaneous decisions, predictions, promises.</p>
-        <div class="example">"The system <strong>will</strong> reboot automatically after the update." (prediction)</div>
-        <div class="example">"I <strong>will</strong> check the logs right now." (spontaneous decision)</div>
-        <p><strong>Going to</strong> – plans or intentions.</p>
-        <div class="example">"We <strong>are going to</strong> deploy the patch next week." (plan)</div>
-        <p><strong>Present Continuous</strong> – fixed arrangements.</p>
-        <div class="example">"The meeting <strong>is starting</strong> at 10 AM." (schedule)</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> In incident response, use "will" for immediate actions ("I will investigate") and "going to" for planned changes.</div>
-      </div>
-
-      <!-- 11. Phrasal Verbs (Very common in IT) -->
-      <div class="grammar-block">
-        <h3><i>11.</i> Phrasal Verbs – <span class="badge">Essential</span></h3>
-        <ul>
-          <li><strong>Set up</strong> – configure: "I need to <strong>set up</strong> the VPN."</li>
-          <li><strong>Log in / Log on</strong> – authenticate: "Please <strong>log in</strong> to the FortiGate."</li>
-          <li><strong>Shut down</strong> – power off: "We <strong>shut down</strong> the server for maintenance."</li>
-          <li><strong>Roll back</strong> – revert to a previous state: "We <strong>rolled back</strong> the firmware update."</li>
-          <li><strong>Wipe out</strong> – delete completely: "The attack <strong>wiped out</strong> the database."</li>
-          <li><strong>Carry out</strong> – perform: "We <strong>carry out</strong> security assessments quarterly."</li>
-          <li><strong>Break down</strong> – stop working: "The service <strong>broke down</strong> after the upgrade."</li>
-          <li><strong>Filter out</strong> – remove: "We <strong>filter out</strong> malicious payloads."</li>
-        </ul>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Phrasal verbs are very common in spoken IT English. Use them to sound more natural.</div>
-      </div>
-
-      <!-- 12. Question Formation -->
-      <div class="grammar-block">
-        <h3><i>12.</i> Asking Questions (Politely & Directly)</h3>
-        <p><strong>Direct questions</strong> (informal / urgent):</p>
-        <div class="example">"<strong>How do you</strong> configure NAT?"</div>
-        <div class="example">"<strong>Why is</strong> the interface down?"</div>
-        <p><strong>Indirect / Polite questions</strong> (formal / to managers):</p>
-        <div class="example">"<strong>Could you explain</strong> how to configure the SD-WAN?"</div>
-        <div class="example">"<strong>I was wondering if</strong> you could check the logs."</div>
-        <div class="example">"<strong>Would you mind</strong> reviewing the policy?"</div>
-        <p><strong>Question tags</strong> (checking understanding):</p>
-        <div class="example">"We need to apply the patch, <strong>don't we</strong>?"</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> In emails and meetings with stakeholders, use indirect questions to sound more professional.</div>
-      </div>
-
-      <!-- 13. Adverbs of Frequency & Degree -->
-      <div class="grammar-block">
-        <h3><i>13.</i> Adverbs of Frequency & Degree</h3>
-        <p><strong>Frequency</strong> – how often:</p>
-        <div class="example">"I <strong>always</strong> verify the logs before applying changes." (100%)</div>
-        <div class="example">"We <strong>usually</strong> perform updates on Sundays." (80%)</div>
-        <div class="example">"The system <strong>sometimes</strong> crashes during peak hours." (50%)</div>
-        <div class="example">"They <strong>rarely</strong> change the default settings." (20%)</div>
-        <div class="example">"He <strong>never</strong> connects without the VPN." (0%)</div>
-        <p><strong>Degree</strong> – intensity:</p>
-        <div class="example">"It is <strong>very</strong> important to enable 2FA."</div>
-        <div class="example">"The firewall is <strong>extremely</strong> sensitive to this rule."</div>
-        <div class="example">"This version is <strong>slightly</strong> faster than the previous one."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Place frequency adverbs before the main verb ("I always check") but after "to be" ("The system is usually stable").</div>
-      </div>
-
-      <!-- 14. Comparative & Superlative -->
-      <div class="grammar-block">
-        <h3><i>14.</i> Comparative & Superlative</h3>
-        <p><strong>Comparative</strong> – comparing two things:</p>
-        <div class="example">"AES-256 is <strong>more secure than</strong> DES."</div>
-        <div class="example">"This interface is <strong>faster than</strong> the old one."</div>
-        <div class="example">"The new firmware is <strong>less stable</strong> than the previous version."</div>
-        <p><strong>Superlative</strong> – the highest degree (three or more):</p>
-        <div class="example">"This is the <strong>most efficient</strong> method we have."</div>
-        <div class="example">"FortiGate is the <strong>best</strong> solution for our network."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> For short adjectives (fast, slow, big), add "-er" and "-est" (faster, fastest). For longer ones (secure, efficient), use "more" and "most".</div>
-      </div>
-
-      <!-- 15. Countable vs. Uncountable -->
-      <div class="grammar-block">
-        <h3><i>15.</i> Countable vs. Uncountable Nouns – <span class="badge">IT warning</span></h3>
-        <p><strong>Countable</strong> – can be counted (plural possible):</p>
-        <div class="example">"firewall<strong>s</strong>", "policy<strong>s</strong>", "log<strong>s</strong>", "device<strong>s</strong>"</div>
-        <div class="example">"The <strong>logs</strong> are stored in the database." (countable plural)</div>
-        <p><strong>Uncountable</strong> – no plural, use singular verb:</p>
-        <div class="example">"<strong>Data</strong> is stored on the server." (not "datas")</div>
-        <div class="example">"<strong>Traffic</strong> is flowing through the interface."</div>
-        <div class="example">"<strong>Equipment</strong> needs to be replaced." (no plural)</div>
-        <div class="example">"<strong>Software</strong> is installed on the system."</div>
-        <div class="example">"<strong>Information</strong> is confidential."</div>
-        <div class="grammar-tip">💡 <strong>Tip:</strong> Common mistakes: "Datas" (❌) → "Data" (✅), "Informations" (❌) → "Information" (✅). Use "a piece of information" or "a log entry" to count them.</div>
-      </div>
-
-      <!-- BONUS: Common Mistakes -->
-      <div class="grammar-block" style="border-top: 2px solid #ffaa3344; padding-top: 20px; margin-top: 10px;">
-        <h3><i>⚠️</i> Quick Fix – Common Mistakes</h3>
-        <ul>
-          <li><strong>❌ Explain me</strong> → ✅ <strong>Explain to me</strong> / <strong>Explain how</strong> (never "explain me").</li>
-          <li><strong>❌ I am agree</strong> → ✅ <strong>I agree</strong> (no "am").</li>
-          <li><strong>❌ It depends of</strong> → ✅ <strong>It depends on</strong>.</li>
-          <li><strong>❌ We are discussing about</strong> → ✅ <strong>We are discussing</strong> (no "about").</li>
-          <li><strong>❌ We need to discuss about the policy</strong> → ✅ <strong>We need to discuss the policy</strong>.</li>
-          <li><strong>❌ The system is more better</strong> → ✅ <strong>better</strong> or <strong>more reliable</strong> (avoid double comparatives).</li>
-        </ul>
-      </div>
-
-      <div style="margin-top: 20px; border-top: 1px solid #1a3144; padding-top: 16px; text-align: right; color: #5a7a94; font-size: 0.8rem;">
-        💡 Practice these structures out loud to build fluency. Use the Voice Lab to train!
-      </div>
-    </div>
-  </div>
+  <button id="logoutBtn" class="logout-btn" style="display:none;">🚪 Logout</button>
 
   <!-- ============================================================
-  PRACTICE SCREEN
+  MAIN APP CONTAINER (hidden until login)
   ============================================================ -->
-  <div id="practiceScreen" class="practice-screen">
+  <div id="appContainer" style="display:none;">
 
-    <button id="backToHomeBtn" class="back-btn">← Back to Modules</button>
+    <div class="container">
 
-    <div class="card">
-
-      <div id="textHeader" class="text-header"></div>
-
-      <div id="micStatus" class="mic-status waiting">
-        🎤 Press "Speak" to activate microphone
+      <!-- HEADER -->
+      <div class="header">
+        <h1>
+          🛡️ CYBER VOICE LAB
+          <span>NSE 4 · SPEAK</span>
+        </h1>
+        <p>🎧 Listen → 🎤 Speak → ✅ Repeat & Validate</p>
       </div>
 
-      <div id="compatWarning" class="compat-warning">⚠️ Your browser doesn't support voice recognition. Use Chrome/Edge.</div>
+      <!-- HOME SCREEN -->
+      <div id="homeScreen" class="home-screen">
+        <h2>📂 Select <i>NSE 4</i> Module</h2>
+        <div class="text-grid" id="textGrid">
+          <!-- Generated dynamically -->
+        </div>
 
-      <div class="controls">
-        <button id="playBtn">🔊 Listen</button>
-        <button id="repeatBtn">🎤 Speak</button>
-        <button id="nextBtn" disabled>⏩ Next</button>
-        <button id="resetBtn">↺ Reset</button>
+        <div class="home-actions">
+          <button id="grammarBtn">📘 Grammar Reference</button>
+        </div>
       </div>
 
-      <div class="sentence-box">
-        <div class="sentence-text" id="sentenceText">Loading...</div>
-        <div class="sentence-translation" id="sentenceTranslation"></div>
+      <!-- GRAMMAR MODAL -->
+      <div id="grammarModal" class="modal-overlay">
+        <div class="modal-content">
+          <button id="grammarCloseBtn" class="modal-close">✕</button>
+          <h2>📘 Essential Grammar for Cybersecurity Engineers</h2>
+
+          <!-- 1. Present Simple vs Continuous -->
+          <div class="grammar-block">
+            <h3><i>1.</i> Present Simple vs. Present Continuous</h3>
+            <p><strong>Present Simple</strong> – facts, routines, and permanent states.</p>
+            <div class="example">"I <strong>configure</strong> firewalls every day."</div>
+            <div class="example">"The firewall <strong>blocks</strong> malicious traffic."</div>
+            <p style="margin-top:6px;"><strong>Present Continuous</strong> – actions happening right now or temporary situations.</p>
+            <div class="example">"I <strong>am configuring</strong> the VPN at the moment."</div>
+            <div class="example">"We <strong>are testing</strong> the new IPS signatures this week."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Use Simple for facts ("The system runs on FortiOS 7.2"), Continuous for ongoing tasks ("I am troubleshooting a connectivity issue").</div>
+          </div>
+
+          <!-- 2. Present Perfect -->
+          <div class="grammar-block">
+            <h3><i>2.</i> Present Perfect (Past → Present)</h3>
+            <p>Used for past experiences with present relevance, or actions that started in the past and continue.</p>
+            <div class="example">"I <strong>have configured</strong> this policy before."</div>
+            <div class="example">"We <strong>have been working</strong> on this project for three months."</div>
+            <div class="example">"The administrator <strong>has already applied</strong> the patch."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Use "has/have + past participle". Very common in status reports: "The issue has been resolved."</div>
+          </div>
+
+          <!-- 3. Past Simple vs Past Perfect -->
+          <div class="grammar-block">
+            <h3><i>3.</i> Past Simple vs. Past Perfect</h3>
+            <p><strong>Past Simple</strong> – completed actions in the past.</p>
+            <div class="example">"I <strong>configured</strong> the interface yesterday."</div>
+            <p><strong>Past Perfect</strong> – an action that happened <em>before</em> another past action.</p>
+            <div class="example">"I <strong>had already saved</strong> the config before I rebooted the device."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Use Past Perfect to show sequence in troubleshooting: "The log showed that the user <strong>had attempted</strong> to log in three times."</div>
+          </div>
+
+          <!-- 4. Conditionals -->
+          <div class="grammar-block">
+            <h3><i>4.</i> Conditionals (If / When / Unless)</h3>
+            <p><strong>Zero Conditional (General facts):</strong></p>
+            <div class="example">"If the traffic matches the policy, it <strong>is allowed</strong>."</div>
+            <p><strong>First Conditional (Real future possibility):</strong></p>
+            <div class="example">"If we <strong>enable</strong> this rule, the system <strong>will block</strong> the attack."</div>
+            <div class="example">"<strong>Unless</strong> we update the signatures, we <strong>won't detect</strong> the new malware."</div>
+            <p><strong>Second Conditional (Hypothetical / unlikely):</strong></p>
+            <div class="example">"If I <strong>had</strong> more bandwidth, I <strong>would</strong> reduce the latency."</div>
+            <p><strong>Third Conditional (Past hypothetical):</strong></p>
+            <div class="example">"If we <strong>had applied</strong> the patch earlier, the breach <strong>would not have happened</strong>."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> In IT documentation, First and Zero conditionals appear most frequently.</div>
+          </div>
+
+          <!-- 5. Passive Voice -->
+          <div class="grammar-block">
+            <h3><i>5.</i> Passive Voice (Very common in tech)</h3>
+            <p>Used when the action is more important than the doer, or the doer is unknown.</p>
+            <div class="example">"The firewall <strong>is configured</strong> by the admin."</div>
+            <div class="example">"The logs <strong>are reviewed</strong> daily."</div>
+            <div class="example">"The patch <strong>was applied</strong> last night."</div>
+            <div class="example">"The vulnerability <strong>has been patched</strong>."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Be careful: Passive voice can sound impersonal. Use it when the actor is obvious ("The route was added.") or unknown ("The system was breached.").</div>
+          </div>
+
+          <!-- 6. Modal Verbs -->
+          <div class="grammar-block">
+            <h3><i>6.</i> Modal Verbs (Obligation, Possibility, Ability)</h3>
+            <ul>
+              <li><strong>Must</strong> – strong obligation: "You <strong>must</strong> enable 2FA."</li>
+              <li><strong>Must not</strong> – prohibition: "You <strong>must not</strong> expose the admin interface to the internet."</li>
+              <li><strong>Should</strong> – recommendation: "You <strong>should</strong> back up the config before the upgrade."</li>
+              <li><strong>Might / Could</strong> – possibility: "The issue <strong>might</strong> be related to DNS." / "It <strong>could</strong> be a routing problem."</li>
+              <li><strong>Can / Could</strong> – ability or request: "I <strong>can</strong> troubleshoot this." / "<strong>Could</strong> you check the logs?"</li>
+              <li><strong>May</strong> – formal permission or possibility: "The system <strong>may</strong> reboot after the update."</li>
+              <li><strong>Need to</strong> – necessity: "We <strong>need to</strong> review the firewall rules."</li>
+            </ul>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> "Must" is stronger than "should". In incident reports, use "must" for critical actions.</div>
+          </div>
+
+          <!-- 7. Prepositions -->
+          <div class="grammar-block">
+            <h3><i>7.</i> Prepositions (Place, Time, Direction)</h3>
+            <ul>
+              <li><strong>On</strong> – surface / device: "I work <strong>on</strong> the firewall." / "The error is <strong>on</strong> the dashboard."</li>
+              <li><strong>In</strong> – inside / context: "The error is <strong>in</strong> the log file." / "<strong>In</strong> this case, we block the traffic."</li>
+              <li><strong>To</strong> – direction: "I send traffic <strong>to</strong> the gateway." / "Navigate <strong>to</strong> the CLI."</li>
+              <li><strong>For</strong> – purpose / duration: "I am responsible <strong>for</strong> security." / "The session is valid <strong>for</strong> 8 hours."</li>
+              <li><strong>At</strong> – specific point: "Look <strong>at</strong> the packet capture." / "The meeting is <strong>at</strong> 3 PM."</li>
+              <li><strong>With</strong> – using / accompanied by: "I configured it <strong>with</strong> the CLI."</li>
+              <li><strong>From</strong> – origin: "The traffic originates <strong>from</strong> the internal network."</li>
+            </ul>
+          </div>
+
+          <!-- 8. Articles -->
+          <div class="grammar-block">
+            <h3><i>8.</i> Articles – <span class="badge">Common mistakes</span></h3>
+            <p><strong>A / An</strong> – first mention, non-specific.</p>
+            <div class="example">"I configured <strong>a</strong> firewall policy." (first time mentioned)</div>
+            <p><strong>The</strong> – specific, already known.</p>
+            <div class="example">"I configured <strong>the</strong> firewall policy we discussed." (both know which one)</div>
+            <p><strong>Zero article</strong> – plural / general concepts.</p>
+            <div class="example">"<strong>Firewalls</strong> are essential for network security." (general)</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Use "the" when there is only one (e.g., <em>the internet</em>, <em>the administrator</em>).</div>
+          </div>
+
+          <!-- 9. Relative Clauses -->
+          <div class="grammar-block">
+            <h3><i>9.</i> Relative Clauses (who, which, that, whose)</h3>
+            <p>Used to add extra information about a person, object, or situation.</p>
+            <div class="example">"The engineer <strong>who</strong> configured the network is on leave." (person)</div>
+            <div class="example">"The policy <strong>that</strong> blocks port 443 caused the issue." (object/defining)</div>
+            <div class="example">"The IPS signature, <strong>which</strong> was updated yesterday, detected the attack." (non-defining – with commas)</div>
+            <div class="example">"The device <strong>whose</strong> IP address is 10.0.0.1 is offline." (possession)</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> In technical writing, "that" is preferred for essential information (no commas). Use "which" with commas for extra, non-essential info.</div>
+          </div>
+
+          <!-- 10. Future Forms -->
+          <div class="grammar-block">
+            <h3><i>10.</i> Future Forms (Will / Going to / Present Continuous)</h3>
+            <p><strong>Will</strong> – spontaneous decisions, predictions, promises.</p>
+            <div class="example">"The system <strong>will</strong> reboot automatically after the update." (prediction)</div>
+            <div class="example">"I <strong>will</strong> check the logs right now." (spontaneous decision)</div>
+            <p><strong>Going to</strong> – plans or intentions.</p>
+            <div class="example">"We <strong>are going to</strong> deploy the patch next week." (plan)</div>
+            <p><strong>Present Continuous</strong> – fixed arrangements.</p>
+            <div class="example">"The meeting <strong>is starting</strong> at 10 AM." (schedule)</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> In incident response, use "will" for immediate actions ("I will investigate") and "going to" for planned changes.</div>
+          </div>
+
+          <!-- 11. Phrasal Verbs -->
+          <div class="grammar-block">
+            <h3><i>11.</i> Phrasal Verbs – <span class="badge">Essential</span></h3>
+            <ul>
+              <li><strong>Set up</strong> – configure: "I need to <strong>set up</strong> the VPN."</li>
+              <li><strong>Log in / Log on</strong> – authenticate: "Please <strong>log in</strong> to the FortiGate."</li>
+              <li><strong>Shut down</strong> – power off: "We <strong>shut down</strong> the server for maintenance."</li>
+              <li><strong>Roll back</strong> – revert: "We <strong>rolled back</strong> the firmware update."</li>
+              <li><strong>Wipe out</strong> – delete: "The attack <strong>wiped out</strong> the database."</li>
+              <li><strong>Carry out</strong> – perform: "We <strong>carry out</strong> security assessments quarterly."</li>
+              <li><strong>Break down</strong> – stop working: "The service <strong>broke down</strong> after the upgrade."</li>
+              <li><strong>Filter out</strong> – remove: "We <strong>filter out</strong> malicious payloads."</li>
+            </ul>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Phrasal verbs are very common in spoken IT English. Use them to sound more natural.</div>
+          </div>
+
+          <!-- 12. Question Formation -->
+          <div class="grammar-block">
+            <h3><i>12.</i> Asking Questions (Politely & Directly)</h3>
+            <p><strong>Direct questions</strong> (informal / urgent):</p>
+            <div class="example">"<strong>How do you</strong> configure NAT?"</div>
+            <div class="example">"<strong>Why is</strong> the interface down?"</div>
+            <p><strong>Indirect / Polite questions</strong> (formal / to managers):</p>
+            <div class="example">"<strong>Could you explain</strong> how to configure the SD-WAN?"</div>
+            <div class="example">"<strong>I was wondering if</strong> you could check the logs."</div>
+            <div class="example">"<strong>Would you mind</strong> reviewing the policy?"</div>
+            <p><strong>Question tags</strong> (checking understanding):</p>
+            <div class="example">"We need to apply the patch, <strong>don't we</strong>?"</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> In emails and meetings with stakeholders, use indirect questions to sound more professional.</div>
+          </div>
+
+          <!-- 13. Adverbs -->
+          <div class="grammar-block">
+            <h3><i>13.</i> Adverbs of Frequency & Degree</h3>
+            <p><strong>Frequency</strong> – how often:</p>
+            <div class="example">"I <strong>always</strong> verify the logs before applying changes." (100%)</div>
+            <div class="example">"We <strong>usually</strong> perform updates on Sundays." (80%)</div>
+            <div class="example">"The system <strong>sometimes</strong> crashes during peak hours." (50%)</div>
+            <div class="example">"They <strong>rarely</strong> change the default settings." (20%)</div>
+            <div class="example">"He <strong>never</strong> connects without the VPN." (0%)</div>
+            <p><strong>Degree</strong> – intensity:</p>
+            <div class="example">"It is <strong>very</strong> important to enable 2FA."</div>
+            <div class="example">"The firewall is <strong>extremely</strong> sensitive to this rule."</div>
+            <div class="example">"This version is <strong>slightly</strong> faster than the previous one."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Place frequency adverbs before the main verb ("I always check") but after "to be" ("The system is usually stable").</div>
+          </div>
+
+          <!-- 14. Comparative & Superlative -->
+          <div class="grammar-block">
+            <h3><i>14.</i> Comparative & Superlative</h3>
+            <p><strong>Comparative</strong> – comparing two things:</p>
+            <div class="example">"AES-256 is <strong>more secure than</strong> DES."</div>
+            <div class="example">"This interface is <strong>faster than</strong> the old one."</div>
+            <div class="example">"The new firmware is <strong>less stable</strong> than the previous version."</div>
+            <p><strong>Superlative</strong> – the highest degree (three or more):</p>
+            <div class="example">"This is the <strong>most efficient</strong> method we have."</div>
+            <div class="example">"FortiGate is the <strong>best</strong> solution for our network."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> For short adjectives (fast, slow, big), add "-er" and "-est" (faster, fastest). For longer ones (secure, efficient), use "more" and "most".</div>
+          </div>
+
+          <!-- 15. Countable vs. Uncountable -->
+          <div class="grammar-block">
+            <h3><i>15.</i> Countable vs. Uncountable Nouns – <span class="badge">IT warning</span></h3>
+            <p><strong>Countable</strong> – can be counted (plural possible):</p>
+            <div class="example">"firewall<strong>s</strong>", "policy<strong>s</strong>", "log<strong>s</strong>", "device<strong>s</strong>"</div>
+            <div class="example">"The <strong>logs</strong> are stored in the database." (countable plural)</div>
+            <p><strong>Uncountable</strong> – no plural, use singular verb:</p>
+            <div class="example">"<strong>Data</strong> is stored on the server." (not "datas")</div>
+            <div class="example">"<strong>Traffic</strong> is flowing through the interface."</div>
+            <div class="example">"<strong>Equipment</strong> needs to be replaced." (no plural)</div>
+            <div class="example">"<strong>Software</strong> is installed on the system."</div>
+            <div class="example">"<strong>Information</strong> is confidential."</div>
+            <div class="grammar-tip">💡 <strong>Tip:</strong> Common mistakes: "Datas" (❌) → "Data" (✅), "Informations" (❌) → "Information" (✅). Use "a piece of information" or "a log entry" to count them.</div>
+          </div>
+
+          <!-- BONUS: Common Mistakes -->
+          <div class="grammar-block" style="border-top: 2px solid #ffaa3344; padding-top: 20px; margin-top: 10px;">
+            <h3><i>⚠️</i> Quick Fix – Common Mistakes</h3>
+            <ul>
+              <li><strong>❌ Explain me</strong> → ✅ <strong>Explain to me</strong> / <strong>Explain how</strong> (never "explain me").</li>
+              <li><strong>❌ I am agree</strong> → ✅ <strong>I agree</strong> (no "am").</li>
+              <li><strong>❌ It depends of</strong> → ✅ <strong>It depends on</strong>.</li>
+              <li><strong>❌ We are discussing about</strong> → ✅ <strong>We are discussing</strong> (no "about").</li>
+              <li><strong>❌ We need to discuss about the policy</strong> → ✅ <strong>We need to discuss the policy</strong>.</li>
+              <li><strong>❌ The system is more better</strong> → ✅ <strong>better</strong> or <strong>more reliable</strong> (avoid double comparatives).</li>
+            </ul>
+          </div>
+
+          <div style="margin-top: 20px; border-top: 1px solid #1a3144; padding-top: 16px; text-align: right; color: #5a7a94; font-size: 0.8rem;">
+            💡 Practice these structures out loud to build fluency. Use the Voice Lab to train!
+          </div>
+        </div>
       </div>
 
-      <div class="visualizer">
-        <canvas id="voiceCanvas" width="400" height="60"></canvas>
-        <div class="status" id="voiceStatus">⚡ Ready</div>
+      <!-- PRACTICE SCREEN -->
+      <div id="practiceScreen" class="practice-screen">
+
+        <button id="backToHomeBtn" class="back-btn">← Back to Modules</button>
+
+        <div class="card">
+
+          <div id="textHeader" class="text-header"></div>
+
+          <div id="micStatus" class="mic-status waiting">
+            🎤 Press "Speak" to activate microphone
+          </div>
+
+          <div id="compatWarning" class="compat-warning">⚠️ Your browser doesn't support voice recognition. Use Chrome/Edge.</div>
+
+          <div class="controls">
+            <button id="playBtn">🔊 Listen</button>
+            <button id="repeatBtn">🎤 Speak</button>
+            <button id="nextBtn" disabled>⏩ Next</button>
+            <button id="resetBtn">↺ Reset</button>
+          </div>
+
+          <div class="sentence-box">
+            <div class="sentence-text" id="sentenceText">Loading...</div>
+            <div class="sentence-translation" id="sentenceTranslation"></div>
+          </div>
+
+          <div class="visualizer">
+            <canvas id="voiceCanvas" width="400" height="60"></canvas>
+            <div class="status" id="voiceStatus">⚡ Ready</div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-stats">
+            <span>📊 Progress</span>
+            <span id="progressText">0%</span>
+          </div>
+
+          <div id="feedback" class="feedback feedback-info">
+            💡 Press "Speak" and repeat the sentence aloud.
+          </div>
+
+        </div>
       </div>
 
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="progress-stats">
-        <span>📊 Progress</span>
-        <span id="progressText">0%</span>
-      </div>
+    </div> <!-- /container -->
+  </div> <!-- /appContainer -->
 
-      <div id="feedback" class="feedback feedback-info">
-        💡 Press "Speak" and repeat the sentence aloud.
-      </div>
+  <!-- ============================================================
+  SCRIPTS
+  ============================================================ -->
+  <!-- Supabase CDN (non-module) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
+  </script>
 
-    </div>
-  </div>
-</div>
+  <!-- Main app logic + login -->
+  <script>
+    // ---- Supabase client ----
+    // REPLACE WITH YOUR OWN CREDENTIALS
+    const supabaseUrl = "YOUR_SUPABASE_URL";      // e.g. "https://xxxxx.supabase.co"
+    const supabaseAnonKey = "YOUR_PUBLIC_ANON_KEY";
 
-<!-- ============================================================
-JAVASCRIPT – IDENTICAL TO PREVIOUS (KEEP DATA)
-============================================================ -->
-<script>
-  // =============================================================
-  // 1. NSE 4 DATA – INTRO + 10 TECHNICAL UNITS
-  // =============================================================
-  const textsData = {
-    intro: {
-      title: "Professional Introductions",
-      tag: "👔 Intro",
-      sentences: [
-        { en: "My name is [Name] and I am a cyber security engineer.", fr: "Je m'appelle [Nom] et je suis ingénieur en cybersécurité." },
-        { en: "I specialize in network security and firewall management.", fr: "Je me spécialise dans la sécurité réseau et la gestion des pare-feu." },
-        { en: "I have over five years of experience in the IT industry.", fr: "J'ai plus de cinq ans d'expérience dans le secteur informatique." },
-        { en: "My primary responsibility is to protect the corporate network.", fr: "Ma responsabilité principale est de protéger le réseau d'entreprise." },
-        { en: "I am currently preparing for the NSE 4 certification.", fr: "Je prépare actuellement la certification NSE 4." },
-        { en: "I work closely with the security operations center.", fr: "Je travaille en étroite collaboration avec le centre des opérations de sécurité." },
-        { en: "I enjoy troubleshooting complex network issues.", fr: "J'aime résoudre des problèmes réseau complexes." },
-        { en: "My goal is to become a certified Fortinet specialist.", fr: "Mon objectif est de devenir un spécialiste certifié Fortinet." },
-        { en: "I am proficient in configuring firewall policies.", fr: "Je maîtrise la configuration des politiques de pare-feu." },
-        { en: "I collaborate with my team to implement security measures.", fr: "Je collabore avec mon équipe pour mettre en œuvre les mesures de sécurité." },
-        { en: "I am responsible for maintaining high availability.", fr: "Je suis responsable du maintien de la haute disponibilité." },
-        { en: "I regularly conduct security assessments.", fr: "Je réalise régulièrement des évaluations de sécurité." },
-        { en: "I believe in continuous learning and professional development.", fr: "Je crois en l'apprentissage continu et au développement professionnel." },
-        { en: "I communicate with stakeholders about security risks.", fr: "Je communique avec les parties prenantes sur les risques de sécurité." },
-        { en: "I am excited to start this training programme.", fr: "Je suis ravi de commencer ce programme de formation." },
-        { en: "I work in a fast-paced and dynamic environment.", fr: "Je travaille dans un environnement dynamique et en constante évolution." },
-        { en: "I use various tools to monitor network traffic.", fr: "J'utilise divers outils pour surveiller le trafic réseau." },
-        { en: "I document all configurations for audit purposes.", fr: "Je documente toutes les configurations à des fins d'audit." },
-        { en: "I often participate in incident response meetings.", fr: "Je participe souvent à des réunions de réponse aux incidents." },
-        { en: "I look forward to learning from this course.", fr: "Je me réjouis d'apprendre grâce à ce cours." }
-      ]
-    },
-    unit1: {
-      title: "Firewall Policies & NAT",
-      tag: "🔐 Security",
-      sentences: [
-        { en: "I configure a firewall policy to allow traffic.", fr: "Je configure une politique de pare-feu pour autoriser le trafic." },
-        { en: "We set the source and destination addresses.", fr: "Nous définissons les adresses source et destination." },
-        { en: "The firewall denies any traffic by default.", fr: "Le pare-feu refuse tout trafic par défaut." },
-        { en: "We enable NAT to translate private IP addresses.", fr: "Nous activons le NAT pour traduire les adresses IP privées." },
-        { en: "I create an IPv4 policy for internal users.", fr: "Je crée une politique IPv4 pour les utilisateurs internes." },
-        { en: "We place the policy above the implicit deny rule.", fr: "Nous plaçons la politique au-dessus de la règle de refus implicite." },
-        { en: "The administrator edits the policy sequence.", fr: "L'administrateur modifie la séquence des politiques." },
-        { en: "We disable NAT for this specific interface.", fr: "Nous désactivons le NAT pour cette interface spécifique." },
-        { en: "I add a comment to explain the policy purpose.", fr: "J'ajoute un commentaire pour expliquer le but de la politique." },
-        { en: "The policy matches the traffic based on the service.", fr: "La politique correspond au trafic en fonction du service." },
-        { en: "We enable logging to monitor denied connections.", fr: "Nous activons la journalisation pour surveiller les connexions refusées." },
-        { en: "I need to clone this policy for another VLAN.", fr: "Je dois cloner cette politique pour un autre VLAN." },
-        { en: "The firewall processes policies from top to bottom.", fr: "Le pare-feu traite les politiques de haut en bas." },
-        { en: "We use central NAT to simplify address translation.", fr: "Nous utilisons le NAT central pour simplifier la traduction d'adresses." },
-        { en: "I verify the policy hit count to check usage.", fr: "Je vérifie le nombre de hits de la politique pour vérifier l'utilisation." }
-      ]
-    },
-    unit2: {
-      title: "Routing & Static Routes",
-      tag: "🌐 Networking",
-      sentences: [
-        { en: "We configure a default route to the internet gateway.", fr: "Nous configurons une route par défaut vers la passerelle internet." },
-        { en: "The static route points to the next-hop IP address.", fr: "La route statique pointe vers l'adresse IP du prochain saut." },
-        { en: "We set the administrative distance to influence routing.", fr: "Nous définissons la distance administrative pour influencer le routage." },
-        { en: "I add a policy route to override the routing table.", fr: "J'ajoute une route politique pour outrepasser la table de routage." },
-        { en: "The device uses the routing table to forward packets.", fr: "L'appareil utilise la table de routage pour transférer les paquets." },
-        { en: "We verify the route is active in the forwarding table.", fr: "Nous vérifions que la route est active dans la table de transfert." },
-        { en: "I configure the interface IP address for the LAN.", fr: "Je configure l'adresse IP de l'interface pour le LAN." },
-        { en: "The gateway is unreachable, so we check the physical link.", fr: "La passerelle est inaccessible, alors nous vérifions le lien physique." },
-        { en: "We enable routing on the virtual domain (VDOM).", fr: "Nous activons le routage sur le domaine virtuel (VDOM)." },
-        { en: "I delete the old static route to avoid conflicts.", fr: "Je supprime l'ancienne route statique pour éviter les conflits." },
-        { en: "The routing protocol learns dynamic routes automatically.", fr: "Le protocole de routage apprend les routes dynamiques automatiquement." },
-        { en: "We use a default route for all unknown destinations.", fr: "Nous utilisons une route par défaut pour toutes les destinations inconnues." },
-        { en: "I check the route cache for performance issues.", fr: "Je vérifie le cache de routage pour les problèmes de performance." },
-        { en: "The network administrator manages the routing table.", fr: "L'administrateur réseau gère la table de routage." },
-        { en: "We prioritize the static route over the dynamic one.", fr: "Nous priorisons la route statique par rapport à la route dynamique." }
-      ]
-    },
-    unit3: {
-      title: "User Authentication",
-      tag: "👤 Identity",
-      sentences: [
-        { en: "We authenticate users before granting network access.", fr: "Nous authentifions les utilisateurs avant d'accorder l'accès réseau." },
-        { en: "The FortiGate connects to an LDAP server for verification.", fr: "Le FortiGate se connecte à un serveur LDAP pour la vérification." },
-        { en: "I configure two-factor authentication for VPN users.", fr: "Je configure l'authentification à deux facteurs pour les utilisateurs VPN." },
-        { en: "The local user database stores credentials securely.", fr: "La base de données utilisateur locale stocke les identifiants de manière sécurisée." },
-        { en: "We enable certificate-based authentication for clients.", fr: "Nous activons l'authentification par certificat pour les clients." },
-        { en: "The user fails to authenticate because of an invalid password.", fr: "L'utilisateur échoue à s'authentifier en raison d'un mot de passe invalide." },
-        { en: "I set up a RADIUS server for centralized authentication.", fr: "Je configure un serveur RADIUS pour l'authentification centralisée." },
-        { en: "The firewall prompts for credentials on the login page.", fr: "Le pare-feu demande les identifiants sur la page de connexion." },
-        { en: "We define authentication rules for different user groups.", fr: "Nous définissons des règles d'authentification pour différents groupes d'utilisateurs." },
-        { en: "The session expires after a period of inactivity.", fr: "La session expire après une période d'inactivité." },
-        { en: "I test the LDAP connection using the CLI command.", fr: "Je teste la connexion LDAP à l'aide de la commande CLI." },
-        { en: "We sync user accounts from Active Directory.", fr: "Nous synchronisons les comptes utilisateur depuis Active Directory." },
-        { en: "The user identity is used for policy matching.", fr: "L'identité de l'utilisateur est utilisée pour la correspondance des politiques." },
-        { en: "I forgot my password and need to reset it.", fr: "J'ai oublié mon mot de passe et je dois le réinitialiser." },
-        { en: "We implement guest access with limited privileges.", fr: "Nous mettons en place un accès invité avec des privilèges limités." }
-      ]
-    },
-    unit4: {
-      title: "SSL VPN",
-      tag: "🔒 VPN",
-      sentences: [
-        { en: "We configure SSL VPN to provide remote access.", fr: "Nous configurons le SSL VPN pour fournir un accès à distance." },
-        { en: "The SSL VPN portal hosts the web applications.", fr: "Le portail SSL VPN héberge les applications web." },
-        { en: "I create a tunnel mode for full network access.", fr: "Je crée un mode tunnel pour un accès réseau complet." },
-        { en: "The client downloads the VPN client from the portal.", fr: "Le client télécharge le client VPN depuis le portail." },
-        { en: "We enable split tunneling to optimize bandwidth.", fr: "Nous activons le split tunneling pour optimiser la bande passante." },
-        { en: "The SSL certificate is trusted by the client browser.", fr: "Le certificat SSL est approuvé par le navigateur client." },
-        { en: "I restrict access to specific subnet via SSL VPN.", fr: "Je restreins l'accès à un sous-réseau spécifique via SSL VPN." },
-        { en: "The session uses TLS 1.2 for encryption.", fr: "La session utilise TLS 1.2 pour le chiffrement." },
-        { en: "We check the SSL VPN logs for user connections.", fr: "Nous vérifions les journaux SSL VPN pour les connexions utilisateur." },
-        { en: "The user connects successfully from their laptop.", fr: "L'utilisateur se connecte avec succès depuis son ordinateur portable." },
-        { en: "I configure the portal to display bookmarks.", fr: "Je configure le portail pour afficher les signets." },
-        { en: "The security policy enforces MFA for VPN users.", fr: "La politique de sécurité impose l'authentification multifacteur pour les utilisateurs VPN." },
-        { en: "We test the VPN connection before going live.", fr: "Nous testons la connexion VPN avant la mise en production." },
-        { en: "The VPN tunnel drops due to a timeout.", fr: "Le tunnel VPN se déconnecte en raison d'un délai d'attente." },
-        { en: "I assign IP pools to SSL VPN clients.", fr: "J'attribue des pools IP aux clients SSL VPN." }
-      ]
-    },
-    unit5: {
-      title: "IPsec VPN",
-      tag: "🔐 IPSec",
-      sentences: [
-        { en: "We configure IPsec VPN for site-to-site connectivity.", fr: "Nous configurons le VPN IPsec pour la connectivité site à site." },
-        { en: "Phase 1 establishes the secure channel between peers.", fr: "La phase 1 établit le canal sécurisé entre les pairs." },
-        { en: "We use pre-shared keys to authenticate the tunnel.", fr: "Nous utilisons des clés pré-partagées pour authentifier le tunnel." },
-        { en: "Phase 2 negotiates the encryption algorithms.", fr: "La phase 2 négocie les algorithmes de chiffrement." },
-        { en: "The IKE version is set to version 2 for better security.", fr: "La version IKE est définie sur la version 2 pour une meilleure sécurité." },
-        { en: "We define the local and remote subnets for the VPN.", fr: "Nous définissons les sous-réseaux local et distant pour le VPN." },
-        { en: "The VPN tunnel fails because of a mismatch in pre-shared keys.", fr: "Le tunnel VPN échoue en raison d'une non-concordance des clés pré-partagées." },
-        { en: "I debug the IPsec tunnel using the CLI.", fr: "Je débogue le tunnel IPsec à l'aide de la CLI." },
-        { en: "The security association is established successfully.", fr: "L'association de sécurité est établie avec succès." },
-        { en: "We enable dead peer detection to monitor the tunnel.", fr: "Nous activons la détection des pairs morts pour surveiller le tunnel." },
-        { en: "The traffic is encrypted using AES-256.", fr: "Le trafic est chiffré à l'aide d'AES-256." },
-        { en: "I configure the VPN interface for routing.", fr: "Je configure l'interface VPN pour le routage." },
-        { en: "The remote gateway is behind a dynamic IP address.", fr: "La passerelle distante est derrière une adresse IP dynamique." },
-        { en: "We use digital certificates for stronger authentication.", fr: "Nous utilisons des certificats numériques pour une authentification plus forte." },
-        { en: "The VPN policy must allow traffic to traverse the tunnel.", fr: "La politique VPN doit autoriser le trafic à traverser le tunnel." }
-      ]
-    },
-    unit6: {
-      title: "Intrusion Prevention (IPS)",
-      tag: "🛡️ Security",
-      sentences: [
-        { en: "IPS protects the network from known exploits.", fr: "L'IPS protège le réseau contre les exploits connus." },
-        { en: "We enable IPS on the firewall policy to scan traffic.", fr: "Nous activons l'IPS sur la politique de pare-feu pour analyser le trafic." },
-        { en: "The IPS signature database is updated regularly.", fr: "La base de données des signatures IPS est mise à jour régulièrement." },
-        { en: "I configure a custom signature for a specific threat.", fr: "Je configure une signature personnalisée pour une menace spécifique." },
-        { en: "The sensor detects a brute force attack on SSH.", fr: "Le capteur détecte une attaque par force brute sur SSH." },
-        { en: "We set the IPS action to block and log the traffic.", fr: "Nous définissons l'action IPS pour bloquer et journaliser le trafic." },
-        { en: "The DoS policy prevents flooding attacks.", fr: "La politique DoS prévient les attaques par inondation." },
-        { en: "I analyze the IPS logs to identify false positives.", fr: "J'analyse les journaux IPS pour identifier les faux positifs." },
-        { en: "The security profile is applied to inbound traffic.", fr: "Le profil de sécurité est appliqué au trafic entrant." },
-        { en: "We enable anomaly detection for unusual patterns.", fr: "Nous activons la détection d'anomalies pour les modèles inhabituels." },
-        { en: "The IPS engine is updated to the latest version.", fr: "Le moteur IPS est mis à jour vers la dernière version." },
-        { en: "I exclude internal IPs from IPS scanning.", fr: "J'exclus les IP internes de l'analyse IPS." },
-        { en: "The firewall drops the packet when a signature matches.", fr: "Le pare-feu abandonne le paquet lorsqu'une signature correspond." },
-        { en: "We use the IPS to protect our web servers.", fr: "Nous utilisons l'IPS pour protéger nos serveurs web." },
-        { en: "The system generates an alert for critical vulnerabilities.", fr: "Le système génère une alerte pour les vulnérabilités critiques." }
-      ]
-    },
-    unit7: {
-      title: "Web & Application Control",
-      tag: "🌐 Filtering",
-      sentences: [
-        { en: "We configure web filtering to block malicious sites.", fr: "Nous configurons le filtrage web pour bloquer les sites malveillants." },
-        { en: "The URL filter blocks access to social media.", fr: "Le filtre URL bloque l'accès aux réseaux sociaux." },
-        { en: "We enable application control to manage cloud apps.", fr: "Nous activons le contrôle des applications pour gérer les applications cloud." },
-        { en: "The web rating overrides the default category.", fr: "L'évaluation web remplace la catégorie par défaut." },
-        { en: "I create a profile to block file sharing applications.", fr: "Je crée un profil pour bloquer les applications de partage de fichiers." },
-        { en: "The firewall inspects HTTPS traffic using certificate inspection.", fr: "Le pare-feu inspecte le trafic HTTPS à l'aide de l'inspection des certificats." },
-        { en: "We allow streaming services only during off-peak hours.", fr: "Nous autorisons les services de streaming uniquement pendant les heures creuses." },
-        { en: "The application control signature identifies the protocol.", fr: "La signature du contrôle des applications identifie le protocole." },
-        { en: "I whitelist trusted domains for research.", fr: "Je mets sur liste blanche les domaines de confiance pour la recherche." },
-        { en: "The web filter sends a warning to the user.", fr: "Le filtre web envoie un avertissement à l'utilisateur." },
-        { en: "We combine web filtering with application control.", fr: "Nous combinons le filtrage web avec le contrôle des applications." },
-        { en: "The administrator monitors web usage statistics.", fr: "L'administrateur surveille les statistiques d'utilisation du web." },
-        { en: "I configure a quota for social media usage.", fr: "Je configure un quota pour l'utilisation des réseaux sociaux." },
-        { en: "The system blocks access to gambling websites.", fr: "Le système bloque l'accès aux sites de jeux d'argent." },
-        { en: "We update the web filter database daily.", fr: "Nous mettons à jour la base de données du filtre web quotidiennement." }
-      ]
-    },
-    unit8: {
-      title: "SD-WAN",
-      tag: "⚡ WAN",
-      sentences: [
-        { en: "We configure SD-WAN to improve network reliability.", fr: "Nous configurons le SD-WAN pour améliorer la fiabilité du réseau." },
-        { en: "The SD-WAN interface combines multiple WAN links.", fr: "L'interface SD-WAN combine plusieurs liens WAN." },
-        { en: "We set the load balancing method to optimal performance.", fr: "Nous définissons la méthode d'équilibrage de charge pour des performances optimales." },
-        { en: "The SLA monitoring ensures link quality.", fr: "La surveillance SLA garantit la qualité des liens." },
-        { en: "I create a performance SLA for latency and jitter.", fr: "Je crée un SLA de performance pour la latence et la gigue." },
-        { en: "The SD-WAN rules route traffic based on priority.", fr: "Les règles SD-WAN acheminent le trafic en fonction de la priorité." },
-        { en: "We enable health check probes to detect failures.", fr: "Nous activons les sondes de contrôle de santé pour détecter les pannes." },
-        { en: "The link fails over to the backup connection.", fr: "Le lien bascule vers la connexion de secours." },
-        { en: "I adjust the bandwidth thresholds for traffic shaping.", fr: "J'ajuste les seuils de bande passante pour la mise en forme du trafic." },
-        { en: "The SD-WAN zone includes three physical interfaces.", fr: "La zone SD-WAN comprend trois interfaces physiques." },
-        { en: "We monitor the SD-WAN performance on the dashboard.", fr: "Nous surveillons les performances SD-WAN sur le tableau de bord." },
-        { en: "The algorithm selects the best path for VoIP traffic.", fr: "L'algorithme sélectionne le meilleur chemin pour le trafic VoIP." },
-        { en: "I add a static route using the SD-WAN interface.", fr: "J'ajoute une route statique utilisant l'interface SD-WAN." },
-        { en: "The connection latency is too high, so we switch links.", fr: "La latence de la connexion est trop élevée, donc nous changeons de lien." },
-        { en: "We configure SD-WAN rules based on application type.", fr: "Nous configurons des règles SD-WAN basées sur le type d'application." }
-      ]
-    },
-    unit9: {
-      title: "High Availability (HA)",
-      tag: "🔄 Reliability",
-      sentences: [
-        { en: "We configure HA to ensure network uptime.", fr: "Nous configurons la HA pour garantir la disponibilité du réseau." },
-        { en: "The FGCP cluster provides active-passive failover.", fr: "Le cluster FGCP fournit un basculement actif-passif." },
-        { en: "We synchronize the configuration between cluster members.", fr: "Nous synchronisons la configuration entre les membres du cluster." },
-        { en: "The heartbeat interface monitors peer availability.", fr: "L'interface de battement de cœur surveille la disponibilité du pair." },
-        { en: "I set the priority value to select the primary unit.", fr: "Je définis la valeur de priorité pour sélectionner l'unité principale." },
-        { en: "The secondary unit takes over when the primary fails.", fr: "L'unité secondaire prend le relais lorsque l'unité principale tombe en panne." },
-        { en: "We enable session synchronization to prevent disruption.", fr: "Nous activons la synchronisation des sessions pour éviter les interruptions." },
-        { en: "The failover time is under one second.", fr: "Le temps de basculement est inférieur à une seconde." },
-        { en: "I check the HA status using the CLI.", fr: "Je vérifie l'état de la HA à l'aide de la CLI." },
-        { en: "The cluster uses virtual MAC addresses.", fr: "Le cluster utilise des adresses MAC virtuelles." },
-        { en: "We test the failover during maintenance windows.", fr: "Nous testons le basculement pendant les fenêtres de maintenance." },
-        { en: "The configuration must be identical on all nodes.", fr: "La configuration doit être identique sur tous les nœuds." },
-        { en: "I add a third unit to the HA cluster.", fr: "J'ajoute une troisième unité au cluster HA." },
-        { en: "The HA link requires a dedicated network interface.", fr: "Le lien HA nécessite une interface réseau dédiée." },
-        { en: "We monitor the cluster health via SNMP.", fr: "Nous surveillons la santé du cluster via SNMP." }
-      ]
-    },
-    unit10: {
-      title: "Logging & Troubleshooting",
-      tag: "📊 Monitoring",
-      sentences: [
-        { en: "We send logs to the FortiAnalyzer for centralization.", fr: "Nous envoyons les journaux à FortiAnalyzer pour la centralisation." },
-        { en: "The syslog server receives real-time event data.", fr: "Le serveur syslog reçoit les données d'événements en temps réel." },
-        { en: "I enable debug mode to trace packet flow.", fr: "J'active le mode débogage pour tracer le flux des paquets." },
-        { en: "The log shows a denied connection from a suspicious IP.", fr: "Le journal montre une connexion refusée depuis une IP suspecte." },
-        { en: "We use the packet capture tool to analyze traffic.", fr: "Nous utilisons l'outil de capture de paquets pour analyser le trafic." },
-        { en: "The CLI command provides detailed system status.", fr: "La commande CLI fournit un état détaillé du système." },
-        { en: "I filter logs by severity level to reduce noise.", fr: "Je filtre les journaux par niveau de gravité pour réduire le bruit." },
-        { en: "The administrator checks the event logs daily.", fr: "L'administrateur vérifie les journaux d'événements quotidiennement." },
-        { en: "We troubleshoot connectivity issues using the diagnose command.", fr: "Nous résolvons les problèmes de connectivité à l'aide de la commande diagnose." },
-        { en: "The disk is full, so we rotate the log files.", fr: "Le disque est plein, alors nous faisons la rotation des fichiers journaux." },
-        { en: "I export the logs for external analysis.", fr: "J'exporte les journaux pour une analyse externe." },
-        { en: "The system alerts me to high CPU usage.", fr: "Le système m'alerte sur une utilisation élevée du CPU." },
-        { en: "We verify the logging settings in the configuration.", fr: "Nous vérifions les paramètres de journalisation dans la configuration." },
-        { en: "The troubleshooting guide helps fix common errors.", fr: "Le guide de dépannage aide à corriger les erreurs courantes." },
-        { en: "I test the connectivity using the ping command.", fr: "Je teste la connectivité à l'aide de la commande ping." }
-      ]
+    // Create client (available globally)
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+    // ---- DOM refs ----
+    const authOverlay = document.getElementById('authOverlay');
+    const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const appContainer = document.getElementById('appContainer');
+
+    // ---- Login ----
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.textContent = '';
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        // Success – hide login, show app
+        authOverlay.classList.add('hidden');
+        appContainer.style.display = 'block';
+        logoutBtn.style.display = 'block';
+        // Optionally store session info
+        console.log('Logged in as:', data.user.email);
+      } catch (err) {
+        loginError.textContent = '❌ ' + err.message;
+        console.error(err);
+      }
+    });
+
+    // ---- Logout ----
+    logoutBtn.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      // Reset UI
+      authOverlay.classList.remove('hidden');
+      appContainer.style.display = 'none';
+      logoutBtn.style.display = 'none';
+      loginError.textContent = '';
+      // Clear fields
+      emailInput.value = '';
+      passwordInput.value = '';
+      // Optional: reload modules or reset state
+    });
+
+    // ---- Auto-check session (optional) ----
+    // If user is already logged in (e.g., from previous session), skip login
+    (async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // User is already authenticated
+        authOverlay.classList.add('hidden');
+        appContainer.style.display = 'block';
+        logoutBtn.style.display = 'block';
+        console.log('Welcome back,', session.user.email);
+      }
+    })();
+
+    // =============================================================
+    // ORIGINAL APP LOGIC – unchanged (copied from your code)
+    // =============================================================
+    // ... (all the textsData, variables, functions, event listeners)
+    // I'll paste it here; make sure it's identical to your previous working version.
+
+    // =============================================================
+    // 1. NSE 4 DATA – INTRO + 10 TECHNICAL UNITS
+    // =============================================================
+    const textsData = {
+      intro: {
+        title: "Professional Introductions",
+        tag: "👔 Intro",
+        sentences: [
+          { en: "My name is [Name] and I am a cyber security engineer.", fr: "Je m'appelle [Nom] et je suis ingénieur en cybersécurité." },
+          { en: "I specialize in network security and firewall management.", fr: "Je me spécialise dans la sécurité réseau et la gestion des pare-feu." },
+          { en: "I have over five years of experience in the IT industry.", fr: "J'ai plus de cinq ans d'expérience dans le secteur informatique." },
+          { en: "My primary responsibility is to protect the corporate network.", fr: "Ma responsabilité principale est de protéger le réseau d'entreprise." },
+          { en: "I am currently preparing for the NSE 4 certification.", fr: "Je prépare actuellement la certification NSE 4." },
+          { en: "I work closely with the security operations center.", fr: "Je travaille en étroite collaboration avec le centre des opérations de sécurité." },
+          { en: "I enjoy troubleshooting complex network issues.", fr: "J'aime résoudre des problèmes réseau complexes." },
+          { en: "My goal is to become a certified Fortinet specialist.", fr: "Mon objectif est de devenir un spécialiste certifié Fortinet." },
+          { en: "I am proficient in configuring firewall policies.", fr: "Je maîtrise la configuration des politiques de pare-feu." },
+          { en: "I collaborate with my team to implement security measures.", fr: "Je collabore avec mon équipe pour mettre en œuvre les mesures de sécurité." },
+          { en: "I am responsible for maintaining high availability.", fr: "Je suis responsable du maintien de la haute disponibilité." },
+          { en: "I regularly conduct security assessments.", fr: "Je réalise régulièrement des évaluations de sécurité." },
+          { en: "I believe in continuous learning and professional development.", fr: "Je crois en l'apprentissage continu et au développement professionnel." },
+          { en: "I communicate with stakeholders about security risks.", fr: "Je communique avec les parties prenantes sur les risques de sécurité." },
+          { en: "I am excited to start this training programme.", fr: "Je suis ravi de commencer ce programme de formation." },
+          { en: "I work in a fast-paced and dynamic environment.", fr: "Je travaille dans un environnement dynamique et en constante évolution." },
+          { en: "I use various tools to monitor network traffic.", fr: "J'utilise divers outils pour surveiller le trafic réseau." },
+          { en: "I document all configurations for audit purposes.", fr: "Je documente toutes les configurations à des fins d'audit." },
+          { en: "I often participate in incident response meetings.", fr: "Je participe souvent à des réunions de réponse aux incidents." },
+          { en: "I look forward to learning from this course.", fr: "Je me réjouis d'apprendre grâce à ce cours." }
+        ]
+      },
+      unit1: {
+        title: "Firewall Policies & NAT",
+        tag: "🔐 Security",
+        sentences: [
+          { en: "I configure a firewall policy to allow traffic.", fr: "Je configure une politique de pare-feu pour autoriser le trafic." },
+          { en: "We set the source and destination addresses.", fr: "Nous définissons les adresses source et destination." },
+          { en: "The firewall denies any traffic by default.", fr: "Le pare-feu refuse tout trafic par défaut." },
+          { en: "We enable NAT to translate private IP addresses.", fr: "Nous activons le NAT pour traduire les adresses IP privées." },
+          { en: "I create an IPv4 policy for internal users.", fr: "Je crée une politique IPv4 pour les utilisateurs internes." },
+          { en: "We place the policy above the implicit deny rule.", fr: "Nous plaçons la politique au-dessus de la règle de refus implicite." },
+          { en: "The administrator edits the policy sequence.", fr: "L'administrateur modifie la séquence des politiques." },
+          { en: "We disable NAT for this specific interface.", fr: "Nous désactivons le NAT pour cette interface spécifique." },
+          { en: "I add a comment to explain the policy purpose.", fr: "J'ajoute un commentaire pour expliquer le but de la politique." },
+          { en: "The policy matches the traffic based on the service.", fr: "La politique correspond au trafic en fonction du service." },
+          { en: "We enable logging to monitor denied connections.", fr: "Nous activons la journalisation pour surveiller les connexions refusées." },
+          { en: "I need to clone this policy for another VLAN.", fr: "Je dois cloner cette politique pour un autre VLAN." },
+          { en: "The firewall processes policies from top to bottom.", fr: "Le pare-feu traite les politiques de haut en bas." },
+          { en: "We use central NAT to simplify address translation.", fr: "Nous utilisons le NAT central pour simplifier la traduction d'adresses." },
+          { en: "I verify the policy hit count to check usage.", fr: "Je vérifie le nombre de hits de la politique pour vérifier l'utilisation." }
+        ]
+      },
+      unit2: {
+        title: "Routing & Static Routes",
+        tag: "🌐 Networking",
+        sentences: [
+          { en: "We configure a default route to the internet gateway.", fr: "Nous configurons une route par défaut vers la passerelle internet." },
+          { en: "The static route points to the next-hop IP address.", fr: "La route statique pointe vers l'adresse IP du prochain saut." },
+          { en: "We set the administrative distance to influence routing.", fr: "Nous définissons la distance administrative pour influencer le routage." },
+          { en: "I add a policy route to override the routing table.", fr: "J'ajoute une route politique pour outrepasser la table de routage." },
+          { en: "The device uses the routing table to forward packets.", fr: "L'appareil utilise la table de routage pour transférer les paquets." },
+          { en: "We verify the route is active in the forwarding table.", fr: "Nous vérifions que la route est active dans la table de transfert." },
+          { en: "I configure the interface IP address for the LAN.", fr: "Je configure l'adresse IP de l'interface pour le LAN." },
+          { en: "The gateway is unreachable, so we check the physical link.", fr: "La passerelle est inaccessible, alors nous vérifions le lien physique." },
+          { en: "We enable routing on the virtual domain (VDOM).", fr: "Nous activons le routage sur le domaine virtuel (VDOM)." },
+          { en: "I delete the old static route to avoid conflicts.", fr: "Je supprime l'ancienne route statique pour éviter les conflits." },
+          { en: "The routing protocol learns dynamic routes automatically.", fr: "Le protocole de routage apprend les routes dynamiques automatiquement." },
+          { en: "We use a default route for all unknown destinations.", fr: "Nous utilisons une route par défaut pour toutes les destinations inconnues." },
+          { en: "I check the route cache for performance issues.", fr: "Je vérifie le cache de routage pour les problèmes de performance." },
+          { en: "The network administrator manages the routing table.", fr: "L'administrateur réseau gère la table de routage." },
+          { en: "We prioritize the static route over the dynamic one.", fr: "Nous priorisons la route statique par rapport à la route dynamique." }
+        ]
+      },
+      unit3: {
+        title: "User Authentication",
+        tag: "👤 Identity",
+        sentences: [
+          { en: "We authenticate users before granting network access.", fr: "Nous authentifions les utilisateurs avant d'accorder l'accès réseau." },
+          { en: "The FortiGate connects to an LDAP server for verification.", fr: "Le FortiGate se connecte à un serveur LDAP pour la vérification." },
+          { en: "I configure two-factor authentication for VPN users.", fr: "Je configure l'authentification à deux facteurs pour les utilisateurs VPN." },
+          { en: "The local user database stores credentials securely.", fr: "La base de données utilisateur locale stocke les identifiants de manière sécurisée." },
+          { en: "We enable certificate-based authentication for clients.", fr: "Nous activons l'authentification par certificat pour les clients." },
+          { en: "The user fails to authenticate because of an invalid password.", fr: "L'utilisateur échoue à s'authentifier en raison d'un mot de passe invalide." },
+          { en: "I set up a RADIUS server for centralized authentication.", fr: "Je configure un serveur RADIUS pour l'authentification centralisée." },
+          { en: "The firewall prompts for credentials on the login page.", fr: "Le pare-feu demande les identifiants sur la page de connexion." },
+          { en: "We define authentication rules for different user groups.", fr: "Nous définissons des règles d'authentification pour différents groupes d'utilisateurs." },
+          { en: "The session expires after a period of inactivity.", fr: "La session expire après une période d'inactivité." },
+          { en: "I test the LDAP connection using the CLI command.", fr: "Je teste la connexion LDAP à l'aide de la commande CLI." },
+          { en: "We sync user accounts from Active Directory.", fr: "Nous synchronisons les comptes utilisateur depuis Active Directory." },
+          { en: "The user identity is used for policy matching.", fr: "L'identité de l'utilisateur est utilisée pour la correspondance des politiques." },
+          { en: "I forgot my password and need to reset it.", fr: "J'ai oublié mon mot de passe et je dois le réinitialiser." },
+          { en: "We implement guest access with limited privileges.", fr: "Nous mettons en place un accès invité avec des privilèges limités." }
+        ]
+      },
+      unit4: {
+        title: "SSL VPN",
+        tag: "🔒 VPN",
+        sentences: [
+          { en: "We configure SSL VPN to provide remote access.", fr: "Nous configurons le SSL VPN pour fournir un accès à distance." },
+          { en: "The SSL VPN portal hosts the web applications.", fr: "Le portail SSL VPN héberge les applications web." },
+          { en: "I create a tunnel mode for full network access.", fr: "Je crée un mode tunnel pour un accès réseau complet." },
+          { en: "The client downloads the VPN client from the portal.", fr: "Le client télécharge le client VPN depuis le portail." },
+          { en: "We enable split tunneling to optimize bandwidth.", fr: "Nous activons le split tunneling pour optimiser la bande passante." },
+          { en: "The SSL certificate is trusted by the client browser.", fr: "Le certificat SSL est approuvé par le navigateur client." },
+          { en: "I restrict access to specific subnet via SSL VPN.", fr: "Je restreins l'accès à un sous-réseau spécifique via SSL VPN." },
+          { en: "The session uses TLS 1.2 for encryption.", fr: "La session utilise TLS 1.2 pour le chiffrement." },
+          { en: "We check the SSL VPN logs for user connections.", fr: "Nous vérifions les journaux SSL VPN pour les connexions utilisateur." },
+          { en: "The user connects successfully from their laptop.", fr: "L'utilisateur se connecte avec succès depuis son ordinateur portable." },
+          { en: "I configure the portal to display bookmarks.", fr: "Je configure le portail pour afficher les signets." },
+          { en: "The security policy enforces MFA for VPN users.", fr: "La politique de sécurité impose l'authentification multifacteur pour les utilisateurs VPN." },
+          { en: "We test the VPN connection before going live.", fr: "Nous testons la connexion VPN avant la mise en production." },
+          { en: "The VPN tunnel drops due to a timeout.", fr: "Le tunnel VPN se déconnecte en raison d'un délai d'attente." },
+          { en: "I assign IP pools to SSL VPN clients.", fr: "J'attribue des pools IP aux clients SSL VPN." }
+        ]
+      },
+      unit5: {
+        title: "IPsec VPN",
+        tag: "🔐 IPSec",
+        sentences: [
+          { en: "We configure IPsec VPN for site-to-site connectivity.", fr: "Nous configurons le VPN IPsec pour la connectivité site à site." },
+          { en: "Phase 1 establishes the secure channel between peers.", fr: "La phase 1 établit le canal sécurisé entre les pairs." },
+          { en: "We use pre-shared keys to authenticate the tunnel.", fr: "Nous utilisons des clés pré-partagées pour authentifier le tunnel." },
+          { en: "Phase 2 negotiates the encryption algorithms.", fr: "La phase 2 négocie les algorithmes de chiffrement." },
+          { en: "The IKE version is set to version 2 for better security.", fr: "La version IKE est définie sur la version 2 pour une meilleure sécurité." },
+          { en: "We define the local and remote subnets for the VPN.", fr: "Nous définissons les sous-réseaux local et distant pour le VPN." },
+          { en: "The VPN tunnel fails because of a mismatch in pre-shared keys.", fr: "Le tunnel VPN échoue en raison d'une non-concordance des clés pré-partagées." },
+          { en: "I debug the IPsec tunnel using the CLI.", fr: "Je débogue le tunnel IPsec à l'aide de la CLI." },
+          { en: "The security association is established successfully.", fr: "L'association de sécurité est établie avec succès." },
+          { en: "We enable dead peer detection to monitor the tunnel.", fr: "Nous activons la détection des pairs morts pour surveiller le tunnel." },
+          { en: "The traffic is encrypted using AES-256.", fr: "Le trafic est chiffré à l'aide d'AES-256." },
+          { en: "I configure the VPN interface for routing.", fr: "Je configure l'interface VPN pour le routage." },
+          { en: "The remote gateway is behind a dynamic IP address.", fr: "La passerelle distante est derrière une adresse IP dynamique." },
+          { en: "We use digital certificates for stronger authentication.", fr: "Nous utilisons des certificats numériques pour une authentification plus forte." },
+          { en: "The VPN policy must allow traffic to traverse the tunnel.", fr: "La politique VPN doit autoriser le trafic à traverser le tunnel." }
+        ]
+      },
+      unit6: {
+        title: "Intrusion Prevention (IPS)",
+        tag: "🛡️ Security",
+        sentences: [
+          { en: "IPS protects the network from known exploits.", fr: "L'IPS protège le réseau contre les exploits connus." },
+          { en: "We enable IPS on the firewall policy to scan traffic.", fr: "Nous activons l'IPS sur la politique de pare-feu pour analyser le trafic." },
+          { en: "The IPS signature database is updated regularly.", fr: "La base de données des signatures IPS est mise à jour régulièrement." },
+          { en: "I configure a custom signature for a specific threat.", fr: "Je configure une signature personnalisée pour une menace spécifique." },
+          { en: "The sensor detects a brute force attack on SSH.", fr: "Le capteur détecte une attaque par force brute sur SSH." },
+          { en: "We set the IPS action to block and log the traffic.", fr: "Nous définissons l'action IPS pour bloquer et journaliser le trafic." },
+          { en: "The DoS policy prevents flooding attacks.", fr: "La politique DoS prévient les attaques par inondation." },
+          { en: "I analyze the IPS logs to identify false positives.", fr: "J'analyse les journaux IPS pour identifier les faux positifs." },
+          { en: "The security profile is applied to inbound traffic.", fr: "Le profil de sécurité est appliqué au trafic entrant." },
+          { en: "We enable anomaly detection for unusual patterns.", fr: "Nous activons la détection d'anomalies pour les modèles inhabituels." },
+          { en: "The IPS engine is updated to the latest version.", fr: "Le moteur IPS est mis à jour vers la dernière version." },
+          { en: "I exclude internal IPs from IPS scanning.", fr: "J'exclus les IP internes de l'analyse IPS." },
+          { en: "The firewall drops the packet when a signature matches.", fr: "Le pare-feu abandonne le paquet lorsqu'une signature correspond." },
+          { en: "We use the IPS to protect our web servers.", fr: "Nous utilisons l'IPS pour protéger nos serveurs web." },
+          { en: "The system generates an alert for critical vulnerabilities.", fr: "Le système génère une alerte pour les vulnérabilités critiques." }
+        ]
+      },
+      unit7: {
+        title: "Web & Application Control",
+        tag: "🌐 Filtering",
+        sentences: [
+          { en: "We configure web filtering to block malicious sites.", fr: "Nous configurons le filtrage web pour bloquer les sites malveillants." },
+          { en: "The URL filter blocks access to social media.", fr: "Le filtre URL bloque l'accès aux réseaux sociaux." },
+          { en: "We enable application control to manage cloud apps.", fr: "Nous activons le contrôle des applications pour gérer les applications cloud." },
+          { en: "The web rating overrides the default category.", fr: "L'évaluation web remplace la catégorie par défaut." },
+          { en: "I create a profile to block file sharing applications.", fr: "Je crée un profil pour bloquer les applications de partage de fichiers." },
+          { en: "The firewall inspects HTTPS traffic using certificate inspection.", fr: "Le pare-feu inspecte le trafic HTTPS à l'aide de l'inspection des certificats." },
+          { en: "We allow streaming services only during off-peak hours.", fr: "Nous autorisons les services de streaming uniquement pendant les heures creuses." },
+          { en: "The application control signature identifies the protocol.", fr: "La signature du contrôle des applications identifie le protocole." },
+          { en: "I whitelist trusted domains for research.", fr: "Je mets sur liste blanche les domaines de confiance pour la recherche." },
+          { en: "The web filter sends a warning to the user.", fr: "Le filtre web envoie un avertissement à l'utilisateur." },
+          { en: "We combine web filtering with application control.", fr: "Nous combinons le filtrage web avec le contrôle des applications." },
+          { en: "The administrator monitors web usage statistics.", fr: "L'administrateur surveille les statistiques d'utilisation du web." },
+          { en: "I configure a quota for social media usage.", fr: "Je configure un quota pour l'utilisation des réseaux sociaux." },
+          { en: "The system blocks access to gambling websites.", fr: "Le système bloque l'accès aux sites de jeux d'argent." },
+          { en: "We update the web filter database daily.", fr: "Nous mettons à jour la base de données du filtre web quotidiennement." }
+        ]
+      },
+      unit8: {
+        title: "SD-WAN",
+        tag: "⚡ WAN",
+        sentences: [
+          { en: "We configure SD-WAN to improve network reliability.", fr: "Nous configurons le SD-WAN pour améliorer la fiabilité du réseau." },
+          { en: "The SD-WAN interface combines multiple WAN links.", fr: "L'interface SD-WAN combine plusieurs liens WAN." },
+          { en: "We set the load balancing method to optimal performance.", fr: "Nous définissons la méthode d'équilibrage de charge pour des performances optimales." },
+          { en: "The SLA monitoring ensures link quality.", fr: "La surveillance SLA garantit la qualité des liens." },
+          { en: "I create a performance SLA for latency and jitter.", fr: "Je crée un SLA de performance pour la latence et la gigue." },
+          { en: "The SD-WAN rules route traffic based on priority.", fr: "Les règles SD-WAN acheminent le trafic en fonction de la priorité." },
+          { en: "We enable health check probes to detect failures.", fr: "Nous activons les sondes de contrôle de santé pour détecter les pannes." },
+          { en: "The link fails over to the backup connection.", fr: "Le lien bascule vers la connexion de secours." },
+          { en: "I adjust the bandwidth thresholds for traffic shaping.", fr: "J'ajuste les seuils de bande passante pour la mise en forme du trafic." },
+          { en: "The SD-WAN zone includes three physical interfaces.", fr: "La zone SD-WAN comprend trois interfaces physiques." },
+          { en: "We monitor the SD-WAN performance on the dashboard.", fr: "Nous surveillons les performances SD-WAN sur le tableau de bord." },
+          { en: "The algorithm selects the best path for VoIP traffic.", fr: "L'algorithme sélectionne le meilleur chemin pour le trafic VoIP." },
+          { en: "I add a static route using the SD-WAN interface.", fr: "J'ajoute une route statique utilisant l'interface SD-WAN." },
+          { en: "The connection latency is too high, so we switch links.", fr: "La latence de la connexion est trop élevée, donc nous changeons de lien." },
+          { en: "We configure SD-WAN rules based on application type.", fr: "Nous configurons des règles SD-WAN basées sur le type d'application." }
+        ]
+      },
+      unit9: {
+        title: "High Availability (HA)",
+        tag: "🔄 Reliability",
+        sentences: [
+          { en: "We configure HA to ensure network uptime.", fr: "Nous configurons la HA pour garantir la disponibilité du réseau." },
+          { en: "The FGCP cluster provides active-passive failover.", fr: "Le cluster FGCP fournit un basculement actif-passif." },
+          { en: "We synchronize the configuration between cluster members.", fr: "Nous synchronisons la configuration entre les membres du cluster." },
+          { en: "The heartbeat interface monitors peer availability.", fr: "L'interface de battement de cœur surveille la disponibilité du pair." },
+          { en: "I set the priority value to select the primary unit.", fr: "Je définis la valeur de priorité pour sélectionner l'unité principale." },
+          { en: "The secondary unit takes over when the primary fails.", fr: "L'unité secondaire prend le relais lorsque l'unité principale tombe en panne." },
+          { en: "We enable session synchronization to prevent disruption.", fr: "Nous activons la synchronisation des sessions pour éviter les interruptions." },
+          { en: "The failover time is under one second.", fr: "Le temps de basculement est inférieur à une seconde." },
+          { en: "I check the HA status using the CLI.", fr: "Je vérifie l'état de la HA à l'aide de la CLI." },
+          { en: "The cluster uses virtual MAC addresses.", fr: "Le cluster utilise des adresses MAC virtuelles." },
+          { en: "We test the failover during maintenance windows.", fr: "Nous testons le basculement pendant les fenêtres de maintenance." },
+          { en: "The configuration must be identical on all nodes.", fr: "La configuration doit être identique sur tous les nœuds." },
+          { en: "I add a third unit to the HA cluster.", fr: "J'ajoute une troisième unité au cluster HA." },
+          { en: "The HA link requires a dedicated network interface.", fr: "Le lien HA nécessite une interface réseau dédiée." },
+          { en: "We monitor the cluster health via SNMP.", fr: "Nous surveillons la santé du cluster via SNMP." }
+        ]
+      },
+      unit10: {
+        title: "Logging & Troubleshooting",
+        tag: "📊 Monitoring",
+        sentences: [
+          { en: "We send logs to the FortiAnalyzer for centralization.", fr: "Nous envoyons les journaux à FortiAnalyzer pour la centralisation." },
+          { en: "The syslog server receives real-time event data.", fr: "Le serveur syslog reçoit les données d'événements en temps réel." },
+          { en: "I enable debug mode to trace packet flow.", fr: "J'active le mode débogage pour tracer le flux des paquets." },
+          { en: "The log shows a denied connection from a suspicious IP.", fr: "Le journal montre une connexion refusée depuis une IP suspecte." },
+          { en: "We use the packet capture tool to analyze traffic.", fr: "Nous utilisons l'outil de capture de paquets pour analyser le trafic." },
+          { en: "The CLI command provides detailed system status.", fr: "La commande CLI fournit un état détaillé du système." },
+          { en: "I filter logs by severity level to reduce noise.", fr: "Je filtre les journaux par niveau de gravité pour réduire le bruit." },
+          { en: "The administrator checks the event logs daily.", fr: "L'administrateur vérifie les journaux d'événements quotidiennement." },
+          { en: "We troubleshoot connectivity issues using the diagnose command.", fr: "Nous résolvons les problèmes de connectivité à l'aide de la commande diagnose." },
+          { en: "The disk is full, so we rotate the log files.", fr: "Le disque est plein, alors nous faisons la rotation des fichiers journaux." },
+          { en: "I export the logs for external analysis.", fr: "J'exporte les journaux pour une analyse externe." },
+          { en: "The system alerts me to high CPU usage.", fr: "Le système m'alerte sur une utilisation élevée du CPU." },
+          { en: "We verify the logging settings in the configuration.", fr: "Nous vérifions les paramètres de journalisation dans la configuration." },
+          { en: "The troubleshooting guide helps fix common errors.", fr: "Le guide de dépannage aide à corriger les erreurs courantes." },
+          { en: "I test the connectivity using the ping command.", fr: "Je teste la connectivité à l'aide de la commande ping." }
+        ]
+      }
+    };
+
+    // =============================================================
+    // 2. GLOBALS
+    // =============================================================
+    let currentTextId = null;
+    let sentences = [];
+    let currentIndex = 0;
+    let progress = [];
+    let isListening = false;
+    let animationId = null;
+    let recognition = null;
+    let canvas = document.getElementById('voiceCanvas');
+    let ctx = canvas.getContext('2d');
+
+    // DOM refs
+    const homeScreen = document.getElementById('homeScreen');
+    const practiceScreen = document.getElementById('practiceScreen');
+    const textGrid = document.getElementById('textGrid');
+    const backToHomeBtn = document.getElementById('backToHomeBtn');
+    const textHeader = document.getElementById('textHeader');
+    const sentenceEl = document.getElementById('sentenceText');
+    const translationEl = document.getElementById('sentenceTranslation');
+    const playBtn = document.getElementById('playBtn');
+    const repeatBtn = document.getElementById('repeatBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const voiceStatus = document.getElementById('voiceStatus');
+    const feedbackDiv = document.getElementById('feedback');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const micStatus = document.getElementById('micStatus');
+    const compatWarning = document.getElementById('compatWarning');
+
+    // Grammar modal
+    const grammarModal = document.getElementById('grammarModal');
+    const grammarBtn = document.getElementById('grammarBtn');
+    const grammarCloseBtn = document.getElementById('grammarCloseBtn');
+
+    // =============================================================
+    // 3. UTILITIES
+    // =============================================================
+    function resizeCanvas() {
+      canvas.width = Math.min(canvas.parentElement.clientWidth - 40, 400);
+      canvas.height = 60;
     }
-  };
+    window.addEventListener('resize', resizeCanvas);
 
-  // =============================================================
-  // 2. GLOBALS
-  // =============================================================
-  let currentTextId = null;
-  let sentences = [];
-  let currentIndex = 0;
-  let progress = [];
-  let isListening = false;
-  let animationId = null;
-  let recognition = null;
-  let canvas = document.getElementById('voiceCanvas');
-  let ctx = canvas.getContext('2d');
+    function getStorageKey() { return `nse4_progress_${currentTextId}`; }
 
-  // DOM refs
-  const homeScreen = document.getElementById('homeScreen');
-  const practiceScreen = document.getElementById('practiceScreen');
-  const textGrid = document.getElementById('textGrid');
-  const backToHomeBtn = document.getElementById('backToHomeBtn');
-  const textHeader = document.getElementById('textHeader');
-  const sentenceEl = document.getElementById('sentenceText');
-  const translationEl = document.getElementById('sentenceTranslation');
-  const playBtn = document.getElementById('playBtn');
-  const repeatBtn = document.getElementById('repeatBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const voiceStatus = document.getElementById('voiceStatus');
-  const feedbackDiv = document.getElementById('feedback');
-  const progressFill = document.getElementById('progressFill');
-  const progressText = document.getElementById('progressText');
-  const micStatus = document.getElementById('micStatus');
-  const compatWarning = document.getElementById('compatWarning');
-
-  // Grammar modal
-  const grammarModal = document.getElementById('grammarModal');
-  const grammarBtn = document.getElementById('grammarBtn');
-  const grammarCloseBtn = document.getElementById('grammarCloseBtn');
-
-  // =============================================================
-  // 3. UTILITIES
-  // =============================================================
-  function resizeCanvas() {
-    canvas.width = Math.min(canvas.parentElement.clientWidth - 40, 400);
-    canvas.height = 60;
-  }
-  window.addEventListener('resize', resizeCanvas);
-
-  function getStorageKey() { return `nse4_progress_${currentTextId}`; }
-
-  function loadProgress() {
-    let saved = localStorage.getItem(getStorageKey());
-    if (saved) {
-      progress = JSON.parse(saved);
-      if (progress.length > sentences.length) progress = progress.slice(0, sentences.length);
-      while (progress.length < sentences.length) progress.push(false);
-    } else {
-      progress = new Array(sentences.length).fill(false);
+    function loadProgress() {
+      let saved = localStorage.getItem(getStorageKey());
+      if (saved) {
+        progress = JSON.parse(saved);
+        if (progress.length > sentences.length) progress = progress.slice(0, sentences.length);
+        while (progress.length < sentences.length) progress.push(false);
+      } else {
+        progress = new Array(sentences.length).fill(false);
+      }
+      currentIndex = 0;
+      updateUI();
     }
-    currentIndex = 0;
-    updateUI();
-  }
 
-  function saveProgress() {
-    localStorage.setItem(getStorageKey(), JSON.stringify(progress));
-    updateUI();
-  }
-
-  function updateUI() {
-    if (sentences.length === 0) return;
-    let done = progress.filter(v => v === true).length;
-    let percent = Math.round((done / sentences.length) * 100);
-    progressFill.style.width = percent + '%';
-    progressText.innerText = `${done}/${sentences.length} (${percent}%)`;
-    if (sentences[currentIndex]) {
-      sentenceEl.innerText = sentences[currentIndex].en;
-      translationEl.innerText = sentences[currentIndex].fr;
+    function saveProgress() {
+      localStorage.setItem(getStorageKey(), JSON.stringify(progress));
+      updateUI();
     }
-    nextBtn.disabled = !progress[currentIndex];
-    if (progress[currentIndex]) nextBtn.classList.add('success');
-    else nextBtn.classList.remove('success');
-  }
 
-  function markCurrentDone() {
-    if (!progress[currentIndex]) {
-      progress[currentIndex] = true;
-      saveProgress();
-      showFeedback(`✅ Sentence ${currentIndex+1} validated!`, 'success');
-      return true;
+    function updateUI() {
+      if (sentences.length === 0) return;
+      let done = progress.filter(v => v === true).length;
+      let percent = Math.round((done / sentences.length) * 100);
+      progressFill.style.width = percent + '%';
+      progressText.innerText = `${done}/${sentences.length} (${percent}%)`;
+      if (sentences[currentIndex]) {
+        sentenceEl.innerText = sentences[currentIndex].en;
+        translationEl.innerText = sentences[currentIndex].fr;
+      }
+      nextBtn.disabled = !progress[currentIndex];
+      if (progress[currentIndex]) nextBtn.classList.add('success');
+      else nextBtn.classList.remove('success');
     }
-    return false;
-  }
 
-  function showFeedback(msg, type = 'info') {
-    let className = '';
-    if (type === 'success') className = 'feedback-success';
-    else if (type === 'error') className = 'feedback-error';
-    else if (type === 'warning') className = 'feedback-warning';
-    else className = 'feedback-info';
-    feedbackDiv.innerHTML = msg;
-    feedbackDiv.className = `feedback ${className}`;
-  }
-
-  // =============================================================
-  // 4. SPEECH SYNTHESIS
-  // =============================================================
-  function speak(text, onEnd) {
-    if (!window.speechSynthesis) {
-      showFeedback("Speech not available", "error");
-      return;
+    function markCurrentDone() {
+      if (!progress[currentIndex]) {
+        progress[currentIndex] = true;
+        saveProgress();
+        showFeedback(`✅ Sentence ${currentIndex+1} validated!`, 'success');
+        return true;
+      }
+      return false;
     }
-    try {
-      let utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.75;
-      utterance.onend = () => { if (typeof onEnd === 'function') onEnd(); };
-      utterance.onerror = () => { if (typeof onEnd === 'function') onEnd(); };
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      console.error(e);
-      showFeedback("Speech error", "error");
-      if (typeof onEnd === 'function') onEnd();
+
+    function showFeedback(msg, type = 'info') {
+      let className = '';
+      if (type === 'success') className = 'feedback-success';
+      else if (type === 'error') className = 'feedback-error';
+      else if (type === 'warning') className = 'feedback-warning';
+      else className = 'feedback-info';
+      feedbackDiv.innerHTML = msg;
+      feedbackDiv.className = `feedback ${className}`;
     }
-  }
 
-  function playCurrent() {
-    if (!sentences[currentIndex]) return;
-    speak(sentences[currentIndex].en);
-    showFeedback(`🔊 Listening - ${currentIndex+1}/${sentences.length}`, 'info');
-  }
-
-  function playBeep() {
-    try {
-      let ac = new(window.AudioContext || window.webkitAudioContext)();
-      let osc = ac.createOscillator();
-      let gain = ac.createGain();
-      osc.connect(gain);
-      gain.connect(ac.destination);
-      osc.frequency.value = 880;
-      gain.gain.value = 0.08;
-      osc.start();
-      gain.gain.exponentialRampToValueAtTime(0.00001, ac.currentTime + 0.2);
-      osc.stop(ac.currentTime + 0.2);
-      setTimeout(() => ac.close(), 400);
-    } catch (e) { /* silent fail */ }
-  }
-
-  // =============================================================
-  // 5. VISUALIZER
-  // =============================================================
-  function startVisualization() {
-    if (animationId) cancelAnimationFrame(animationId);
-    let time = 0;
-
-    function draw() {
-      if (!isListening) {
-        ctx.fillStyle = '#060a12';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#1a2a3a';
-        ctx.fillRect(0, canvas.height/2 - 1, canvas.width, 2);
+    // =============================================================
+    // 4. SPEECH SYNTHESIS
+    // =============================================================
+    function speak(text, onEnd) {
+      if (!window.speechSynthesis) {
+        showFeedback("Speech not available", "error");
         return;
       }
+      try {
+        let utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.75;
+        utterance.onend = () => { if (typeof onEnd === 'function') onEnd(); };
+        utterance.onerror = () => { if (typeof onEnd === 'function') onEnd(); };
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.error(e);
+        showFeedback("Speech error", "error");
+        if (typeof onEnd === 'function') onEnd();
+      }
+    }
+
+    function playCurrent() {
+      if (!sentences[currentIndex]) return;
+      speak(sentences[currentIndex].en);
+      showFeedback(`🔊 Listening - ${currentIndex+1}/${sentences.length}`, 'info');
+    }
+
+    function playBeep() {
+      try {
+        let ac = new(window.AudioContext || window.webkitAudioContext)();
+        let osc = ac.createOscillator();
+        let gain = ac.createGain();
+        osc.connect(gain);
+        gain.connect(ac.destination);
+        osc.frequency.value = 880;
+        gain.gain.value = 0.08;
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, ac.currentTime + 0.2);
+        osc.stop(ac.currentTime + 0.2);
+        setTimeout(() => ac.close(), 400);
+      } catch (e) { /* silent fail */ }
+    }
+
+    // =============================================================
+    // 5. VISUALIZER
+    // =============================================================
+    function startVisualization() {
+      if (animationId) cancelAnimationFrame(animationId);
+      let time = 0;
+
+      function draw() {
+        if (!isListening) {
+          ctx.fillStyle = '#060a12';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#1a2a3a';
+          ctx.fillRect(0, canvas.height/2 - 1, canvas.width, 2);
+          return;
+        }
+        ctx.fillStyle = '#060a12';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.strokeStyle = '#00d4ff';
+        ctx.lineWidth = 2;
+        let amp = 14 + Math.sin(time * 0.6) * 4;
+        for (let x = 0; x < canvas.width; x += 3) {
+          let y = canvas.height / 2 + Math.sin(x * 0.035 + time * 2) * amp;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        time += 0.1;
+        animationId = requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    function stopVisualization() {
+      isListening = false;
+      if (animationId) cancelAnimationFrame(animationId);
       ctx.fillStyle = '#060a12';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-      ctx.strokeStyle = '#00d4ff';
-      ctx.lineWidth = 2;
-      let amp = 14 + Math.sin(time * 0.6) * 4;
-      for (let x = 0; x < canvas.width; x += 3) {
-        let y = canvas.height / 2 + Math.sin(x * 0.035 + time * 2) * amp;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-      time += 0.1;
-      animationId = requestAnimationFrame(draw);
+      ctx.fillStyle = '#1a2a3a';
+      ctx.fillRect(0, canvas.height/2 - 1, canvas.width, 2);
     }
-    draw();
-  }
 
-  function stopVisualization() {
-    isListening = false;
-    if (animationId) cancelAnimationFrame(animationId);
-    ctx.fillStyle = '#060a12';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#1a2a3a';
-    ctx.fillRect(0, canvas.height/2 - 1, canvas.width, 2);
-  }
+    // =============================================================
+    // 6. SPEECH RECOGNITION & EVALUATION
+    // =============================================================
+    function calculateSimilarity(spoken, target) {
+      let a = spoken.toLowerCase().replace(/[^\w\s]/g, '').trim();
+      let b = target.toLowerCase().replace(/[^\w\s]/g, '').trim();
+      if (a === b) return 1;
+      if (a.length === 0 || b.length === 0) return 0;
 
-  // =============================================================
-  // 6. SPEECH RECOGNITION & EVALUATION
-  // =============================================================
-  function calculateSimilarity(spoken, target) {
-    let a = spoken.toLowerCase().replace(/[^\w\s]/g, '').trim();
-    let b = target.toLowerCase().replace(/[^\w\s]/g, '').trim();
-    if (a === b) return 1;
-    if (a.length === 0 || b.length === 0) return 0;
-
-    let wordsA = a.split(/\s+/);
-    let wordsB = b.split(/\s+/);
-    let lengthDiff = Math.abs(wordsA.length - wordsB.length);
-    let lengthPenalty = Math.max(0, 1 - (lengthDiff / Math.max(wordsA.length, wordsB.length)));
-    let matches = 0;
-    for (let wa of wordsA) {
-      let bestMatch = 0;
-      for (let wb of wordsB) {
-        if (wb === wa) { bestMatch = 1; break; }
-        if (wa.includes(wb) && wa.length > 3) bestMatch = Math.max(bestMatch, 0.85);
-        if (wb.includes(wa) && wb.length > 3) bestMatch = Math.max(bestMatch, 0.85);
-        if (wa.length > 4 && wb.length > 4) {
-          if (wa[0] === wb[0] && wa[wa.length - 1] === wb[wb.length - 1]) bestMatch = Math.max(bestMatch, 0.6);
+      let wordsA = a.split(/\s+/);
+      let wordsB = b.split(/\s+/);
+      let lengthDiff = Math.abs(wordsA.length - wordsB.length);
+      let lengthPenalty = Math.max(0, 1 - (lengthDiff / Math.max(wordsA.length, wordsB.length)));
+      let matches = 0;
+      for (let wa of wordsA) {
+        let bestMatch = 0;
+        for (let wb of wordsB) {
+          if (wb === wa) { bestMatch = 1; break; }
+          if (wa.includes(wb) && wa.length > 3) bestMatch = Math.max(bestMatch, 0.85);
+          if (wb.includes(wa) && wb.length > 3) bestMatch = Math.max(bestMatch, 0.85);
+          if (wa.length > 4 && wb.length > 4) {
+            if (wa[0] === wb[0] && wa[wa.length - 1] === wb[wb.length - 1]) bestMatch = Math.max(bestMatch, 0.6);
+          }
         }
+        matches += bestMatch;
       }
-      matches += bestMatch;
-    }
-    let ratio = (matches / Math.max(wordsA.length, wordsB.length)) * lengthPenalty;
-    return Math.min(ratio + 0.1, 1);
-  }
-
-  function startListening() {
-    const SpeechRecog = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecog) {
-      showFeedback("Voice recognition not supported", "error");
-      compatWarning.classList.add('show');
-      return;
+      let ratio = (matches / Math.max(wordsA.length, wordsB.length)) * lengthPenalty;
+      return Math.min(ratio + 0.1, 1);
     }
 
-    if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
-
-    recognition = new SpeechRecog();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.continuous = false;
-
-    recognition.onstart = () => {
-      isListening = true;
-      voiceStatus.innerHTML = '🎤🔴 Recording...';
-      voiceStatus.className = 'status listening';
-      repeatBtn.textContent = '⏹️ Stop';
-      repeatBtn.classList.add('recording');
-      startVisualization();
-      micStatus.innerHTML = '🎤 Speak now!';
-      micStatus.className = 'mic-status';
-    };
-
-    recognition.onresult = (event) => {
-      let transcript = event.results[0][0].transcript;
-      evaluate(transcript);
-    };
-
-    recognition.onerror = (event) => {
-      if (event.error === 'not-allowed') {
-        micStatus.innerHTML = '🎤❌ Micro access denied';
-        micStatus.className = 'mic-status error';
-        showFeedback("Please allow microphone access", "error");
-      } else if (event.error === 'no-speech') {
-        showFeedback("No sound detected. Speak louder!", "warning");
-      } else if (event.error === 'audio-capture') {
-        showFeedback("Microphone not found", "error");
-      } else {
-        showFeedback(`Error: ${event.error}`, "error");
+    function startListening() {
+      const SpeechRecog = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecog) {
+        showFeedback("Voice recognition not supported", "error");
+        compatWarning.classList.add('show');
+        return;
       }
-      stopListening();
-    };
 
-    recognition.onend = () => {
-      stopListening();
+      if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
+
+      recognition = new SpeechRecog();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        isListening = true;
+        voiceStatus.innerHTML = '🎤🔴 Recording...';
+        voiceStatus.className = 'status listening';
+        repeatBtn.textContent = '⏹️ Stop';
+        repeatBtn.classList.add('recording');
+        startVisualization();
+        micStatus.innerHTML = '🎤 Speak now!';
+        micStatus.className = 'mic-status';
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = event.results[0][0].transcript;
+        evaluate(transcript);
+      };
+
+      recognition.onerror = (event) => {
+        if (event.error === 'not-allowed') {
+          micStatus.innerHTML = '🎤❌ Micro access denied';
+          micStatus.className = 'mic-status error';
+          showFeedback("Please allow microphone access", "error");
+        } else if (event.error === 'no-speech') {
+          showFeedback("No sound detected. Speak louder!", "warning");
+        } else if (event.error === 'audio-capture') {
+          showFeedback("Microphone not found", "error");
+        } else {
+          showFeedback(`Error: ${event.error}`, "error");
+        }
+        stopListening();
+      };
+
+      recognition.onend = () => {
+        stopListening();
+        voiceStatus.innerHTML = '⚡ Ready';
+        voiceStatus.className = '';
+        repeatBtn.textContent = '🎤 Speak';
+        repeatBtn.classList.remove('recording');
+      };
+
+      try {
+        recognition.start();
+        setTimeout(() => { if (recognition && isListening) { try { recognition.stop(); } catch (e) {} } }, 15000);
+      } catch (e) {
+        showFeedback("Press Speak again", "warning");
+        repeatBtn.textContent = '🎤 Speak';
+        repeatBtn.classList.remove('recording');
+      }
+    }
+
+    function stopListening() {
+      isListening = false;
+      if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
+      stopVisualization();
       voiceStatus.innerHTML = '⚡ Ready';
       voiceStatus.className = '';
       repeatBtn.textContent = '🎤 Speak';
       repeatBtn.classList.remove('recording');
-    };
-
-    try {
-      recognition.start();
-      setTimeout(() => { if (recognition && isListening) { try { recognition.stop(); } catch (e) {} } }, 15000);
-    } catch (e) {
-      showFeedback("Press Speak again", "warning");
-      repeatBtn.textContent = '🎤 Speak';
-      repeatBtn.classList.remove('recording');
     }
-  }
 
-  function stopListening() {
-    isListening = false;
-    if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
-    stopVisualization();
-    voiceStatus.innerHTML = '⚡ Ready';
-    voiceStatus.className = '';
-    repeatBtn.textContent = '🎤 Speak';
-    repeatBtn.classList.remove('recording');
-  }
+    function evaluate(spoken) {
+      if (!sentences[currentIndex]) return;
+      const target = sentences[currentIndex].en;
+      const sim = calculateSimilarity(spoken, target);
+      const percent = Math.round(sim * 100);
 
-  function evaluate(spoken) {
-    if (!sentences[currentIndex]) return;
-    const target = sentences[currentIndex].en;
-    const sim = calculateSimilarity(spoken, target);
-    const percent = Math.round(sim * 100);
+      voiceStatus.innerHTML = `🎤✅ ${percent}%`;
+      voiceStatus.className = 'status success';
 
-    voiceStatus.innerHTML = `🎤✅ ${percent}%`;
-    voiceStatus.className = 'status success';
+      if (sim >= 0.65) {
+        showFeedback(`✅ Excellent! ${percent}% match`, 'success');
+        const validated = markCurrentDone();
+        if (validated && currentIndex + 1 < sentences.length) {
+          setTimeout(() => {
+            currentIndex++;
+            saveProgress();
+            updateUI();
+            showFeedback(`📖 Next sentence ${currentIndex+1}/${sentences.length}`, 'info');
+          }, 2000);
+        } else if (validated && currentIndex + 1 >= sentences.length) {
+          setTimeout(() => showFeedback("🏆 Congratulations! Module complete!", "success"), 1500);
+        }
+      } else if (sim >= 0.45) {
+        showFeedback(`👍 ${percent}% - Close, try again`, 'warning');
+      } else {
+        showFeedback(`📚 ${percent}% - Listen again and retry`, 'error');
+      }
+    }
 
-    if (sim >= 0.65) {
-      showFeedback(`✅ Excellent! ${percent}% match`, 'success');
-      const validated = markCurrentDone();
-      if (validated && currentIndex + 1 < sentences.length) {
+    function repeatSequence() {
+      if (isListening) { stopListening(); return; }
+      if (!sentences[currentIndex]) return;
+      showFeedback("🔊 Listen carefully...", "info");
+      speak(sentences[currentIndex].en, () => {
         setTimeout(() => {
+          playBeep();
+          showFeedback("🎤 Your turn! Speak now.", "warning");
+          setTimeout(() => { startListening(); }, 400);
+        }, 300);
+      });
+    }
+
+    function nextSegment() {
+      if (progress[currentIndex]) {
+        if (currentIndex + 1 < sentences.length) {
           currentIndex++;
           saveProgress();
           updateUI();
-          showFeedback(`📖 Next sentence ${currentIndex+1}/${sentences.length}`, 'info');
-        }, 2000);
-      } else if (validated && currentIndex + 1 >= sentences.length) {
-        setTimeout(() => showFeedback("🏆 Congratulations! Module complete!", "success"), 1500);
+          showFeedback(`📖 Sentence ${currentIndex+1}/${sentences.length}`, 'info');
+        } else {
+          showFeedback("🎉 Module completed!", "success");
+        }
+      } else {
+        showFeedback("⚠️ Validate this sentence first", "warning");
       }
-    } else if (sim >= 0.45) {
-      showFeedback(`👍 ${percent}% - Close, try again`, 'warning');
-    } else {
-      showFeedback(`📚 ${percent}% - Listen again and retry`, 'error');
     }
-  }
 
-  function repeatSequence() {
-    if (isListening) { stopListening(); return; }
-    if (!sentences[currentIndex]) return;
-    showFeedback("🔊 Listen carefully...", "info");
-    speak(sentences[currentIndex].en, () => {
-      setTimeout(() => {
-        playBeep();
-        showFeedback("🎤 Your turn! Speak now.", "warning");
-        setTimeout(() => { startListening(); }, 400);
-      }, 300);
-    });
-  }
-
-  function nextSegment() {
-    if (progress[currentIndex]) {
-      if (currentIndex + 1 < sentences.length) {
-        currentIndex++;
+    function resetProgress() {
+      if (confirm("Reset progress for this module?")) {
+        progress = new Array(sentences.length).fill(false);
+        currentIndex = 0;
         saveProgress();
         updateUI();
-        showFeedback(`📖 Sentence ${currentIndex+1}/${sentences.length}`, 'info');
-      } else {
-        showFeedback("🎉 Module completed!", "success");
+        showFeedback("Progress reset", "info");
       }
-    } else {
-      showFeedback("⚠️ Validate this sentence first", "warning");
     }
-  }
 
-  function resetProgress() {
-    if (confirm("Reset progress for this module?")) {
-      progress = new Array(sentences.length).fill(false);
-      currentIndex = 0;
-      saveProgress();
-      updateUI();
-      showFeedback("Progress reset", "info");
+    // =============================================================
+    // 7. LOAD MODULE
+    // =============================================================
+    function loadText(textId) {
+      currentTextId = textId;
+      const data = textsData[textId];
+      if (!data) return;
+      sentences = data.sentences.slice();
+      if (sentences.length === 0) {
+        sentences = [{ en: "(No sentences)", fr: "(Aucune phrase)" }];
+      }
+      textHeader.innerHTML = `<h3><i>⚙️</i> ${data.title} <span style="font-size:0.8rem;color:#5a7a94;font-weight:400;">(${sentences.length} sentences)</span></h3>`;
+      loadProgress();
+      resizeCanvas();
+      homeScreen.style.display = 'none';
+      practiceScreen.style.display = 'block';
+      if (recognition) { try { recognition.stop(); } catch (e) {} }
+      stopListening();
     }
-  }
 
-  // =============================================================
-  // 7. LOAD MODULE
-  // =============================================================
-  function loadText(textId) {
-    currentTextId = textId;
-    const data = textsData[textId];
-    if (!data) return;
-    sentences = data.sentences.slice();
-    if (sentences.length === 0) {
-      sentences = [{ en: "(No sentences)", fr: "(Aucune phrase)" }];
+    // =============================================================
+    // 8. BUILD HOME
+    // =============================================================
+    function buildHomeScreen() {
+      textGrid.innerHTML = '';
+      for (let [id, data] of Object.entries(textsData)) {
+        let card = document.createElement('div');
+        card.className = 'text-card';
+        card.innerHTML = `
+          <h3>${data.title}</h3>
+          <p>${data.tag || '📘'}</p>
+          <span class="text-tag">🎙️ ${data.sentences.length}</span>
+        `;
+        card.onclick = () => loadText(id);
+        textGrid.appendChild(card);
+      }
     }
-    textHeader.innerHTML = `<h3><i>⚙️</i> ${data.title} <span style="font-size:0.8rem;color:#5a7a94;font-weight:400;">(${sentences.length} sentences)</span></h3>`;
-    loadProgress();
-    resizeCanvas();
-    homeScreen.style.display = 'none';
-    practiceScreen.style.display = 'block';
-    if (recognition) { try { recognition.stop(); } catch (e) {} }
-    stopListening();
-  }
 
-  // =============================================================
-  // 8. BUILD HOME
-  // =============================================================
-  function buildHomeScreen() {
-    textGrid.innerHTML = '';
-    for (let [id, data] of Object.entries(textsData)) {
-      let card = document.createElement('div');
-      card.className = 'text-card';
-      card.innerHTML = `
-        <h3>${data.title}</h3>
-        <p>${data.tag || '📘'}</p>
-        <span class="text-tag">🎙️ ${data.sentences.length}</span>
-      `;
-      card.onclick = () => loadText(id);
-      textGrid.appendChild(card);
-    }
-  }
+    // =============================================================
+    // 9. EVENTS
+    // =============================================================
+    playBtn.onclick = playCurrent;
+    repeatBtn.onclick = repeatSequence;
+    nextBtn.onclick = nextSegment;
+    resetBtn.onclick = resetProgress;
+    backToHomeBtn.onclick = () => {
+      homeScreen.style.display = 'block';
+      practiceScreen.style.display = 'none';
+      if (recognition) { try { recognition.stop(); } catch (e) {} }
+      stopListening();
+    };
 
-  // =============================================================
-  // 9. EVENTS
-  // =============================================================
-  playBtn.onclick = playCurrent;
-  repeatBtn.onclick = repeatSequence;
-  nextBtn.onclick = nextSegment;
-  resetBtn.onclick = resetProgress;
-  backToHomeBtn.onclick = () => {
-    homeScreen.style.display = 'block';
-    practiceScreen.style.display = 'none';
-    if (recognition) { try { recognition.stop(); } catch (e) {} }
-    stopListening();
-  };
+    // Grammar modal events
+    grammarBtn.onclick = () => grammarModal.classList.add('active');
+    grammarCloseBtn.onclick = () => grammarModal.classList.remove('active');
+    grammarModal.onclick = (e) => { if (e.target === grammarModal) grammarModal.classList.remove('active'); };
 
-  // Grammar modal events
-  grammarBtn.onclick = () => grammarModal.classList.add('active');
-  grammarCloseBtn.onclick = () => grammarModal.classList.remove('active');
-  grammarModal.onclick = (e) => { if (e.target === grammarModal) grammarModal.classList.remove('active'); };
-
-  // Keyboard shortcuts
-  document.addEventListener('keydown', (e) => {
-    if (grammarModal.classList.contains('active')) {
-      if (e.key === 'Escape') grammarModal.classList.remove('active');
-      return;
-    }
-    if (practiceScreen.style.display !== 'block') return;
-    if (e.key === ' ' || e.key === 'Space') { e.preventDefault(); playCurrent(); }
-    if (e.key === 'r' || e.key === 'R') { e.preventDefault(); repeatSequence(); }
-    if (e.key === 'n' || e.key === 'N') { e.preventDefault(); nextSegment(); }
-  });
-
-  // =============================================================
-  // 10. INIT
-  // =============================================================
-  buildHomeScreen();
-  resizeCanvas();
-</script>
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js";
-  
-  const supabase = createClient(
-    "https://YOUR_PROJECT_URL.supabase.co",
-    "YOUR_PUBLIC_ANON_KEY"
-  );
-</script>
-<script type="module">
-  loginBtn.onclick = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (grammarModal.classList.contains('active')) {
+        if (e.key === 'Escape') grammarModal.classList.remove('active');
+        return;
+      }
+      if (practiceScreen.style.display !== 'block') return;
+      if (e.key === ' ' || e.key === 'Space') { e.preventDefault(); playCurrent(); }
+      if (e.key === 'r' || e.key === 'R') { e.preventDefault(); repeatSequence(); }
+      if (e.key === 'n' || e.key === 'N') { e.preventDefault(); nextSegment(); }
     });
 
-    if (error) {
-      alert("Login failed: " + error.message);
-    } else {
-      alert("Logged in!");
-      loadModules(); // call next step after login
-    }
-  };
-</script>
-async function loadModules() {
-  const { data: modules, error } = await supabase
-    .from("modules")
-    .select("*");
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  console.log("Modules:", modules);
-}
-
+    // =============================================================
+    // 10. INIT
+    // =============================================================
+    buildHomeScreen();
+    resizeCanvas();
+  </script>
 </body>
 </html>
