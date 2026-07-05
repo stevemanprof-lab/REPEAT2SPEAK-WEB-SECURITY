@@ -157,12 +157,14 @@
       transition: color 0.2s;
     }
 
-    #authBox .toggle-link span {
+    #authBox .toggle-link a {
       color: #00d4ff;
       font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
     }
 
-    #authBox .toggle-link span:hover {
+    #authBox .toggle-link a:hover {
       text-decoration: underline;
     }
 
@@ -843,7 +845,7 @@
         <div id="authError" class="error-msg"></div>
       </form>
       <div class="toggle-link" id="toggleAuthLink">
-        Don't have an account? <span id="toggleText">Sign Up</span>
+        Don't have an account? <a href="#" id="toggleText">Sign Up</a>
       </div>
     </div>
   </div>
@@ -1188,28 +1190,43 @@
     let isLoginMode = true;  // true = login, false = sign-up
 
     // ---- Toggle between Login and Sign-Up ----
-    toggleLink.addEventListener('click', () => {
+    function toggleAuthMode(e) {
+      e.preventDefault();
       isLoginMode = !isLoginMode;
       if (isLoginMode) {
         // Switch to Login
         authTitle.textContent = '🔐 Sign In';
         authSubmitBtn.textContent = 'Login';
         toggleText.textContent = 'Sign Up';
-        toggleLink.innerHTML = `Don't have an account? <span id="toggleText">Sign Up</span>`;
+        document.querySelector('.toggle-link').innerHTML = `Don't have an account? <a href="#" id="toggleText">Sign Up</a>`;
         confirmPasswordGroup.style.display = 'none';
         confirmPasswordInput.value = '';
         confirmPasswordInput.removeAttribute('required');
+        // Re-attach event listener to the new link
+        document.getElementById('toggleText').addEventListener('click', toggleAuthMode);
       } else {
         // Switch to Sign-Up
         authTitle.textContent = '📝 Sign Up';
         authSubmitBtn.textContent = 'Create Account';
         toggleText.textContent = 'Login';
-        toggleLink.innerHTML = `Already have an account? <span id="toggleText">Login</span>`;
+        document.querySelector('.toggle-link').innerHTML = `Already have an account? <a href="#" id="toggleText">Login</a>`;
         confirmPasswordGroup.style.display = 'block';
         confirmPasswordInput.setAttribute('required', 'required');
+        // Re-attach event listener to the new link
+        document.getElementById('toggleText').addEventListener('click', toggleAuthMode);
       }
       authError.textContent = '';
+    }
+
+    // Attach the toggle event listener
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('toggleText').addEventListener('click', toggleAuthMode);
     });
+
+    // Also attach directly (in case DOMContentLoaded already fired)
+    if (document.getElementById('toggleText')) {
+      document.getElementById('toggleText').addEventListener('click', toggleAuthMode);
+    }
 
     // ---- Handle form submission (Login or Sign-Up) ----
     authForm.addEventListener('submit', async (e) => {
@@ -1272,12 +1289,11 @@
           } else {
             // Email confirmation is required – show a message.
             authError.textContent = '✅ Account created! Please check your email to confirm.';
-            // Optionally clear the form or switch back to login.
-            // We'll switch back to login mode after a moment.
+            // Switch back to login mode after a moment
             setTimeout(() => {
               // Reset to login mode
               isLoginMode = false;
-              toggleLink.click(); // programmatically toggle back to login
+              toggleAuthMode(new Event('click'));
               authError.textContent = '✅ Please check your email and then log in.';
             }, 2000);
           }
@@ -1300,15 +1316,14 @@
       confirmPasswordInput.value = '';
       // Reset to login mode
       if (!isLoginMode) {
-        // If we're in sign-up mode, toggle back to login
         isLoginMode = true;
         authTitle.textContent = '🔐 Sign In';
         authSubmitBtn.textContent = 'Login';
-        toggleText.textContent = 'Sign Up';
-        toggleLink.innerHTML = `Don't have an account? <span id="toggleText">Sign Up</span>`;
+        document.querySelector('.toggle-link').innerHTML = `Don't have an account? <a href="#" id="toggleText">Sign Up</a>`;
         confirmPasswordGroup.style.display = 'none';
         confirmPasswordInput.value = '';
         confirmPasswordInput.removeAttribute('required');
+        document.getElementById('toggleText').addEventListener('click', toggleAuthMode);
       }
     });
 
