@@ -148,6 +148,24 @@
       min-height: 1.5em;
     }
 
+    #authBox .toggle-link {
+      color: #7a96b0;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 16px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    #authBox .toggle-link span {
+      color: #00d4ff;
+      font-weight: 600;
+    }
+
+    #authBox .toggle-link span:hover {
+      text-decoration: underline;
+    }
+
     .logout-btn {
       position: fixed;
       top: 16px;
@@ -807,17 +825,26 @@
   ============================================================ -->
   <div id="authOverlay">
     <div id="authBox">
-      <h2>🔐 Sign In</h2>
-      <form id="loginForm" autocomplete="off">
+      <h2 id="authTitle">🔐 Sign In</h2>
+      <form id="authForm" autocomplete="off">
         <label for="email">Email</label>
         <input id="email" type="email" placeholder="your@email.com" required>
 
         <label for="password">Password</label>
-        <input id="password" type="password" placeholder="••••••••" required>
+        <input id="password" type="password" placeholder="••••••••" required minlength="6">
 
-        <button type="submit">Login</button>
-        <div id="loginError" class="error-msg"></div>
+        <!-- Confirm password (hidden by default) -->
+        <div id="confirmPasswordGroup" style="display:none;">
+          <label for="confirmPassword">Confirm Password</label>
+          <input id="confirmPassword" type="password" placeholder="••••••••">
+        </div>
+
+        <button type="submit" id="authSubmitBtn">Login</button>
+        <div id="authError" class="error-msg"></div>
       </form>
+      <div class="toggle-link" id="toggleAuthLink">
+        Don't have an account? <span id="toggleText">Sign Up</span>
+      </div>
     </div>
   </div>
 
@@ -1145,37 +1172,118 @@
 
     // ---- DOM refs ----
     const authOverlay = document.getElementById('authOverlay');
-    const loginForm = document.getElementById('loginForm');
+    const authForm = document.getElementById('authForm');
+    const authTitle = document.getElementById('authTitle');
+    const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const authError = document.getElementById('authError');
+    const toggleLink = document.getElementById('toggleAuthLink');
+    const toggleText = document.getElementById('toggleText');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
-    const loginError = document.getElementById('loginError');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
     const logoutBtn = document.getElementById('logoutBtn');
     const appContainer = document.getElementById('appContainer');
 
-    // ---- Login ----
-    loginForm.addEventListener('submit', async (e) => {
+    let isLoginMode = true;  // true = login, false = sign-up
+
+    // ---- Toggle between Login and Sign-Up ----
+    toggleLink.addEventListener('click', () => {
+      isLoginMode = !isLoginMode;
+      if (isLoginMode) {
+        // Switch to Login
+        authTitle.textContent = '🔐 Sign In';
+        authSubmitBtn.textContent = 'Login';
+        toggleText.textContent = 'Sign Up';
+        toggleLink.innerHTML = `Don't have an account? <span id="toggleText">Sign Up</span>`;
+        confirmPasswordGroup.style.display = 'none';
+        confirmPasswordInput.value = '';
+        confirmPasswordInput.removeAttribute('required');
+      } else {
+        // Switch to Sign-Up
+        authTitle.textContent = '📝 Sign Up';
+        authSubmitBtn.textContent = 'Create Account';
+        toggleText.textContent = 'Login';
+        toggleLink.innerHTML = `Already have an account? <span id="toggleText">Login</span>`;
+        confirmPasswordGroup.style.display = 'block';
+        confirmPasswordInput.setAttribute('required', 'required');
+      }
+      authError.textContent = '';
+    });
+
+    // ---- Handle form submission (Login or Sign-Up) ----
+    authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      loginError.textContent = '';
+      authError.textContent = '';
 
       const email = emailInput.value.trim();
       const password = passwordInput.value;
 
+      // Basic validation
+      if (!email || !password) {
+        authError.textContent = '❌ Please fill in all fields.';
+        return;
+      }
+
+      if (password.length < 6) {
+        authError.textContent = '❌ Password must be at least 6 characters.';
+        return;
+      }
+
+      if (!isLoginMode) {
+        // Sign-Up mode: check passwords match
+        const confirmPassword = confirmPasswordInput.value;
+        if (password !== confirmPassword) {
+          authError.textContent = '❌ Passwords do not match.';
+          return;
+        }
+      }
+
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
+        let result;
+        if (isLoginMode) {
+          // ---- LOGIN ----
+          result = await supabase.auth.signInWithPassword({ email, password });
+        } else {
+          // ---- SIGN-UP ----
+          result = await supabase.auth.signUp({ email, password });
+        }
+
+        const { data, error } = result;
 
         if (error) throw error;
 
-        // Success – hide login, show app
-        authOverlay.classList.add('hidden');
-        appContainer.style.display = 'block';
-        logoutBtn.style.display = 'block';
-        // Optionally store session info
-        console.log('Logged in as:', data.user.email);
+        // Success for Login: hide auth and show app
+        if (isLoginMode) {
+          authOverlay.classList.add('hidden');
+          appContainer.style.display = 'block';
+          logoutBtn.style.display = 'block';
+          console.log('Logged in as:', data.user.email);
+        } else {
+          // Sign-Up successful: the user is now created.
+          // If auto-confirm is on, they are also logged in automatically (session exists).
+          // If not, we show a message.
+          if (data.session) {
+            // Auto-confirm is enabled – they are already logged in.
+            authOverlay.classList.add('hidden');
+            appContainer.style.display = 'block';
+            logoutBtn.style.display = 'block';
+            console.log('Signed up and logged in as:', data.user.email);
+          } else {
+            // Email confirmation is required – show a message.
+            authError.textContent = '✅ Account created! Please check your email to confirm.';
+            // Optionally clear the form or switch back to login.
+            // We'll switch back to login mode after a moment.
+            setTimeout(() => {
+              // Reset to login mode
+              isLoginMode = false;
+              toggleLink.click(); // programmatically toggle back to login
+              authError.textContent = '✅ Please check your email and then log in.';
+            }, 2000);
+          }
+        }
       } catch (err) {
-        loginError.textContent = '❌ ' + err.message;
+        authError.textContent = '❌ ' + err.message;
         console.error(err);
       }
     });
@@ -1183,23 +1291,31 @@
     // ---- Logout ----
     logoutBtn.addEventListener('click', async () => {
       await supabase.auth.signOut();
-      // Reset UI
       authOverlay.classList.remove('hidden');
       appContainer.style.display = 'none';
       logoutBtn.style.display = 'none';
-      loginError.textContent = '';
-      // Clear fields
+      authError.textContent = '';
       emailInput.value = '';
       passwordInput.value = '';
-      // Optional: reload modules or reset state
+      confirmPasswordInput.value = '';
+      // Reset to login mode
+      if (!isLoginMode) {
+        // If we're in sign-up mode, toggle back to login
+        isLoginMode = true;
+        authTitle.textContent = '🔐 Sign In';
+        authSubmitBtn.textContent = 'Login';
+        toggleText.textContent = 'Sign Up';
+        toggleLink.innerHTML = `Don't have an account? <span id="toggleText">Sign Up</span>`;
+        confirmPasswordGroup.style.display = 'none';
+        confirmPasswordInput.value = '';
+        confirmPasswordInput.removeAttribute('required');
+      }
     });
 
-    // ---- Auto-check session (optional) ----
-    // If user is already logged in (e.g., from previous session), skip login
+    // ---- Auto-check session ----
     (async function checkSession() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        // User is already authenticated
         authOverlay.classList.add('hidden');
         appContainer.style.display = 'block';
         logoutBtn.style.display = 'block';
