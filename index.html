@@ -1682,6 +1682,33 @@ JAVASCRIPT – IDENTICAL TO PREVIOUS (KEEP DATA)
     "YOUR_PUBLIC_ANON_KEY"
   );
 </script>
+<script type="module">
+  loginBtn.onclick = async () => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    });
+
+    if (error) {
+      alert("Login failed: " + error.message);
+    } else {
+      alert("Logged in!");
+      loadModules(); // call next step after login
+    }
+  };
+</script>
+async function loadModules() {
+  const { data: modules, error } = await supabase
+    .from("modules")
+    .select("*");
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  console.log("Modules:", modules);
+}
 
 </body>
 </html>
