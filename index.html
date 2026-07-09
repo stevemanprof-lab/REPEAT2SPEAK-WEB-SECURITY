@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>Cyber Voice Lab · NSE 4</title>
   <style>
     /* ===== RESET & BASE ===== */
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'JetBrains Mono', 'Fira Code', 'Segoe UI', monospace;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       min-height:100vh;
       background: radial-gradient(circle at 20% 30%, #141c2b, #070a10);
-      padding:16px;
+      padding:12px;
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:center;
       color:#d0dbea;
     }
@@ -27,7 +27,7 @@
       pointer-events:none;
       z-index:0;
     }
-    .container { max-width:700px; width:100%; margin:0 auto; position:relative; z-index:1; }
+    .container { max-width:720px; width:100%; margin:0 auto; position:relative; z-index:1; }
 
     /* ===== HEADER ===== */
     .header {
@@ -35,9 +35,9 @@
       backdrop-filter:blur(12px);
       border:1px solid #2a3f5a;
       border-bottom:3px solid #00d4ff;
-      padding:12px 18px;
+      padding:10px 16px;
       border-radius:14px 14px 6px 6px;
-      margin-bottom:14px;
+      margin-bottom:12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -45,18 +45,18 @@
       gap:6px;
     }
     .header h1 {
-      font-size:1.2rem; letter-spacing:1px; font-weight:600;
-      display:flex; align-items:center; gap:8px;
+      font-size:1.1rem; letter-spacing:0.5px; font-weight:600;
+      display:flex; align-items:center; gap:6px;
     }
     .header h1 span {
-      background:#00d4ff; color:#0b0e14; font-size:0.6rem; padding:2px 12px;
+      background:#00d4ff; color:#0b0e14; font-size:0.55rem; padding:2px 10px;
       border-radius:30px; font-weight:700; border:1px solid #00e6ff;
     }
     .header .mini-stats {
-      font-size:0.7rem; background:rgba(10,18,30,0.6); padding:4px 12px;
-      border-radius:30px; border:1px solid #2a4058; display:flex; gap:12px;
+      font-size:0.65rem; background:rgba(10,18,30,0.6); padding:4px 10px;
+      border-radius:30px; border:1px solid #2a4058; display:flex; gap:10px;
     }
-    .header .mini-stats span { display:flex; align-items:center; gap:3px; }
+    .header .mini-stats span { display:flex; align-items:center; gap:2px; }
     .header .mini-stats b { color:#00d4ff; }
     .header .mini-stats .s b { color:#ffaa33; }
     .header .mini-stats .l b { color:#ff6b6b; }
@@ -66,7 +66,7 @@
       background:rgba(12,20,32,0.70);
       backdrop-filter:blur(16px);
       border-radius:20px;
-      padding:24px 20px;
+      padding:20px 16px;
       box-shadow:0 12px 48px rgba(0,0,0,0.5);
       border:1px solid #263b4e;
     }
@@ -75,137 +75,140 @@
       background:rgba(0,212,255,0.06);
       border:1px solid #1f5a78;
       border-radius:12px;
-      padding:10px 16px;
-      margin-bottom:16px;
+      padding:8px 14px;
+      margin-bottom:14px;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap:8px;
       flex-wrap:wrap;
     }
     .continue-banner.show { display:flex; }
-    .continue-banner .cb-text { font-size:0.85rem; color:#b0cbe0; }
+    .continue-banner .cb-text { font-size:0.8rem; color:#b0cbe0; }
     .continue-banner .cb-text b { color:#00d4ff; }
     .continue-banner button {
       background:rgba(0,212,255,0.12); border:1px solid #00d4ff; color:#00d4ff;
-      padding:4px 16px; border-radius:30px; font-family:inherit; font-weight:700;
-      font-size:0.75rem; cursor:pointer;
+      padding:4px 14px; border-radius:30px; font-family:inherit; font-weight:700;
+      font-size:0.7rem; cursor:pointer;
     }
     .home-screen h2 {
-      color:#b0cbe0; margin-bottom:16px; text-align:center; font-size:1.2rem;
-      font-weight:500; letter-spacing:1px; border-bottom:1px dashed #2a3f5a; padding-bottom:10px;
+      color:#b0cbe0; margin-bottom:14px; text-align:center; font-size:1.1rem;
+      font-weight:500; letter-spacing:0.5px; border-bottom:1px dashed #2a3f5a; padding-bottom:8px;
     }
     .home-screen h2 i { color:#00d4ff; font-style:normal; }
-    .text-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
+    .text-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+      gap:10px;
+    }
     .text-card {
-      background:rgba(22,34,50,0.8); border:1px solid #2a4058; border-radius:14px;
-      padding:14px 16px; transition:all 0.15s ease; box-shadow:0 4px 12px rgba(0,0,0,0.3);
-      display:flex; flex-direction:column; gap:4px;
+      background:rgba(22,34,50,0.8); border:1px solid #2a4058; border-radius:12px;
+      padding:12px 14px; transition:all 0.15s ease; box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      display:flex; flex-direction:column; gap:3px;
     }
     .text-card:hover { border-color:#00d4ff; background:rgba(0,212,255,0.06); transform:translateY(-2px); }
-    .text-card .card-main { cursor:pointer; display:flex; flex-direction:column; gap:4px; }
-    .text-card h3 { color:#e0ecf5; font-size:0.95rem; font-weight:600; }
+    .text-card .card-main { cursor:pointer; display:flex; flex-direction:column; gap:3px; }
+    .text-card h3 { color:#e0ecf5; font-size:0.85rem; font-weight:600; }
     .text-card p {
-      font-size:0.7rem; color:#7a96b0; background:rgba(0,212,255,0.08); display:inline-block;
-      padding:2px 10px; border-radius:20px; font-weight:500; border:1px solid #1a3144; width:fit-content;
+      font-size:0.65rem; color:#7a96b0; background:rgba(0,212,255,0.08); display:inline-block;
+      padding:2px 8px; border-radius:20px; font-weight:500; border:1px solid #1a3144; width:fit-content;
     }
     .card-progress-track { height:4px; background:#0f1a26; border-radius:6px; overflow:hidden; margin-top:2px; }
     .card-progress-fill { height:100%; background:linear-gradient(90deg,#00d4ff,#00e676); border-radius:6px; }
-    .card-progress-label { font-size:0.65rem; color:#5a7a94; display:flex; justify-content:space-between; }
+    .card-progress-label { font-size:0.6rem; color:#5a7a94; display:flex; justify-content:space-between; }
     .card-review-btn {
-      margin-top:3px; align-self:flex-start; background:none; border:1px solid #ffaa3355; color:#ffaa33;
-      padding:3px 12px; border-radius:30px; font-family:inherit; font-size:0.65rem; font-weight:700; cursor:pointer;
+      margin-top:2px; align-self:flex-start; background:none; border:1px solid #ffaa3355; color:#ffaa33;
+      padding:2px 10px; border-radius:30px; font-family:inherit; font-size:0.6rem; font-weight:700; cursor:pointer;
     }
     .card-review-btn:hover { background:rgba(255,170,51,0.1); border-color:#ffaa33; }
     .home-actions {
-      margin-top:18px; display:flex; justify-content:center; border-top:1px solid #1a3144;
-      padding-top:16px; gap:10px; flex-wrap:wrap;
+      margin-top:16px; display:flex; justify-content:center; border-top:1px solid #1a3144;
+      padding-top:12px; gap:8px; flex-wrap:wrap;
     }
     #grammarBtn {
-      background:rgba(0,212,255,0.05); border:1px solid #2a4058; color:#b0cbe0; padding:8px 24px;
-      border-radius:40px; font-family:inherit; font-weight:600; font-size:0.8rem; cursor:pointer;
-      transition:all 0.2s; display:inline-flex; align-items:center; gap:6px;
+      background:rgba(0,212,255,0.05); border:1px solid #2a4058; color:#b0cbe0; padding:6px 20px;
+      border-radius:40px; font-family:inherit; font-weight:600; font-size:0.75rem; cursor:pointer;
+      transition:all 0.2s; display:inline-flex; align-items:center; gap:4px;
     }
     #grammarBtn:hover { border-color:#00d4ff; color:#00d4ff; }
 
     /* ===== GRAMMAR MODAL ===== */
     .modal-overlay {
       display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.85);
-      backdrop-filter:blur(10px); z-index:1000; justify-content:center; align-items:center; padding:16px;
+      backdrop-filter:blur(10px); z-index:1000; justify-content:center; align-items:center; padding:12px;
     }
     .modal-overlay.active { display:flex; }
     .modal-content {
-      background:#0b111b; border:1px solid #2a4058; border-top:4px solid #00d4ff; border-radius:20px;
-      max-width:700px; width:100%; max-height:90vh; overflow-y:auto; padding:24px 22px 20px;
+      background:#0b111b; border:1px solid #2a4058; border-top:4px solid #00d4ff; border-radius:18px;
+      max-width:700px; width:100%; max-height:90vh; overflow-y:auto; padding:20px 18px 16px;
       box-shadow:0 24px 64px rgba(0,0,0,0.9); color:#d0dbea;
     }
-    .modal-content::-webkit-scrollbar { width:5px; }
-    .modal-content::-webkit-scrollbar-track { background:#1a2a3a; border-radius:8px; }
-    .modal-content::-webkit-scrollbar-thumb { background:#00d4ff; border-radius:8px; }
+    .modal-content::-webkit-scrollbar { width:4px; }
+    .modal-content::-webkit-scrollbar-track { background:#1a2a3a; border-radius:6px; }
+    .modal-content::-webkit-scrollbar-thumb { background:#00d4ff; border-radius:6px; }
     .modal-close {
       position:sticky; top:0; float:right; background:none; border:1px solid #2a4058; color:#7a96b0;
-      font-size:1.2rem; padding:2px 12px; border-radius:30px; cursor:pointer; font-family:inherit;
-      transition:all 0.2s; margin-bottom:8px; backdrop-filter:blur(4px); z-index:10;
+      font-size:1.1rem; padding:2px 10px; border-radius:30px; cursor:pointer; font-family:inherit;
+      transition:all 0.2s; margin-bottom:6px; backdrop-filter:blur(4px); z-index:10;
     }
     .modal-close:hover { border-color:#ff6b6b; color:#ff6b6b; }
     .modal-content h2 {
-      color:#00d4ff; font-weight:500; letter-spacing:1px; margin-bottom:16px; font-size:1.3rem;
-      border-bottom:1px solid #1a3144; padding-bottom:8px;
+      color:#00d4ff; font-weight:500; letter-spacing:0.5px; margin-bottom:12px; font-size:1.2rem;
+      border-bottom:1px solid #1a3144; padding-bottom:6px;
     }
     details.grammar-block {
-      margin-bottom:8px; border:1px solid #1a3144; border-radius:10px; overflow:hidden;
+      margin-bottom:6px; border:1px solid #1a3144; border-radius:8px; overflow:hidden;
     }
     details.grammar-block summary {
-      padding:10px 14px; cursor:pointer; font-weight:600; color:#b0cbe0;
+      padding:8px 12px; cursor:pointer; font-weight:600; color:#b0cbe0;
       background:rgba(0,212,255,0.02); transition:background 0.2s; list-style:none;
-      display:flex; justify-content:space-between; align-items:center; font-size:0.9rem;
+      display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;
     }
     details.grammar-block summary::-webkit-details-marker { display:none; }
     details.grammar-block summary:hover { background:rgba(0,212,255,0.06); }
-    details.grammar-block summary:after { content:"▸"; font-size:1.1rem; color:#5a7a94; transition:transform 0.2s; }
+    details.grammar-block summary:after { content:"▸"; font-size:1rem; color:#5a7a94; transition:transform 0.2s; }
     details.grammar-block[open] summary:after { transform:rotate(90deg); }
-    details.grammar-block .body { padding:0 14px 12px; font-size:0.85rem; line-height:1.5; }
+    details.grammar-block .body { padding:0 12px 10px; font-size:0.8rem; line-height:1.5; }
     details.grammar-block .body ul { list-style:none; padding-left:4px; }
-    details.grammar-block .body ul li { padding:4px 0 4px 18px; border-bottom:1px solid #0f1a26; position:relative; }
+    details.grammar-block .body ul li { padding:3px 0 3px 16px; border-bottom:1px solid #0f1a26; position:relative; }
     details.grammar-block .body ul li::before { content:"•"; color:#00d4ff; position:absolute; left:0; }
     details.grammar-block .body ul li em { color:#aaccee; background:rgba(0,212,255,0.04); padding:0 4px; border-radius:4px; }
-    details.grammar-block .tip { background:rgba(0,212,255,0.04); border:1px dashed #2a5a7a; border-radius:8px; padding:6px 12px; margin-top:6px; font-size:0.8rem; color:#8ab4d0; }
+    details.grammar-block .tip { background:rgba(0,212,255,0.04); border:1px dashed #2a5a7a; border-radius:6px; padding:4px 10px; margin-top:4px; font-size:0.75rem; color:#8ab4d0; }
     details.grammar-block .tip strong { color:#00d4ff; }
 
     /* ===== PRACTICE SCREEN ===== */
     .practice-screen { display:none; }
     .back-btn {
-      background:rgba(12,20,32,0.8); backdrop-filter:blur(8px); color:#b0cbe0; margin-bottom:14px;
-      padding:8px 16px; font-size:0.8rem; font-weight:600; width:100%; border:1px solid #2a3f5a;
+      background:rgba(12,20,32,0.8); backdrop-filter:blur(8px); color:#b0cbe0; margin-bottom:12px;
+      padding:8px 14px; font-size:0.75rem; font-weight:600; width:100%; border:1px solid #2a3f5a;
       border-radius:30px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center;
-      justify-content:center; gap:6px; font-family:inherit;
+      justify-content:center; gap:4px; font-family:inherit;
     }
     .back-btn:hover { border-color:#00d4ff; color:#00d4ff; background:rgba(0,212,255,0.05); }
 
     .card {
       background:rgba(12,20,32,0.75);
       backdrop-filter:blur(16px);
-      border-radius:20px;
-      padding:18px 16px;
+      border-radius:18px;
+      padding:14px 12px;
       box-shadow:0 12px 48px rgba(0,0,0,0.5);
       border:1px solid #263b4e;
     }
 
     .review-banner {
-      background:rgba(255,170,51,0.08); border:1px solid #ffaa3355; border-radius:10px;
-      padding:6px 12px; margin-bottom:10px; font-size:0.75rem; color:#f0d080; text-align:center; display:none;
+      background:rgba(255,170,51,0.08); border:1px solid #ffaa3355; border-radius:8px;
+      padding:4px 10px; margin-bottom:8px; font-size:0.7rem; color:#f0d080; text-align:center; display:none;
     }
     .review-banner.show { display:block; }
 
-    .text-header { margin-bottom:10px; padding-bottom:8px; border-bottom:2px solid #1a3144; }
-    .text-header h3 { color:#e0ecf5; font-size:1rem; font-weight:500; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .text-header { margin-bottom:8px; padding-bottom:6px; border-bottom:2px solid #1a3144; }
+    .text-header h3 { color:#e0ecf5; font-size:0.9rem; font-weight:500; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
     .text-header h3 i { color:#00d4ff; font-style:normal; }
 
-    /* Simple step progress (small dots) */
     .step-progress {
-      display:flex; gap:6px; justify-content:center; margin:4px 0 10px;
+      display:flex; gap:4px; justify-content:center; margin:2px 0 8px;
     }
     .step-dot {
-      width:20px; height:20px; border-radius:50%; border:2px solid #2a4058;
+      width:22px; height:22px; border-radius:50%; border:2px solid #2a4058;
       background:rgba(10,18,30,0.5); color:#5a7a94; display:flex; align-items:center;
       justify-content:center; font-size:0.5rem; font-weight:700; transition:all 0.3s;
     }
@@ -214,128 +217,125 @@
     .step-dot.locked { opacity:0.3; }
 
     .sentence-box {
-      background:#0b111b; border-left:4px solid #00d4ff; padding:14px 18px; border-radius:10px;
-      margin-bottom:14px; box-shadow:inset 0 0 30px rgba(0,0,0,0.4); border:1px solid #1e3142;
+      background:#0b111b; border-left:4px solid #00d4ff; padding:12px 16px; border-radius:10px;
+      margin-bottom:12px; box-shadow:inset 0 0 30px rgba(0,0,0,0.4); border:1px solid #1e3142;
+      transition: all 0.3s ease;
     }
-    .sentence-text { font-size:1.2rem; font-weight:500; line-height:1.5; color:#eef6fc; word-break:break-word; }
+    .sentence-box.dictation-mode,
+    .sentence-box.quiz-mode {
+      border-left-color: #ffaa33;
+      background: rgba(255,170,51,0.04);
+    }
+    .sentence-text { font-size:1.1rem; font-weight:500; line-height:1.5; color:#eef6fc; word-break:break-word; }
     .sentence-translation {
-      margin-top:8px; padding-top:8px; border-top:1px dashed #1a3144; font-size:0.85rem;
-      color:#7a96b0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;
+      margin-top:6px; padding-top:6px; border-top:1px dashed #1a3144; font-size:0.8rem;
+      color:#7a96b0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;
     }
-    .sentence-translation .fr { display:flex; gap:6px; align-items:center; }
-    .sentence-translation .fr::before { content:"FR"; font-size:0.55rem; background:#1a2a3a; padding:1px 6px; border-radius:4px; color:#5a7a94; font-weight:700; }
+    .sentence-translation .fr { display:flex; gap:4px; align-items:center; }
+    .sentence-translation .fr::before { content:"FR"; font-size:0.5rem; background:#1a2a3a; padding:1px 6px; border-radius:4px; color:#5a7a94; font-weight:700; }
     .mini-audio {
       background:none; border:1px solid #2a4058; color:#7a96b0; border-radius:30px; padding:1px 8px;
-      font-size:0.65rem; cursor:pointer; font-family:inherit;
+      font-size:0.6rem; cursor:pointer; font-family:inherit;
     }
     .mini-audio:hover { border-color:#00d4ff; color:#00d4ff; }
 
-    /* Step buttons */
     .step-actions {
-      display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px 0;
+      display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:8px 0;
     }
     .step-btn {
-      padding:8px 18px; border-radius:30px; font-weight:600; font-size:0.8rem; border:1px solid #2a4058;
+      padding:8px 16px; border-radius:30px; font-weight:600; font-size:0.75rem; border:1px solid #2a4058;
       background:rgba(10,18,30,0.8); color:#b0cbe0; cursor:pointer; transition:all 0.15s;
-      font-family:inherit; display:inline-flex; align-items:center; gap:5px;
+      font-family:inherit; display:inline-flex; align-items:center; gap:4px;
+      min-height:44px;
     }
     .step-btn:hover:not(:disabled) { border-color:#00d4ff; color:#00d4ff; }
     .step-btn:disabled { opacity:0.3; cursor:not-allowed; }
     .step-btn.primary { background:rgba(0,212,255,0.08); border-color:#00d4ff; color:#00d4ff; }
     .step-btn.recording { border-color:#ff4444; color:#ff4444; animation:pulse 1s infinite; background:#220000; }
 
-    /* Activity area */
-    .activity-area { margin-top:8px; min-height:60px; }
+    .activity-area { margin-top:6px; min-height:50px; }
 
-    /* Dictation (new) */
-    .dictation-prompt {
-      text-align:center; color:#7a96b0; font-size:0.85rem; padding:6px 0;
+    /* Dictation & Quiz shared styles */
+    .oral-prompt {
+      text-align:center; color:#7a96b0; font-size:0.85rem; padding:4px 0;
     }
-    .dictation-prompt .word-hint { color:#b0cbe0; font-weight:600; }
-    .dictation-controls {
-      display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:6px 0;
+    .oral-prompt .direction { color:#b0cbe0; font-weight:600; }
+    .oral-prompt .source-sentence {
+      display:block;
+      background:rgba(0,212,255,0.04);
+      border-radius:10px;
+      padding:8px 12px;
+      margin:6px auto;
+      font-size:1.05rem;
+      color:#eef6fc;
+      max-width:90%;
+      border:1px solid #1a3144;
     }
-    .dictation-controls button {
-      padding:6px 18px; border-radius:30px; font-weight:600; font-size:0.8rem;
+    .oral-controls {
+      display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:4px 0;
+    }
+    .oral-controls button {
+      padding:6px 16px; border-radius:30px; font-weight:600; font-size:0.75rem;
       border:1px solid #2a4058; background:rgba(10,18,30,0.6); color:#b0cbe0;
       cursor:pointer; font-family:inherit; transition:all 0.2s;
+      min-height:44px;
     }
-    .dictation-controls button:hover { border-color:#00d4ff; color:#00d4ff; }
-    .dictation-controls button.primary { background:rgba(0,212,255,0.08); border-color:#00d4ff; color:#00d4ff; }
+    .oral-controls button:hover { border-color:#00d4ff; color:#00d4ff; }
+    .oral-controls button.primary { background:rgba(0,212,255,0.08); border-color:#00d4ff; color:#00d4ff; }
+    .oral-controls button.recording { border-color:#ff4444; color:#ff4444; animation:pulse 1s infinite; background:#220000; }
 
-    .dictation-input-group {
-      display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center; width:100%;
+    .oral-input-group {
+      display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:center; width:100%;
     }
-    .dictation-input-group input[type="text"] {
-      flex:1; min-width:160px; padding:10px 16px; border-radius:30px; border:1px solid #2a4058;
-      background:rgba(8,16,26,0.8); color:#eef6fc; font-size:0.95rem; font-family:inherit; outline:none;
+    .oral-input-group input[type="text"] {
+      flex:1; min-width:140px; padding:10px 14px; border-radius:30px; border:1px solid #2a4058;
+      background:rgba(8,16,26,0.8); color:#eef6fc; font-size:0.9rem; font-family:inherit; outline:none;
       transition:border 0.2s;
+      min-height:44px;
     }
-    .dictation-input-group input[type="text"]:focus { border-color:#00d4ff; }
-    .dictation-input-group input[type="text"].correct { border-color:#00e676; background:rgba(0,230,118,0.06); }
-    .dictation-input-group input[type="text"].wrong { border-color:#ff4444; background:rgba(255,68,68,0.06); }
-    .dictation-input-group .action-btn {
-      padding:10px 22px; border-radius:30px; font-weight:600; font-size:0.8rem;
+    .oral-input-group input[type="text"]:focus { border-color:#00d4ff; }
+    .oral-input-group input[type="text"].correct { border-color:#00e676; background:rgba(0,230,118,0.06); }
+    .oral-input-group input[type="text"].wrong { border-color:#ff4444; background:rgba(255,68,68,0.06); }
+    .oral-input-group .action-btn {
+      padding:8px 20px; border-radius:30px; font-weight:600; font-size:0.75rem;
       border:1px solid #00d4ff; background:rgba(0,212,255,0.08); color:#00d4ff;
       cursor:pointer; transition:all 0.2s; font-family:inherit;
+      min-height:44px;
     }
-    .dictation-input-group .action-btn:hover { background:rgba(0,212,255,0.16); }
-    .dictation-input-group .action-btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .oral-input-group .action-btn:hover { background:rgba(0,212,255,0.16); }
+    .oral-input-group .action-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
-    /* Choice / Word order */
-    .choice-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; width:100%; }
-    .choice-btn {
-      padding:10px 14px; border-radius:12px; border:1px solid #2a4058; background:rgba(10,18,30,0.5);
-      color:#d0dbea; font-size:0.85rem; font-family:inherit; cursor:pointer; transition:all 0.15s; text-align:left;
+    /* No manual fallback in quiz, only for repeat */
+    .manual-fallback {
+      display:flex; justify-content:center; gap:6px; margin-top:6px; flex-wrap:wrap;
     }
-    .choice-btn:hover:not(:disabled) { border-color:#00d4ff; background:rgba(0,212,255,0.05); }
-    .choice-btn:disabled { cursor:default; opacity:0.5; }
-    .choice-btn.selected-correct { border-color:#00e676; background:rgba(0,230,118,0.10); color:#b0f0c0; }
-    .choice-btn.selected-wrong { border-color:#ff4444; background:rgba(255,68,68,0.08); color:#ffb0b0; }
-    .choice-btn.show-correct { border-color:#00e676; background:rgba(0,230,118,0.05); }
+    .manual-fallback button {
+      padding:6px 16px; border-radius:30px; font-weight:600; font-size:0.75rem;
+      border:1px dashed #2a5a7a; background:rgba(10,18,30,0.4); color:#7a96b0;
+      cursor:pointer; font-family:inherit; transition:all 0.2s;
+      min-height:44px;
+    }
+    .manual-fallback button:hover:not(:disabled) { border-color:#00d4ff; color:#00d4ff; }
+    .manual-fallback button:disabled { opacity:0.4; cursor:not-allowed; }
+    .manual-fallback button .cd { font-weight:700; color:#ffaa33; }
 
-    .word-bank {
-      display:flex; flex-wrap:wrap; gap:5px; justify-content:center; padding:8px;
-      min-height:44px; background:rgba(8,16,26,0.3); border-radius:12px; border:1px dashed #2a4058; margin-bottom:8px;
-    }
-    .word-chip {
-      padding:6px 14px; border-radius:30px; background:rgba(0,212,255,0.06); border:1px solid #2a5a7a;
-      color:#d0dbea; font-size:0.85rem; font-family:inherit; cursor:pointer; transition:all 0.15s; user-select:none;
-    }
-    .word-chip:hover:not(.placed) { border-color:#00d4ff; background:rgba(0,212,255,0.10); }
-    .word-chip.placed { opacity:0.25; cursor:default; pointer-events:none; }
-    .word-slot-container {
-      display:flex; flex-wrap:wrap; gap:5px; justify-content:center; padding:8px;
-      min-height:44px; background:rgba(8,16,26,0.4); border-radius:12px; border:1px solid #1a3144; margin-bottom:8px;
-    }
-    .word-slot {
-      padding:6px 14px; border-radius:30px; background:rgba(0,212,255,0.03); border:2px dashed #2a5a7a;
-      color:#7a96b0; font-size:0.85rem; font-family:inherit; min-width:36px; text-align:center; cursor:pointer;
-      transition:all 0.15s;
-    }
-    .word-slot.filled { border-style:solid; border-color:#00d4ff; background:rgba(0,212,255,0.06); color:#eef6fc; }
-    .word-slot:hover.filled { border-color:#ff6b6b; }
-    .word-slot.correct-slot { border-color:#00e676; background:rgba(0,230,118,0.06); }
-    .word-slot.wrong-slot { border-color:#ff4444; background:rgba(255,68,68,0.06); }
-    .word-order-actions { display:flex; gap:8px; justify-content:center; margin-top:4px; }
+    /* Progress */
+    .progress-bar { height:4px; background:#131f2e; border-radius:30px; margin:8px 0 4px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#00d4ff,#00e676); width:0%; border-radius:30px; transition:width 0.5s; }
+    .progress-stats { display:flex; justify-content:space-between; font-size:0.65rem; font-weight:500; color:#6a8aa5; }
 
-    /* Feedback */
     .feedback {
-      margin-top:10px; padding:8px 14px; border-radius:10px; font-size:0.85rem; line-height:1.4;
-      border:1px solid transparent; background:rgba(8,16,26,0.5); min-height:36px; text-align:center;
+      margin-top:8px; padding:6px 12px; border-radius:8px; font-size:0.8rem; line-height:1.4;
+      border:1px solid transparent; background:rgba(8,16,26,0.5); min-height:32px; text-align:center;
     }
     .feedback.info { border-color:#00d4ff; color:#90c8e0; }
     .feedback.success { border-color:#00e676; color:#b0f0c0; background:rgba(0,230,118,0.05); }
     .feedback.error { border-color:#ff4444; color:#ffb0b0; background:rgba(255,68,68,0.05); }
     .feedback.warning { border-color:#ffaa33; color:#f0d080; background:rgba(255,170,51,0.05); }
 
-    .progress-bar { height:4px; background:#131f2e; border-radius:30px; margin:10px 0 4px; overflow:hidden; }
-    .progress-fill { height:100%; background:linear-gradient(90deg,#00d4ff,#00e676); width:0%; border-radius:30px; transition:width 0.5s; }
-    .progress-stats { display:flex; justify-content:space-between; font-size:0.7rem; font-weight:500; color:#6a8aa5; }
-
     .compat-warning {
-      background:#1a1a00; border:1px solid #ffaa33; border-radius:10px; padding:8px 12px; margin-bottom:8px;
-      font-size:0.75rem; font-weight:500; color:#f0d080; text-align:left; display:none; line-height:1.4;
+      background:#1a1a00; border:1px solid #ffaa33; border-radius:8px; padding:6px 10px; margin-bottom:6px;
+      font-size:0.7rem; font-weight:500; color:#f0d080; text-align:left; display:none; line-height:1.4;
     }
     .compat-warning.show { display:block; }
 
@@ -343,36 +343,48 @@
     .completion-overlay {
       display:none; position:fixed; top:0;left:0;right:0;bottom:0;
       background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); z-index:2000;
-      justify-content:center; align-items:center; padding:16px;
+      justify-content:center; align-items:center; padding:12px;
     }
     .completion-overlay.active { display:flex; }
     .completion-modal {
-      background:#0b111b; border:2px solid #00e676; border-radius:24px; max-width:380px; width:100%;
-      padding:28px 24px; text-align:center; box-shadow:0 0 50px rgba(0,230,118,0.10);
+      background:#0b111b; border:2px solid #00e676; border-radius:20px; max-width:360px; width:100%;
+      padding:24px 20px; text-align:center; box-shadow:0 0 50px rgba(0,230,118,0.10);
     }
-    .completion-modal .big { font-size:3.5rem; margin-bottom:4px; }
-    .completion-modal h2 { color:#00e676; font-size:1.4rem; margin-bottom:4px; }
-    .completion-modal .summary { font-size:0.9rem; color:#b0cbe0; margin:8px 0; line-height:1.5; }
+    .completion-modal .big { font-size:3rem; margin-bottom:4px; }
+    .completion-modal h2 { color:#00e676; font-size:1.2rem; margin-bottom:4px; }
+    .completion-modal .summary { font-size:0.85rem; color:#b0cbe0; margin:6px 0; line-height:1.5; }
     .completion-modal .summary span { color:#00d4ff; font-weight:700; }
-    .completion-modal .xp { font-size:1rem; color:#ffaa33; margin:4px 0; }
+    .completion-modal .xp { font-size:0.9rem; color:#ffaa33; margin:4px 0; }
     .completion-modal .level { color:#ff6b6b; font-weight:700; }
     .completion-modal button {
-      margin-top:12px; background:rgba(0,212,255,0.10); border:1px solid #00d4ff; color:#00d4ff;
-      padding:8px 24px; border-radius:30px; font-family:inherit; font-weight:700; font-size:0.85rem;
+      margin-top:10px; background:rgba(0,212,255,0.10); border:1px solid #00d4ff; color:#00d4ff;
+      padding:6px 20px; border-radius:30px; font-family:inherit; font-weight:700; font-size:0.8rem;
       cursor:pointer; transition:all 0.2s;
+      min-height:44px;
     }
     .completion-modal button:hover { background:rgba(0,212,255,0.18); }
 
     @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
 
+    /* ===== RESPONSIVE ===== */
     @media (max-width:480px) {
-      .header h1 { font-size:1rem; }
-      .header .mini-stats { font-size:0.6rem; padding:2px 8px; gap:6px; }
-      .sentence-text { font-size:1rem; }
-      .step-btn { padding:6px 14px; font-size:0.7rem; min-width:60px; }
+      body { padding:8px; }
+      .header { padding:8px 12px; }
+      .header h1 { font-size:0.95rem; }
+      .header .mini-stats { font-size:0.55rem; padding:2px 8px; gap:6px; }
+      .home-screen { padding:14px 10px; }
       .text-grid { grid-template-columns:1fr; }
-      .choice-grid { grid-template-columns:1fr; }
-      .completion-modal { padding:20px 16px; }
+      .text-card h3 { font-size:0.8rem; }
+      .card { padding:10px 8px; }
+      .sentence-text { font-size:1rem; }
+      .step-btn { font-size:0.7rem; padding:6px 12px; min-height:40px; }
+      .oral-controls button { font-size:0.7rem; padding:4px 12px; min-height:40px; }
+      .oral-input-group input[type="text"] { font-size:0.85rem; padding:8px 12px; min-height:40px; }
+      .oral-input-group .action-btn { font-size:0.7rem; padding:6px 16px; min-height:40px; }
+      .manual-fallback button { font-size:0.7rem; padding:4px 12px; min-height:40px; }
+      .completion-modal { padding:18px 14px; }
+      .completion-modal .big { font-size:2.5rem; }
+      .completion-modal h2 { font-size:1rem; }
     }
   </style>
 </head>
@@ -409,7 +421,7 @@
       <button id="grammarCloseBtn" class="modal-close">✕</button>
       <h2>📘 Grammar Reference</h2>
       <div id="grammarContent"></div>
-      <div style="margin-top:12px;border-top:1px solid #1a3144;padding-top:10px;text-align:right;color:#5a7a94;font-size:0.7rem;">Click a topic to expand.</div>
+      <div style="margin-top:10px;border-top:1px solid #1a3144;padding-top:8px;text-align:right;color:#5a7a94;font-size:0.65rem;">Click a topic to expand.</div>
     </div>
   </div>
 
@@ -422,7 +434,6 @@
 
       <div id="textHeader" class="text-header"></div>
 
-      <!-- Simple step dots -->
       <div class="step-progress" id="stepProgress">
         <div class="step-dot active" data-step="0">1</div>
         <div class="step-dot locked" data-step="1">2</div>
@@ -436,10 +447,10 @@
         <button class="step-btn primary" id="stepListenBtn">👂 Listen</button>
         <button class="step-btn" id="stepRepeatBtn" disabled>🗣️ Repeat</button>
         <button class="step-btn" id="stepDictationBtn" disabled>✍️ Dictation</button>
-        <button class="step-btn" id="stepQuizBtn" disabled>🧩 Quiz</button>
+        <button class="step-btn" id="stepQuizBtn" disabled>💬 Quiz</button>
       </div>
 
-      <div class="sentence-box">
+      <div class="sentence-box" id="sentenceBox">
         <div class="sentence-text" id="sentenceText">Loading...</div>
         <div class="sentence-translation">
           <span class="fr"><span id="sentenceTranslation"></span></span>
@@ -479,9 +490,9 @@
   // CONFIG
   // =============================================================
   const C = {
-    SIMILARITY_GOOD: 0.55,      // lowered – easier to pass
+    SIMILARITY_GOOD: 0.55,
     AUTO_ADVANCE: 1800,
-    RECOGNITION_TIMEOUT: 10000,
+    RECOGNITION_TIMEOUT: 12000,
     XP_PER_STEP: [5, 10, 10, 15],
     XP_REVIEW: 4,
     REVIEW_SIZE: 8,
@@ -489,7 +500,7 @@
   };
 
   // =============================================================
-  // DATA
+  // DATA (same as before)
   // =============================================================
   const textsData = {
     intro: {
@@ -691,25 +702,25 @@
   };
 
   const grammarData = [
-    { title: "Present Simple vs. Present Continuous", points: [
-        "Present simple for routines, facts: <em>I configure firewall policies every week.</em>",
-        "Present continuous for now/temporary: <em>I am currently troubleshooting a VPN outage.</em>"
+    { title: "Present Simple vs. Continuous", points: [
+        "Simple for routines, facts: <em>I configure firewall policies weekly.</em>",
+        "Continuous for now/temporary: <em>I am troubleshooting an outage.</em>"
       ], tip: "Use simple for job descriptions, continuous for live incidents." },
     { title: "Present Perfect", points: [
-        "Links past to present: <em>I have configured over fifty policies this year.</em>",
-        "Past simple for a specific time: <em>I configured the policy yesterday.</em>"
+        "Links past to present: <em>I have configured 50 policies this year.</em>",
+        "Past simple for specific time: <em>I configured the policy yesterday.</em>"
       ], tip: "If a specific date appears, use past simple." },
     { title: "Past Simple vs. Past Perfect", points: [
-        "Past perfect is the earlier past event: <em>The attacker had already exploited the flaw before we patched it.</em>"
+        "Past perfect is the earlier past: <em>The attacker had exploited the flaw before we patched.</em>"
       ], tip: "In incident reports, past perfect shows what went wrong first." },
     { title: "Conditionals", points: [
-        "Zero — general rules: <em>If a policy denies traffic, the firewall drops the packet.</em>",
-        "First — real future: <em>If the tunnel fails, we will switch to the backup.</em>",
+        "Zero — general: <em>If a policy denies traffic, the firewall drops the packet.</em>",
+        "First — real future: <em>If the tunnel fails, we switch to backup.</em>",
         "Second — hypothetical: <em>If I had admin rights, I would disable that account.</em>"
-      ], tip: "Zero and first conditionals dominate technical documentation." },
+      ], tip: "Zero and first conditionals dominate documentation." },
     { title: "Passive Voice", points: [
-        "Common in security writing: <em>The traffic is inspected by the IPS engine.</em>",
-        "Used when actor is unknown: <em>Two vulnerabilities were identified during the audit.</em>"
+        "Common in security: <em>The traffic is inspected by the IPS.</em>",
+        "Used when actor unknown: <em>Two vulnerabilities were identified.</em>"
       ], tip: "Don't overuse it — name the actor when accountability matters." },
     { title: "Modal Verbs", points: [
         "must / have to — obligation: <em>Logs must be retained for 90 days.</em>",
@@ -718,7 +729,7 @@
       ], tip: "\"Must\" is stronger than \"should\" — use for compliance." },
     { title: "Prepositions", points: [
         "connect <em>to</em> a server", "protect <em>against</em> threats", "responsible <em>for</em> security"
-      ], tip: "These pairings are fixed — memorize them as whole chunks." },
+      ], tip: "These pairings are fixed — memorize them as chunks." },
     { title: "Articles", points: [
         "\"the\" for specific: <em>The firewall blocked the request.</em>",
         "\"a/an\" for first mention: <em>We deployed a new sensor.</em>",
@@ -726,14 +737,14 @@
       ], tip: "Saying \"the security\" to mean the general concept is a common mistake." },
     { title: "Relative Clauses", points: [
         "who for people: <em>The engineer who configured the VPN is on leave.</em>",
-        "which/that for things: <em>A vulnerability that allows remote code execution is critical.</em>"
-      ], tip: "Relative clauses let you define technical terms precisely." },
+        "which/that for things: <em>A vulnerability that allows RCE is critical.</em>"
+      ], tip: "Relative clauses let you define terms precisely." },
     { title: "Future Forms", points: [
-        "will — decisions/predictions: <em>We will patch this tonight.</em>",
+        "will — decisions/predictions: <em>We will patch tonight.</em>",
         "going to — plans: <em>We are going to migrate to IKEv2.</em>"
       ], tip: "In meetings, \"going to\" signals a decided plan." },
     { title: "Phrasal Verbs", points: [
-        "set up (configure)", "log in / log out", "back up", "shut down", "roll out", "look into (investigate)"
+        "set up (configure)", "log in / out", "back up", "shut down", "roll out", "look into (investigate)"
       ], tip: "These are everyday spoken English in meetings." },
     { title: "Questions", points: [
         "Yes/No: <em>Is the tunnel up?</em>",
@@ -742,20 +753,234 @@
       ], tip: "Indirect questions sound more professional with clients." },
     { title: "Adverbs", points: [
         "Frequency: <em>We regularly update signatures.</em>",
-        "Manner: <em>The system automatically blocks known threats.</em>"
+        "Manner: <em>The system automatically blocks threats.</em>"
       ], tip: "Frequency adverbs go before the main verb." },
     { title: "Comparatives & Superlatives", points: [
         "<em>This algorithm is more secure than the previous one.</em>",
-        "<em>AES-256 is the strongest encryption we use.</em>"
-      ], tip: "Useful for comparing configurations and vendors." },
+        "<em>AES-256 is the strongest encryption.</em>"
+      ], tip: "Useful for comparing configurations." },
     { title: "Countable vs. Uncountable", points: [
-        "Uncountable in security: <em>information, traffic, access, software, hardware, malware</em>.",
+        "Uncountable: <em>information, traffic, access, software, hardware, malware</em>.",
         "Use much / a lot of / less with these."
       ], tip: "\"We collect a lot of information\" is correct; \"many informations\" is not." }
   ];
 
   // =============================================================
-  // STORAGE
+  // QUESTION GENERATOR (creates a natural question from a sentence)
+  // =============================================================
+  function generateQuestion(sentence) {
+    const s = sentence.trim();
+    // Patterns (regex) and corresponding questions
+    const patterns = [
+      // Intro / professional
+      { re: /^my name is (.+?) and i am a (.+)$/i, q: (m) => `What is your name and what do you do?` },
+      { re: /^i am (.+)$/i, q: (m) => `Who are you?` },
+      { re: /^my name is (.+)$/i, q: (m) => `What is your name?` },
+      { re: /^i specialize in (.+)$/i, q: (m) => `What do you specialize in?` },
+      { re: /^i have over (.+) years of experience in the (.+) industry$/i, q: (m) => `How many years of experience do you have and in which industry?` },
+      { re: /^i have over (.+) years of experience$/i, q: (m) => `How many years of experience do you have?` },
+      { re: /^my primary responsibility is to (.+)$/i, q: (m) => `What is your primary responsibility?` },
+      { re: /^i am currently preparing for the (.+)$/i, q: (m) => `What are you currently preparing for?` },
+      { re: /^i work closely with the (.+)$/i, q: (m) => `Who do you work closely with?` },
+      { re: /^i enjoy (.+)$/i, q: (m) => `What do you enjoy?` },
+      { re: /^my goal is to (.+)$/i, q: (m) => `What is your goal?` },
+      { re: /^i am proficient in (.+)$/i, q: (m) => `What are you proficient in?` },
+      { re: /^i collaborate with my team to (.+)$/i, q: (m) => `What do you collaborate on with your team?` },
+      { re: /^i am responsible for (.+)$/i, q: (m) => `What are you responsible for?` },
+      { re: /^i regularly conduct (.+)$/i, q: (m) => `What do you regularly conduct?` },
+      { re: /^i believe in (.+)$/i, q: (m) => `What do you believe in?` },
+      { re: /^i communicate with stakeholders about (.+)$/i, q: (m) => `What do you communicate with stakeholders about?` },
+      { re: /^i am excited to (.+)$/i, q: (m) => `What are you excited to do?` },
+      { re: /^i work in a (.+) environment$/i, q: (m) => `What kind of environment do you work in?` },
+      { re: /^i use various tools to (.+)$/i, q: (m) => `What do you use various tools for?` },
+      { re: /^i document all configurations for (.+)$/i, q: (m) => `Why do you document all configurations?` },
+      { re: /^i often participate in (.+)$/i, q: (m) => `What do you often participate in?` },
+      { re: /^i look forward to (.+)$/i, q: (m) => `What do you look forward to?` },
+
+      // Firewall & NAT
+      { re: /^i configure a firewall policy to (.+)$/i, q: (m) => `What do you configure a firewall policy to do?` },
+      { re: /^we set the source and destination addresses$/i, q: () => `What do you set?` },
+      { re: /^the firewall denies any traffic by default$/i, q: () => `What does the firewall do by default?` },
+      { re: /^we enable nat to (.+)$/i, q: (m) => `Why do you enable NAT?` },
+      { re: /^i create an ipv4 policy for (.+)$/i, q: (m) => `What kind of policy do you create and for whom?` },
+      { re: /^we place the policy above the implicit deny rule$/i, q: () => `Where do you place the policy?` },
+      { re: /^the administrator edits the policy sequence$/i, q: () => `What does the administrator edit?` },
+      { re: /^we disable nat for this specific interface$/i, q: () => `What do you disable for this specific interface?` },
+      { re: /^i add a comment to explain the policy purpose$/i, q: () => `What do you add to explain the policy purpose?` },
+      { re: /^the policy matches the traffic based on the service$/i, q: () => `How does the policy match traffic?` },
+      { re: /^we enable logging to monitor denied connections$/i, q: () => `Why do you enable logging?` },
+      { re: /^i need to clone this policy for another vlan$/i, q: () => `What do you need to clone and why?` },
+      { re: /^the firewall processes policies from top to bottom$/i, q: () => `How does the firewall process policies?` },
+      { re: /^we use central nat to simplify address translation$/i, q: () => `What do you use central NAT for?` },
+      { re: /^i verify the policy hit count to check usage$/i, q: () => `Why do you verify the policy hit count?` },
+
+      // Routing
+      { re: /^we configure a default route to the internet gateway$/i, q: () => `What do you configure a default route to?` },
+      { re: /^the static route points to the next-hop ip address$/i, q: () => `What does the static route point to?` },
+      { re: /^we set the administrative distance to influence routing$/i, q: () => `What do you set to influence routing?` },
+      { re: /^i add a policy route to override the routing table$/i, q: () => `What do you add to override the routing table?` },
+      { re: /^the device uses the routing table to forward packets$/i, q: () => `What does the device use to forward packets?` },
+      { re: /^we verify the route is active in the forwarding table$/i, q: () => `What do you verify?` },
+      { re: /^i configure the interface ip address for the lan$/i, q: () => `What do you configure for the LAN?` },
+      { re: /^the gateway is unreachable, so we check the physical link$/i, q: () => `What do you do when the gateway is unreachable?` },
+      { re: /^we enable routing on the virtual domain \(vdom\)$/i, q: () => `What do you enable on the virtual domain?` },
+      { re: /^i delete the old static route to avoid conflicts$/i, q: () => `Why do you delete the old static route?` },
+      { re: /^the routing protocol learns dynamic routes automatically$/i, q: () => `How does the routing protocol learn dynamic routes?` },
+      { re: /^we use a default route for all unknown destinations$/i, q: () => `What do you use for all unknown destinations?` },
+      { re: /^i check the route cache for performance issues$/i, q: () => `What do you check for performance issues?` },
+      { re: /^the network administrator manages the routing table$/i, q: () => `Who manages the routing table?` },
+      { re: /^we prioritize the static route over the dynamic one$/i, q: () => `Which route do you prioritize?` },
+
+      // Authentication
+      { re: /^we authenticate users before granting network access$/i, q: () => `What do you do before granting network access?` },
+      { re: /^the fortigate connects to an ldap server for verification$/i, q: () => `What does the FortiGate connect to for verification?` },
+      { re: /^i configure two-factor authentication for vpn users$/i, q: () => `What do you configure for VPN users?` },
+      { re: /^the local user database stores credentials securely$/i, q: () => `What does the local user database store securely?` },
+      { re: /^we enable certificate-based authentication for clients$/i, q: () => `What do you enable for clients?` },
+      { re: /^the user fails to authenticate because of an invalid password$/i, q: () => `Why does the user fail to authenticate?` },
+      { re: /^i set up a radius server for centralized authentication$/i, q: () => `What do you set up for centralized authentication?` },
+      { re: /^the firewall prompts for credentials on the login page$/i, q: () => `What does the firewall prompt for?` },
+      { re: /^we define authentication rules for different user groups$/i, q: () => `What do you define for different user groups?` },
+      { re: /^the session expires after a period of inactivity$/i, q: () => `What happens after a period of inactivity?` },
+      { re: /^i test the ldap connection using the cli command$/i, q: () => `What do you test using the CLI command?` },
+      { re: /^we sync user accounts from active directory$/i, q: () => `Where do you sync user accounts from?` },
+      { re: /^the user identity is used for policy matching$/i, q: () => `What is the user identity used for?` },
+      { re: /^i forgot my password and need to reset it$/i, q: () => `What do you need to do if you forget your password?` },
+      { re: /^we implement guest access with limited privileges$/i, q: () => `What do you implement with limited privileges?` },
+
+      // SSL VPN
+      { re: /^we configure ssl vpn to provide remote access$/i, q: () => `What do you configure to provide remote access?` },
+      { re: /^the ssl vpn portal hosts the web applications$/i, q: () => `What does the SSL VPN portal host?` },
+      { re: /^i create a tunnel mode for full network access$/i, q: () => `What do you create for full network access?` },
+      { re: /^the client downloads the vpn client from the portal$/i, q: () => `What does the client download from the portal?` },
+      { re: /^we enable split tunneling to optimize bandwidth$/i, q: () => `Why do you enable split tunneling?` },
+      { re: /^the ssl certificate is trusted by the client browser$/i, q: () => `What is trusted by the client browser?` },
+      { re: /^i restrict access to specific subnet via ssl vpn$/i, q: () => `What do you restrict via SSL VPN?` },
+      { re: /^the session uses tls 1.2 for encryption$/i, q: () => `What does the session use for encryption?` },
+      { re: /^we check the ssl vpn logs for user connections$/i, q: () => `What do you check for user connections?` },
+      { re: /^the user connects successfully from their laptop$/i, q: () => `Where does the user connect successfully from?` },
+      { re: /^i configure the portal to display bookmarks$/i, q: () => `What do you configure the portal to display?` },
+      { re: /^the security policy enforces mfa for vpn users$/i, q: () => `What does the security policy enforce for VPN users?` },
+      { re: /^we test the vpn connection before going live$/i, q: () => `When do you test the VPN connection?` },
+      { re: /^the vpn tunnel drops due to a timeout$/i, q: () => `Why does the VPN tunnel drop?` },
+      { re: /^i assign ip pools to ssl vpn clients$/i, q: () => `What do you assign to SSL VPN clients?` },
+
+      // IPsec
+      { re: /^we configure ipsec vpn for site-to-site connectivity$/i, q: () => `What do you configure for site-to-site connectivity?` },
+      { re: /^phase 1 establishes the secure channel between peers$/i, q: () => `What does phase 1 establish?` },
+      { re: /^we use pre-shared keys to authenticate the tunnel$/i, q: () => `What do you use to authenticate the tunnel?` },
+      { re: /^phase 2 negotiates the encryption algorithms$/i, q: () => `What does phase 2 negotiate?` },
+      { re: /^the ike version is set to version 2 for better security$/i, q: () => `What is the IKE version set to and why?` },
+      { re: /^we define the local and remote subnets for the vpn$/i, q: () => `What do you define for the VPN?` },
+      { re: /^the vpn tunnel fails because of a mismatch in pre-shared keys$/i, q: () => `Why does the VPN tunnel fail?` },
+      { re: /^i debug the ipsec tunnel using the cli$/i, q: () => `What do you debug using the CLI?` },
+      { re: /^the security association is established successfully$/i, q: () => `What is established successfully?` },
+      { re: /^we enable dead peer detection to monitor the tunnel$/i, q: () => `Why do you enable dead peer detection?` },
+      { re: /^the traffic is encrypted using aes-256$/i, q: () => `What encryption is used for traffic?` },
+      { re: /^i configure the vpn interface for routing$/i, q: () => `What do you configure for routing?` },
+      { re: /^the remote gateway is behind a dynamic ip address$/i, q: () => `What is the remote gateway behind?` },
+      { re: /^we use digital certificates for stronger authentication$/i, q: () => `What do you use for stronger authentication?` },
+      { re: /^the vpn policy must allow traffic to traverse the tunnel$/i, q: () => `What must the VPN policy allow?` },
+
+      // IPS
+      { re: /^ips protects the network from known exploits$/i, q: () => `What does IPS protect the network from?` },
+      { re: /^we enable ips on the firewall policy to scan traffic$/i, q: () => `What do you enable on the firewall policy to scan traffic?` },
+      { re: /^the ips signature database is updated regularly$/i, q: () => `What is updated regularly?` },
+      { re: /^i configure a custom signature for a specific threat$/i, q: () => `What do you configure for a specific threat?` },
+      { re: /^the sensor detects a brute force attack on ssh$/i, q: () => `What does the sensor detect on SSH?` },
+      { re: /^we set the ips action to block and log the traffic$/i, q: () => `What action do you set the IPS to?` },
+      { re: /^the dos policy prevents flooding attacks$/i, q: () => `What does the DoS policy prevent?` },
+      { re: /^i analyze the ips logs to identify false positives$/i, q: () => `What do you analyze to identify false positives?` },
+      { re: /^the security profile is applied to inbound traffic$/i, q: () => `What is applied to inbound traffic?` },
+      { re: /^we enable anomaly detection for unusual patterns$/i, q: () => `What do you enable for unusual patterns?` },
+      { re: /^the ips engine is updated to the latest version$/i, q: () => `What is updated to the latest version?` },
+      { re: /^i exclude internal ips from ips scanning$/i, q: () => `What do you exclude from IPS scanning?` },
+      { re: /^the firewall drops the packet when a signature matches$/i, q: () => `What does the firewall do when a signature matches?` },
+      { re: /^we use the ips to protect our web servers$/i, q: () => `What do you use the IPS for?` },
+      { re: /^the system generates an alert for critical vulnerabilities$/i, q: () => `What does the system generate for critical vulnerabilities?` },
+
+      // Web & App Control
+      { re: /^we configure web filtering to block malicious sites$/i, q: () => `What do you configure to block malicious sites?` },
+      { re: /^the url filter blocks access to social media$/i, q: () => `What does the URL filter block?` },
+      { re: /^we enable application control to manage cloud apps$/i, q: () => `What do you enable to manage cloud apps?` },
+      { re: /^the web rating overrides the default category$/i, q: () => `What overrides the default category?` },
+      { re: /^i create a profile to block file sharing applications$/i, q: () => `What do you create to block file sharing applications?` },
+      { re: /^the firewall inspects https traffic using certificate inspection$/i, q: () => `How does the firewall inspect HTTPS traffic?` },
+      { re: /^we allow streaming services only during off-peak hours$/i, q: () => `When do you allow streaming services?` },
+      { re: /^the application control signature identifies the protocol$/i, q: () => `What does the application control signature identify?` },
+      { re: /^i whitelist trusted domains for research$/i, q: () => `What do you whitelist for research?` },
+      { re: /^the web filter sends a warning to the user$/i, q: () => `What does the web filter send to the user?` },
+      { re: /^we combine web filtering with application control$/i, q: () => `What do you combine?` },
+      { re: /^the administrator monitors web usage statistics$/i, q: () => `What does the administrator monitor?` },
+      { re: /^i configure a quota for social media usage$/i, q: () => `What do you configure for social media usage?` },
+      { re: /^the system blocks access to gambling websites$/i, q: () => `What does the system block access to?` },
+      { re: /^we update the web filter database daily$/i, q: () => `How often do you update the web filter database?` },
+
+      // SD-WAN
+      { re: /^we configure sd-wan to improve network reliability$/i, q: () => `What do you configure to improve network reliability?` },
+      { re: /^the sd-wan interface combines multiple wan links$/i, q: () => `What does the SD-WAN interface combine?` },
+      { re: /^we set the load balancing method to optimal performance$/i, q: () => `What do you set to optimal performance?` },
+      { re: /^the sla monitoring ensures link quality$/i, q: () => `What does SLA monitoring ensure?` },
+      { re: /^i create a performance sla for latency and jitter$/i, q: () => `What do you create for latency and jitter?` },
+      { re: /^the sd-wan rules route traffic based on priority$/i, q: () => `How do SD-WAN rules route traffic?` },
+      { re: /^we enable health check probes to detect failures$/i, q: () => `What do you enable to detect failures?` },
+      { re: /^the link fails over to the backup connection$/i, q: () => `What does the link fail over to?` },
+      { re: /^i adjust the bandwidth thresholds for traffic shaping$/i, q: () => `What do you adjust for traffic shaping?` },
+      { re: /^the sd-wan zone includes three physical interfaces$/i, q: () => `What does the SD-WAN zone include?` },
+      { re: /^we monitor the sd-wan performance on the dashboard$/i, q: () => `Where do you monitor SD-WAN performance?` },
+      { re: /^the algorithm selects the best path for voip traffic$/i, q: () => `What does the algorithm select for VoIP traffic?` },
+      { re: /^i add a static route using the sd-wan interface$/i, q: () => `What do you add using the SD-WAN interface?` },
+      { re: /^the connection latency is too high, so we switch links$/i, q: () => `What do you do when connection latency is too high?` },
+      { re: /^we configure sd-wan rules based on application type$/i, q: () => `What are SD-WAN rules based on?` },
+
+      // HA
+      { re: /^we configure ha to ensure network uptime$/i, q: () => `What do you configure to ensure network uptime?` },
+      { re: /^the fgcp cluster provides active-passive failover$/i, q: () => `What does the FGCP cluster provide?` },
+      { re: /^we synchronize the configuration between cluster members$/i, q: () => `What do you synchronize between cluster members?` },
+      { re: /^the heartbeat interface monitors peer availability$/i, q: () => `What does the heartbeat interface monitor?` },
+      { re: /^i set the priority value to select the primary unit$/i, q: () => `What do you set to select the primary unit?` },
+      { re: /^the secondary unit takes over when the primary fails$/i, q: () => `What happens when the primary fails?` },
+      { re: /^we enable session synchronization to prevent disruption$/i, q: () => `Why do you enable session synchronization?` },
+      { re: /^the failover time is under one second$/i, q: () => `How fast is the failover time?` },
+      { re: /^i check the ha status using the cli$/i, q: () => `What do you check using the CLI?` },
+      { re: /^the cluster uses virtual mac addresses$/i, q: () => `What does the cluster use?` },
+      { re: /^we test the failover during maintenance windows$/i, q: () => `When do you test the failover?` },
+      { re: /^the configuration must be identical on all nodes$/i, q: () => `What must be identical on all nodes?` },
+      { re: /^i add a third unit to the ha cluster$/i, q: () => `What do you add to the HA cluster?` },
+      { re: /^the ha link requires a dedicated network interface$/i, q: () => `What does the HA link require?` },
+      { re: /^we monitor the cluster health via snmp$/i, q: () => `How do you monitor the cluster health?` },
+
+      // Logging & Troubleshooting
+      { re: /^we send logs to the fortianalyzer for centralization$/i, q: () => `Where do you send logs for centralization?` },
+      { re: /^the syslog server receives real-time event data$/i, q: () => `What does the syslog server receive?` },
+      { re: /^i enable debug mode to trace packet flow$/i, q: () => `What do you enable to trace packet flow?` },
+      { re: /^the log shows a denied connection from a suspicious ip$/i, q: () => `What does the log show?` },
+      { re: /^we use the packet capture tool to analyze traffic$/i, q: () => `What do you use to analyze traffic?` },
+      { re: /^the cli command provides detailed system status$/i, q: () => `What does the CLI command provide?` },
+      { re: /^i filter logs by severity level to reduce noise$/i, q: () => `What do you filter logs by?` },
+      { re: /^the administrator checks the event logs daily$/i, q: () => `How often does the administrator check event logs?` },
+      { re: /^we troubleshoot connectivity issues using the diagnose command$/i, q: () => `How do you troubleshoot connectivity issues?` },
+      { re: /^the disk is full, so we rotate the log files$/i, q: () => `What do you do when the disk is full?` },
+      { re: /^i export the logs for external analysis$/i, q: () => `What do you export for external analysis?` },
+      { re: /^the system alerts me to high cpu usage$/i, q: () => `What does the system alert you to?` },
+      { re: /^we verify the logging settings in the configuration$/i, q: () => `What do you verify in the configuration?` },
+      { re: /^the troubleshooting guide helps fix common errors$/i, q: () => `What does the troubleshooting guide help with?` },
+      { re: /^i test the connectivity using the ping command$/i, q: () => `How do you test connectivity?` }
+    ];
+
+    // Try to match a pattern
+    for (const p of patterns) {
+      const match = s.match(p.re);
+      if (match) {
+        return p.q(match);
+      }
+    }
+    // Fallback
+    return "What would you say in this situation?";
+  }
+
+  // =============================================================
+  // STORAGE (same as before)
   // =============================================================
   const Store = {
     available: (() => { try { localStorage.setItem('_',''); localStorage.removeItem('_'); return true; } catch(e){ return false; } })(),
@@ -851,7 +1076,9 @@
     reviewCorrect: 0,
     isListening: false,
     recognition: null,
-    speechSupported: !!(window.SpeechRecognition || window.webkitSpeechRecognition)
+    speechSupported: !!(window.SpeechRecognition || window.webkitSpeechRecognition),
+    originalSentence: '',
+    originalTranslation: ''
   };
 
   // =============================================================
@@ -867,6 +1094,7 @@
   const backBtn = $('backToHomeBtn');
   const textHeader = $('textHeader');
   const reviewBanner = $('reviewBanner');
+  const sentenceBox = $('sentenceBox');
   const sentenceEl = $('sentenceText');
   const translationEl = $('sentenceTranslation');
   const playFrBtn = $('playFrBtn');
@@ -918,6 +1146,17 @@
     return { done, total };
   }
 
+  function storeOriginalDisplay() {
+    state.originalSentence = sentenceEl.textContent;
+    state.originalTranslation = translationEl.textContent;
+  }
+
+  function restoreOriginalDisplay() {
+    if (state.originalSentence) sentenceEl.textContent = state.originalSentence;
+    if (state.originalTranslation) translationEl.textContent = state.originalTranslation;
+    sentenceBox.classList.remove('dictation-mode', 'quiz-mode');
+  }
+
   function updateUI() {
     if (!state.sentences.length) return;
     const dots = stepDots.querySelectorAll('.step-dot');
@@ -934,9 +1173,11 @@
     stepDictation.disabled = (done < 2);
     stepQuiz.disabled = (done < 3);
 
-    if (state.sentences[state.index]) {
-      sentenceEl.textContent = state.sentences[state.index].en;
-      translationEl.textContent = state.sentences[state.index].fr;
+    if (!sentenceBox.classList.contains('dictation-mode') && !sentenceBox.classList.contains('quiz-mode')) {
+      if (state.sentences[state.index]) {
+        sentenceEl.textContent = state.sentences[state.index].en;
+        translationEl.textContent = state.sentences[state.index].fr;
+      }
     }
 
     const prog = overallProgress();
@@ -955,7 +1196,7 @@
 
     switch(step) {
       case 0:
-        activityArea.innerHTML = '<div style="text-align:center;color:#7a96b0;padding:6px;">👂 Press "Listen" to hear the sentence.</div>';
+        activityArea.innerHTML = '<div style="text-align:center;color:#7a96b0;padding:4px;">👂 Press "Listen" to hear the sentence.</div>';
         break;
       case 1: {
         const support = state.speechSupported
@@ -963,9 +1204,9 @@
           : '🗣️ Voice recognition not available — use the manual button below.';
         activityArea.innerHTML = `
           <div style="text-align:center;color:#7a96b0;padding:4px;">${support}</div>
-          <div style="display:flex;justify-content:center;gap:8px;margin-top:4px;">
+          <div class="manual-fallback">
             <button class="step-btn" id="manualRepeatBtn" disabled>
-              ✋ I said it <span id="manualCountdown">(3s)</span>
+              ✋ I said it <span class="cd" id="manualCountdown">(3s)</span>
             </button>
           </div>
         `;
@@ -995,16 +1236,19 @@
         renderDictation(s);
         break;
       case 3:
-        renderQuiz(s);
+        renderDialogueQuiz(s);
         break;
     }
   }
 
-  // ---- Dictation (new) ----
+  // ---- Dictation (unchanged) ----
   function renderDictation(s) {
-    // Pick a key word or short phrase from the sentence
+    storeOriginalDisplay();
+    sentenceEl.textContent = '🎧 Listen and type the word';
+    translationEl.textContent = s.fr;
+    sentenceBox.classList.add('dictation-mode');
+
     const words = s.en.replace(/[.,!?]/g,'').split(/\s+/);
-    // Try to pick a meaningful content word (not stopword, length > 3)
     const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by']);
     let candidates = words.map((w,i) => ({ w, i })).filter(o => o.w.length > 3 && !stop.has(o.w.toLowerCase()));
     if (candidates.length === 0) candidates = words.map((w,i) => ({ w, i }));
@@ -1012,15 +1256,15 @@
     const targetWord = pick.w;
 
     activityArea.innerHTML = `
-      <div class="dictation-prompt">
-        🎧 Listen to the audio, then type the word or expression you hear.
-        <div style="font-size:0.75rem;color:#5a7a94;margin-top:2px;">Hint: it's from the sentence above.</div>
+      <div class="oral-prompt">
+        🎧 Listen to the audio, then type the word you hear.
+        <div style="font-size:0.7rem;color:#5a7a94;margin-top:2px;">It’s from the sentence you heard earlier.</div>
       </div>
-      <div class="dictation-controls">
-        <button id="dictationPlayBtn" class="primary">🔊 Play word</button>
+      <div class="oral-controls">
+        <button class="primary" id="dictationPlayBtn">🔊 Play word</button>
         <button id="dictationPlaySlowBtn">🐢 Slow</button>
       </div>
-      <div class="dictation-input-group">
+      <div class="oral-input-group">
         <input type="text" id="dictationInput" placeholder="Type what you hear..." autocomplete="off" spellcheck="false">
         <button class="action-btn" id="dictationSubmitBtn">✓ Check</button>
       </div>
@@ -1029,10 +1273,7 @@
     const input = $('dictationInput');
     const submitBtn = $('dictationSubmitBtn');
 
-    function playWord(rate) {
-      speak(targetWord, 'en-US', rate);
-    }
-
+    function playWord(rate) { speak(targetWord, 'en-US', rate); }
     $('dictationPlayBtn').onclick = () => playWord(0.7);
     $('dictationPlaySlowBtn').onclick = () => playWord(0.35);
 
@@ -1042,152 +1283,157 @@
       if (!val) { showFeedback('Please type something', 'warning'); return; }
       const norm = t => t.toLowerCase().replace(/[^\w']/g,'').trim();
       const isCorrect = norm(val) === norm(targetWord);
-
       if (isCorrect) {
         input.className = 'correct';
         showFeedback('✅ Perfect! You heard "'+targetWord+'"', 'success');
         submitBtn.disabled = true; input.disabled = true;
-        markStepDone(2);
+        setTimeout(() => { restoreOriginalDisplay(); markStepDone(2); }, 700);
       } else {
         input.className = 'wrong';
-        showFeedback('❌ Not quite. Listen again and try.', 'error');
+        showFeedback('❌ Not quite. Listen again.', 'error');
         setTimeout(() => { input.className = ''; }, 1500);
       }
     }
-
     submitBtn.onclick = checkDictation;
     input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); checkDictation(); } };
     setTimeout(() => input.focus(), 150);
   }
 
-  // ---- Quiz ----
-  function renderQuiz(s) {
-    const modes = ['choice','wordorder'];
-    const mode = modes[Math.floor(Math.random() * modes.length)];
-    if (mode === 'choice') renderChoice(s, ()=>markStepDone(3));
-    else renderWordOrder(s, ()=>markStepDone(3));
-  }
+  // ---- Dialogue Quiz (Q&A, no manual fallback) ----
+  function renderDialogueQuiz(s) {
+    storeOriginalDisplay();
 
-  function renderChoice(s, onSuccess) {
-    const correct = s.en;
-    const pool = state.sentences.filter((_,i) => state.sentences[i] !== s).map(x => x.en);
-    const wrongs = shuffle(pool).slice(0,3);
-    while (wrongs.length < 3) wrongs.push('—');
-    const options = shuffle([correct, ...wrongs]);
+    const question = generateQuestion(s.en);
+    const expectedAnswer = s.en;
+
+    // Show question in the sentence box
+    sentenceEl.textContent = question;
+    translationEl.textContent = '💬 Answer in English';
+    sentenceBox.classList.add('quiz-mode');
 
     activityArea.innerHTML = `
-      <div style="margin-bottom:4px;color:#7a96b0;font-size:0.8rem;">Select the correct English translation:</div>
-      <div style="background:rgba(0,212,255,0.03);border-radius:10px;padding:8px 14px;margin-bottom:8px;border:1px solid #1a3144;color:#b0cbe0;">"${s.fr}"</div>
-      <div class="choice-grid" id="quizGrid">
-        ${options.map((opt,i) => `<button class="choice-btn" data-correct="${opt===correct}">${opt}</button>`).join('')}
+      <div class="oral-prompt">
+        <span class="direction">Answer the question by speaking:</span>
+        <span class="source-sentence">"${question}"</span>
+      </div>
+      <div class="oral-controls">
+        <button class="primary" id="quizSpeakBtn">🎤 Speak</button>
+        <button id="quizPlayQuestionBtn">🔊 Listen to question</button>
+      </div>
+      <div class="oral-input-group" style="margin-top:4px;">
+        <input type="text" id="quizTranscript" placeholder="Your spoken answer will appear here..." readonly autocomplete="off" spellcheck="false" style="background:rgba(8,16,26,0.4);">
       </div>
     `;
-    const btns = Array.from(document.querySelectorAll('#quizGrid .choice-btn'));
-    let answered = false;
-    btns.forEach(btn => {
-      btn.onclick = () => {
-        if (answered) return;
-        answered = true;
-        const isCorrect = btn.dataset.correct === 'true';
-        btns.forEach(b => b.disabled = true);
-        if (isCorrect) {
-          btn.classList.add('selected-correct');
-          showFeedback('✅ Correct! "'+correct+'"', 'success');
-          onSuccess();
-        } else {
-          btn.classList.add('selected-wrong');
-          btns.forEach(b => { if (b.dataset.correct === 'true') b.classList.add('show-correct'); });
-          showFeedback('❌ The answer was: "'+correct+'"', 'error');
-          setTimeout(() => {
-            btns.forEach(b => { b.disabled = false; b.classList.remove('selected-wrong','selected-correct','show-correct'); });
-            answered = false;
-          }, 2200);
-        }
-      };
-    });
-  }
 
-  function renderWordOrder(s, onSuccess) {
-    const original = s.en.replace(/\.$/,'').split(/\s+/);
-    const shuffled = shuffle(original);
-    let slots = new Array(original.length).fill(null);
-    let used = new Array(shuffled.length).fill(false);
+    const speakBtn = $('quizSpeakBtn');
+    const playQuestionBtn = $('quizPlayQuestionBtn');
+    const transcriptInput = $('quizTranscript');
 
-    activityArea.innerHTML = `
-      <div style="margin-bottom:4px;color:#7a96b0;font-size:0.8rem;">Tap the words in the correct order:</div>
-      <div class="word-slot-container" id="woSlots"></div>
-      <div class="word-bank" id="woBank"></div>
-      <div class="word-order-actions">
-        <button class="step-btn" id="woClear" style="border-color:#ff6b6b;color:#ff6b6b;">↺ Clear</button>
-        <button class="step-btn primary" id="woCheck">✓ Check</button>
-      </div>
-    `;
-    const slotsEl = $('woSlots');
-    const bankEl = $('woBank');
-
-    function renderSlots() {
-      slotsEl.innerHTML = slots.map((slot,i) =>
-        `<div class="word-slot ${slot?'filled':''}" data-slot="${i}">${slot ? slot.word : '?'}</div>`
-      ).join('');
-      slotsEl.querySelectorAll('.word-slot').forEach(el => {
-        el.onclick = () => {
-          const i = Number(el.dataset.slot);
-          if (slots[i]) {
-            used[slots[i].chipIdx] = false;
-            slots[i] = null;
-            renderSlots(); renderBank();
-          }
-        };
-      });
-    }
-
-    function renderBank() {
-      bankEl.innerHTML = shuffled.map((w,i) =>
-        `<button class="word-chip ${used[i]?'placed':''}" data-chip="${i}">${w}</button>`
-      ).join('');
-      bankEl.querySelectorAll('.word-chip').forEach(el => {
-        el.onclick = () => {
-          const i = Number(el.dataset.chip);
-          if (used[i]) return;
-          const empty = slots.findIndex(sl => sl === null);
-          if (empty === -1) return;
-          slots[empty] = { word: shuffled[i], chipIdx: i };
-          used[i] = true;
-          renderSlots(); renderBank();
-        };
-      });
-    }
-
-    renderSlots(); renderBank();
-
-    $('woClear').onclick = () => {
-      slots = new Array(original.length).fill(null);
-      used = new Array(shuffled.length).fill(false);
-      renderSlots(); renderBank();
-    };
-
-    $('woCheck').onclick = () => {
-      if (slots.some(sl => sl === null)) {
-        showFeedback('Fill every slot first.', 'warning');
+    function startQuizListening() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        showFeedback('Voice recognition not available. Please use a browser that supports it.', 'error');
         return;
       }
-      const attempt = slots.map(sl => sl.word);
-      const isCorrect = attempt.join(' ') === original.join(' ');
-      const els = slotsEl.querySelectorAll('.word-slot');
-      if (isCorrect) {
-        els.forEach(el => el.classList.add('correct-slot'));
-        showFeedback('✅ Perfect order!', 'success');
-        onSuccess();
-      } else {
-        els.forEach((el,i) => { el.classList.add(attempt[i] === original[i] ? 'correct-slot' : 'wrong-slot'); });
-        showFeedback('❌ Not quite right. Try again.', 'error');
-        setTimeout(() => { els.forEach(el => el.classList.remove('correct-slot','wrong-slot')); }, 2000);
+      if (state.recognition) { try { state.recognition.stop(); } catch(e) {} }
+
+      const rec = new SR();
+      state.recognition = rec;
+      rec.lang = 'en-US';
+      rec.interimResults = false;
+
+      rec.onstart = () => {
+        state.isListening = true;
+        speakBtn.textContent = '⏹️ Stop';
+        speakBtn.classList.add('recording');
+        showFeedback('🎤 Speak your answer...', 'info');
+      };
+
+      rec.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        transcriptInput.value = transcript;
+        evaluateQuizAnswer(transcript, expectedAnswer);
+      };
+
+      rec.onerror = (event) => {
+        if (event.error === 'not-allowed') {
+          showFeedback('Microphone access denied. Please allow access.', 'error');
+        } else if (event.error === 'no-speech') {
+          showFeedback('No sound detected. Try again.', 'warning');
+        } else {
+          showFeedback('Error: '+event.error, 'error');
+        }
+        stopQuizListening();
+      };
+
+      rec.onend = () => { stopQuizListening(); };
+
+      try {
+        rec.start();
+        setTimeout(() => {
+          if (state.recognition && state.isListening) {
+            try { state.recognition.stop(); } catch(e) {}
+          }
+        }, C.RECOGNITION_TIMEOUT);
+      } catch(e) {
+        showFeedback('Press Speak again', 'warning');
       }
+    }
+
+    function stopQuizListening() {
+      state.isListening = false;
+      if (state.recognition) { try { state.recognition.stop(); } catch(e) {} state.recognition = null; }
+      speakBtn.textContent = '🎤 Speak';
+      speakBtn.classList.remove('recording');
+    }
+
+    function evaluateQuizAnswer(spoken, expected) {
+      const sim = similarity(spoken, expected);
+      const pct = Math.round(sim * 100);
+
+      if (sim >= C.SIMILARITY_GOOD) {
+        showFeedback('✅ Excellent! '+pct+'% match — well done!', 'success');
+        stopQuizListening();
+        setTimeout(() => {
+          restoreOriginalDisplay();
+          markStepDone(3);
+        }, 700);
+      } else {
+        showFeedback('📚 '+pct+'% — not quite. Try again, or listen to the question again.', 'error');
+        stopQuizListening();
+        // Re-enable speak button for another attempt
+        speakBtn.textContent = '🎤 Speak';
+        speakBtn.classList.remove('recording');
+        // Keep transcript but allow retry
+        setTimeout(() => {
+          // If still not done, keep the button active
+        }, 500);
+      }
+    }
+
+    speakBtn.onclick = () => {
+      if (state.isListening) { stopQuizListening(); return; }
+      // Clear previous transcript
+      transcriptInput.value = '';
+      startQuizListening();
     };
+
+    playQuestionBtn.onclick = () => {
+      speak(question, 'en-US', 0.7);
+    };
+
+    // If speech recognition not supported, we disable the button and show a message
+    if (!state.speechSupported) {
+      speakBtn.disabled = true;
+      speakBtn.textContent = '🚫 Not supported';
+      showFeedback('Speech recognition is not supported in this browser. Please use Chrome or Edge.', 'error');
+    }
+
+    transcriptInput.addEventListener('focus', () => transcriptInput.blur());
   }
 
   // =============================================================
-  // SPEECH
+  // SPEECH UTILITIES
   // =============================================================
   function speak(text, lang, rate, onEnd) {
     if (!window.speechSynthesis) { if(onEnd) onEnd(); return; }
@@ -1225,8 +1471,8 @@
     } catch(e) {}
   }
 
-  // ---- Repeat with recognition ----
-  function startListening() {
+  // ---- Repeat step ----
+  function startListeningRepeat() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
       showFeedback('Voice recognition not supported — use manual button', 'warning');
@@ -1259,10 +1505,10 @@
       } else {
         showFeedback('Error: '+event.error, 'error');
       }
-      stopListening();
+      stopListeningRepeat();
     };
 
-    rec.onend = () => { stopListening(); };
+    rec.onend = () => { stopListeningRepeat(); };
 
     try {
       rec.start();
@@ -1270,7 +1516,7 @@
     } catch(e) { showFeedback('Press Repeat again', 'warning'); }
   }
 
-  function stopListening() {
+  function stopListeningRepeat() {
     state.isListening = false;
     if (state.recognition) { try { state.recognition.stop(); } catch(e) {} state.recognition = null; }
     stepRepeat.textContent = '🗣️ Repeat';
@@ -1295,7 +1541,7 @@
     } else {
       showFeedback('📚 '+pct+'% — listen again and retry', 'error');
     }
-    stopListening();
+    stopListeningRepeat();
   }
 
   function similarity(spoken, target) {
@@ -1311,7 +1557,7 @@
   }
 
   // =============================================================
-  // MARK STEP DONE & ADVANCE
+  // MARK STEP DONE & ADVANCE (same as before)
   // =============================================================
   function markStepDone(step) {
     if (!state.stepProgress[state.index]) state.stepProgress[state.index] = [false,false,false,false];
@@ -1325,7 +1571,6 @@
     showFeedback('✅ Step '+(step+1)+' done! +'+earned+' XP', 'success');
 
     if (isComplete(state.index)) {
-      // Check if whole module is done
       const allDone = state.stepProgress.every(steps => steps.every(Boolean));
       if (allDone) {
         const totalXP = state.stepProgress.reduce((sum, steps) => {
@@ -1340,6 +1585,7 @@
           state.index++;
           state.currentStep = 0;
           activityArea.innerHTML = '';
+          restoreOriginalDisplay();
           updateUI();
           renderStep(0);
           showFeedback('📖 Next sentence '+(state.index+1)+'/'+state.sentences.length, 'info');
@@ -1348,6 +1594,7 @@
     } else {
       const done = getStepsDone(state.index);
       state.currentStep = Math.min(done, 3);
+      restoreOriginalDisplay();
       renderStep(state.currentStep);
       updateUI();
     }
@@ -1368,7 +1615,7 @@
   }
 
   // =============================================================
-  // REVIEW
+  // REVIEW (adapted to use dialogue quiz as well)
   // =============================================================
   function startReview(textId) {
     const data = loadModuleState(textId);
@@ -1425,48 +1672,177 @@
     if (chosen === 'repeat') {
       activityArea.innerHTML = `
         <div style="text-align:center;color:#7a96b0;padding:4px;">🗣️ Read aloud, then confirm.</div>
-        <div style="display:flex;justify-content:center;gap:8px;margin-top:4px;">
+        <div class="manual-fallback">
           <button class="step-btn" id="reviewRepeatBtn">✋ I said it</button>
         </div>
       `;
       $('reviewRepeatBtn').onclick = () => registerReviewResult(true);
     } else if (chosen === 'dictation') {
-      renderDictation(s);
-      // Override success to call registerReviewResult
-      const origSubmit = document.getElementById('dictationSubmitBtn');
-      if (origSubmit) {
-        const newSubmit = () => {
-          const input = document.getElementById('dictationInput');
-          const val = input.value.trim();
-          if (!val) { showFeedback('Please type something', 'warning'); return; }
-          const norm = t => t.toLowerCase().replace(/[^\w']/g,'').trim();
-          // We need the target word – we stored it in renderDictation but we'll re-fetch
-          const words = s.en.replace(/[.,!?]/g,'').split(/\s+/);
-          const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by']);
-          let candidates = words.map((w,i) => ({ w, i })).filter(o => o.w.length > 3 && !stop.has(o.w.toLowerCase()));
-          if (candidates.length === 0) candidates = words.map((w,i) => ({ w, i }));
-          const pick = candidates[Math.floor(Math.random() * candidates.length)];
-          const targetWord = pick.w;
-          if (norm(val) === norm(targetWord)) {
-            input.className = 'correct';
-            showFeedback('✅ Correct!', 'success');
-            document.getElementById('dictationSubmitBtn').disabled = true;
-            input.disabled = true;
-            registerReviewResult(true);
-          } else {
-            input.className = 'wrong';
-            showFeedback('❌ Not quite. Expected: "'+targetWord+'"', 'error');
-            setTimeout(() => { input.className = ''; }, 1500);
-          }
-        };
-        origSubmit.onclick = newSubmit;
-        const inp = document.getElementById('dictationInput');
-        inp.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); newSubmit(); } };
+      // Same as before
+      storeOriginalDisplay();
+      sentenceEl.textContent = '🎧 Listen and type the word';
+      translationEl.textContent = s.fr;
+      sentenceBox.classList.add('dictation-mode');
+
+      const words = s.en.replace(/[.,!?]/g,'').split(/\s+/);
+      const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by']);
+      let candidates = words.map((w,i) => ({ w, i })).filter(o => o.w.length > 3 && !stop.has(o.w.toLowerCase()));
+      if (candidates.length === 0) candidates = words.map((w,i) => ({ w, i }));
+      const pick = candidates[Math.floor(Math.random() * candidates.length)];
+      const targetWord = pick.w;
+
+      activityArea.innerHTML = `
+        <div class="oral-prompt">🎧 Listen to the audio, then type the word.</div>
+        <div class="oral-controls">
+          <button class="primary" id="reviewDictationPlay">🔊 Play word</button>
+          <button id="reviewDictationSlow">🐢 Slow</button>
+        </div>
+        <div class="oral-input-group">
+          <input type="text" id="reviewDictationInput" placeholder="Type what you hear..." autocomplete="off" spellcheck="false">
+          <button class="action-btn" id="reviewDictationSubmit">✓ Check</button>
+        </div>
+      `;
+      const input = $('reviewDictationInput');
+      const submitBtn = $('reviewDictationSubmit');
+
+      function playWord(rate) { speak(targetWord, 'en-US', rate); }
+      $('reviewDictationPlay').onclick = () => playWord(0.7);
+      $('reviewDictationSlow').onclick = () => playWord(0.35);
+
+      function checkReviewDictation() {
+        if (submitBtn.disabled) return;
+        const val = input.value.trim();
+        if (!val) { showFeedback('Please type something', 'warning'); return; }
+        const norm = t => t.toLowerCase().replace(/[^\w']/g,'').trim();
+        if (norm(val) === norm(targetWord)) {
+          input.className = 'correct';
+          showFeedback('✅ Correct!', 'success');
+          submitBtn.disabled = true; input.disabled = true;
+          restoreOriginalDisplay();
+          registerReviewResult(true);
+        } else {
+          input.className = 'wrong';
+          showFeedback('❌ Not quite. Expected: "'+targetWord+'"', 'error');
+          setTimeout(() => { input.className = ''; }, 1500);
+        }
       }
+      submitBtn.onclick = checkReviewDictation;
+      input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); checkReviewDictation(); } };
+      setTimeout(() => input.focus(), 150);
     } else {
-      renderChoice(s, () => registerReviewResult(true));
+      // Quiz in review – use the same dialogue quiz
+      renderDialogueQuizForReview(s);
     }
-    updateReviewUI();
+  }
+
+  // Dialogue quiz for review (same as main but calls registerReviewResult)
+  function renderDialogueQuizForReview(s) {
+    storeOriginalDisplay();
+    const question = generateQuestion(s.en);
+    const expectedAnswer = s.en;
+
+    sentenceEl.textContent = question;
+    translationEl.textContent = '💬 Answer in English';
+    sentenceBox.classList.add('quiz-mode');
+
+    activityArea.innerHTML = `
+      <div class="oral-prompt">
+        <span class="direction">Answer the question:</span>
+        <span class="source-sentence">"${question}"</span>
+      </div>
+      <div class="oral-controls">
+        <button class="primary" id="reviewQuizSpeak">🎤 Speak</button>
+        <button id="reviewQuizPlay">🔊 Listen</button>
+      </div>
+      <div class="oral-input-group" style="margin-top:4px;">
+        <input type="text" id="reviewQuizTranscript" placeholder="Your spoken answer..." readonly style="background:rgba(8,16,26,0.4);">
+      </div>
+    `;
+
+    const speakBtn = $('reviewQuizSpeak');
+    const playBtn = $('reviewQuizPlay');
+    const transcriptInput = $('reviewQuizTranscript');
+
+    function startReviewQuizListening() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        showFeedback('Voice recognition not available.', 'error');
+        return;
+      }
+      if (state.recognition) { try { state.recognition.stop(); } catch(e) {} }
+
+      const rec = new SR();
+      state.recognition = rec;
+      rec.lang = 'en-US';
+      rec.interimResults = false;
+
+      rec.onstart = () => {
+        state.isListening = true;
+        speakBtn.textContent = '⏹️ Stop';
+        speakBtn.classList.add('recording');
+        showFeedback('🎤 Speak your answer...', 'info');
+      };
+
+      rec.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        transcriptInput.value = transcript;
+        const sim = similarity(transcript, expectedAnswer);
+        if (sim >= C.SIMILARITY_GOOD) {
+          showFeedback('✅ Correct!', 'success');
+          stopReviewQuizListening();
+          restoreOriginalDisplay();
+          registerReviewResult(true);
+        } else {
+          showFeedback('❌ Not quite. Try again.', 'error');
+          stopReviewQuizListening();
+        }
+      };
+
+      rec.onerror = (event) => {
+        if (event.error === 'not-allowed') {
+          showFeedback('Microphone access denied.', 'error');
+        } else if (event.error === 'no-speech') {
+          showFeedback('No sound — try again.', 'warning');
+        } else {
+          showFeedback('Error: '+event.error, 'error');
+        }
+        stopReviewQuizListening();
+      };
+
+      rec.onend = () => { stopReviewQuizListening(); };
+
+      try {
+        rec.start();
+        setTimeout(() => {
+          if (state.recognition && state.isListening) { try { state.recognition.stop(); } catch(e) {} }
+        }, C.RECOGNITION_TIMEOUT);
+      } catch(e) { showFeedback('Press Speak again', 'warning'); }
+    }
+
+    function stopReviewQuizListening() {
+      state.isListening = false;
+      if (state.recognition) { try { state.recognition.stop(); } catch(e) {} state.recognition = null; }
+      speakBtn.textContent = '🎤 Speak';
+      speakBtn.classList.remove('recording');
+    }
+
+    speakBtn.onclick = () => {
+      if (state.isListening) { stopReviewQuizListening(); return; }
+      transcriptInput.value = '';
+      startReviewQuizListening();
+    };
+
+    playBtn.onclick = () => {
+      speak(question, 'en-US', 0.7);
+    };
+
+    if (!state.speechSupported) {
+      speakBtn.disabled = true;
+      speakBtn.textContent = '🚫 Not supported';
+      showFeedback('Speech recognition not supported.', 'error');
+    }
+
+    transcriptInput.addEventListener('focus', () => transcriptInput.blur());
   }
 
   function registerReviewResult(correct) {
@@ -1483,7 +1859,7 @@
   }
 
   // =============================================================
-  // LOAD MODULE
+  // LOAD MODULE & NAVIGATION
   // =============================================================
   function loadText(textId) {
     state.textId = textId;
@@ -1503,6 +1879,7 @@
     stepDots.style.display = 'flex';
 
     activityArea.innerHTML = '';
+    restoreOriginalDisplay();
     updateUI();
     renderStep(state.currentStep);
 
@@ -1510,7 +1887,7 @@
     practiceScreen.style.display = 'block';
 
     if (state.recognition) { try { state.recognition.stop(); } catch(e) {} }
-    stopListening();
+    stopListeningRepeat();
 
     Store.set('lastModule', textId);
     saveModuleState();
@@ -1523,13 +1900,14 @@
     reviewBanner.classList.remove('show');
     stepDots.style.display = 'flex';
     if (state.recognition) { try { state.recognition.stop(); } catch(e) {} }
-    stopListening();
+    stopListeningRepeat();
     completionOverlay.classList.remove('active');
+    restoreOriginalDisplay();
     buildHomeScreen();
   }
 
   // =============================================================
-  // HOME
+  // HOME SCREEN
   // =============================================================
   function buildHomeScreen() {
     textGrid.innerHTML = '';
@@ -1585,7 +1963,7 @@
   function initCompat() {
     if (!state.speechSupported) {
       compatWarning.classList.add('show');
-      compatWarning.textContent = '⚠️ Voice recognition not supported in this browser (try Chrome/Edge). Use the manual "I said it" button instead.';
+      compatWarning.textContent = '⚠️ Voice recognition is not supported in this browser (try Chrome/Edge). The Quiz activity will not work without it.';
     }
   }
 
@@ -1595,7 +1973,7 @@
   stepListen.onclick = playCurrent;
   stepRepeat.onclick = () => {
     if (stepRepeat.disabled) return;
-    if (state.isListening) { stopListening(); return; }
+    if (state.isListening) { stopListeningRepeat(); return; }
     if (!state.isReview && !state.stepProgress[state.index][0]) {
       showFeedback('Please listen first (step 1)', 'warning');
       return;
@@ -1605,7 +1983,7 @@
       setTimeout(() => {
         playBeep();
         showFeedback('🎤 Speak now', 'warning');
-        startListening();
+        startListeningRepeat();
       }, 300);
     });
   };
