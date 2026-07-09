@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>Cyber Voice Lab · NSE 4</title>
   <style>
-    /* ===== RESET & BASE ===== */
+    /* ===== RESET & BASE (unchanged) ===== */
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -29,7 +29,7 @@
     }
     .container { max-width:720px; width:100%; margin:0 auto; position:relative; z-index:1; }
 
-    /* ===== HEADER ===== */
+    /* ===== HEADER (unchanged) ===== */
     .header {
       background:rgba(12,20,32,0.85);
       backdrop-filter:blur(12px);
@@ -61,7 +61,7 @@
     .header .mini-stats .s b { color:#ffaa33; }
     .header .mini-stats .l b { color:#ff6b6b; }
 
-    /* ===== HOME SCREEN ===== */
+    /* ===== HOME SCREEN (unchanged) ===== */
     .home-screen {
       background:rgba(12,20,32,0.70);
       backdrop-filter:blur(16px);
@@ -131,7 +131,7 @@
     }
     #grammarBtn:hover { border-color:#00d4ff; color:#00d4ff; }
 
-    /* ===== GRAMMAR MODAL ===== */
+    /* ===== GRAMMAR MODAL (unchanged) ===== */
     .modal-overlay {
       display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.85);
       backdrop-filter:blur(10px); z-index:1000; justify-content:center; align-items:center; padding:12px;
@@ -252,10 +252,11 @@
     .step-btn:disabled { opacity:0.3; cursor:not-allowed; }
     .step-btn.primary { background:rgba(0,212,255,0.08); border-color:#00d4ff; color:#00d4ff; }
     .step-btn.recording { border-color:#ff4444; color:#ff4444; animation:pulse 1s infinite; background:#220000; }
+    .step-btn.success { border-color:#00e676; color:#00e676; }
 
     .activity-area { margin-top:6px; min-height:50px; }
 
-    /* Dictation & Quiz shared styles */
+    /* ===== Dictation & Quiz shared styles ===== */
     .oral-prompt {
       text-align:center; color:#7a96b0; font-size:0.85rem; padding:4px 0;
     }
@@ -305,7 +306,6 @@
     .oral-input-group .action-btn:hover { background:rgba(0,212,255,0.16); }
     .oral-input-group .action-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
-    /* No manual fallback in quiz, only for repeat */
     .manual-fallback {
       display:flex; justify-content:center; gap:6px; margin-top:6px; flex-wrap:wrap;
     }
@@ -319,7 +319,6 @@
     .manual-fallback button:disabled { opacity:0.4; cursor:not-allowed; }
     .manual-fallback button .cd { font-weight:700; color:#ffaa33; }
 
-    /* Progress */
     .progress-bar { height:4px; background:#131f2e; border-radius:30px; margin:8px 0 4px; overflow:hidden; }
     .progress-fill { height:100%; background:linear-gradient(90deg,#00d4ff,#00e676); width:0%; border-radius:30px; transition:width 0.5s; }
     .progress-stats { display:flex; justify-content:space-between; font-size:0.65rem; font-weight:500; color:#6a8aa5; }
@@ -339,7 +338,6 @@
     }
     .compat-warning.show { display:block; }
 
-    /* Completion modal */
     .completion-overlay {
       display:none; position:fixed; top:0;left:0;right:0;bottom:0;
       background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); z-index:2000;
@@ -366,7 +364,6 @@
 
     @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width:480px) {
       body { padding:8px; }
       .header { padding:8px 12px; }
@@ -448,6 +445,7 @@
         <button class="step-btn" id="stepRepeatBtn" disabled>🗣️ Repeat</button>
         <button class="step-btn" id="stepDictationBtn" disabled>✍️ Dictation</button>
         <button class="step-btn" id="stepQuizBtn" disabled>💬 Quiz</button>
+        <button class="step-btn" id="nextBtn" disabled style="border-color:#00e676; color:#00e676;">Next →</button>
       </div>
 
       <div class="sentence-box" id="sentenceBox">
@@ -491,7 +489,7 @@
   // =============================================================
   const C = {
     SIMILARITY_GOOD: 0.55,
-    AUTO_ADVANCE: 1800,
+    AUTO_ADVANCE_DELAY: 2000,
     RECOGNITION_TIMEOUT: 12000,
     XP_PER_STEP: [5, 10, 10, 15],
     XP_REVIEW: 4,
@@ -500,205 +498,245 @@
   };
 
   // =============================================================
-  // DATA (same as before)
+  // DATA WITH EXPLICIT QUESTIONS (no regex coupling)
   // =============================================================
   const textsData = {
     intro: {
       title: "Professional Introductions",
       tag: "👔 Intro",
       sentences: [
-        { en: "My name is Paul and I am a cyber security engineer.", fr: "Je m'appelle Paul et je suis ingénieur en cybersécurité." },
-        { en: "I specialize in network security and firewall management.", fr: "Je me spécialise dans la sécurité réseau et la gestion des pare-feu." },
-        { en: "I have over five years of experience in the IT industry.", fr: "J'ai plus de cinq ans d'expérience dans le secteur informatique." },
-        { en: "My primary responsibility is to protect the corporate network.", fr: "Ma responsabilité principale est de protéger le réseau d'entreprise." },
-        { en: "I am currently preparing for the NSE 4 certification.", fr: "Je prépare actuellement la certification NSE 4." },
-        { en: "I work closely with the security operations center.", fr: "Je travaille en étroite collaboration avec le centre des opérations de sécurité." },
-        { en: "I enjoy troubleshooting complex network issues.", fr: "J'aime résoudre des problèmes réseau complexes." },
-        { en: "My goal is to become a certified Fortinet specialist.", fr: "Mon objectif est de devenir un spécialiste certifié Fortinet." },
-        { en: "I am proficient in configuring firewall policies.", fr: "Je maîtrise la configuration des politiques de pare-feu." },
-        { en: "I collaborate with my team to implement security measures.", fr: "Je collabore avec mon équipe pour mettre en œuvre les mesures de sécurité." },
-        { en: "I am responsible for maintaining high availability.", fr: "Je suis responsable du maintien de la haute disponibilité." },
-        { en: "I regularly conduct security assessments.", fr: "Je réalise régulièrement des évaluations de sécurité." },
-        { en: "I believe in continuous learning and professional development.", fr: "Je crois en l'apprentissage continu et au développement professionnel." },
-        { en: "I communicate with stakeholders about security risks.", fr: "Je communique avec les parties prenantes sur les risques de sécurité." },
-        { en: "I am excited to start this training programme.", fr: "Je suis ravi de commencer ce programme de formation." },
-        { en: "I work in a fast-paced and dynamic environment.", fr: "Je travaille dans un environnement dynamique et en constante évolution." },
-        { en: "I use various tools to monitor network traffic.", fr: "J'utilise divers outils pour surveiller le trafic réseau." },
-        { en: "I document all configurations for audit purposes.", fr: "Je documente toutes les configurations à des fins d'audit." },
-        { en: "I often participate in incident response meetings.", fr: "Je participe souvent à des réunions de réponse aux incidents." },
-        { en: "I look forward to learning from this course.", fr: "Je me réjouis d'apprendre grâce à ce cours." }
+        { en: "My name is Paul and I am a cyber security engineer.", fr: "Je m'appelle Paul et je suis ingénieur en cybersécurité.", question: "What is your name and what do you do?" },
+        { en: "I specialize in network security and firewall management.", fr: "Je me spécialise dans la sécurité réseau et la gestion des pare-feu.", question: "What do you specialize in?" },
+        { en: "I have over five years of experience in the IT industry.", fr: "J'ai plus de cinq ans d'expérience dans le secteur informatique.", question: "How many years of experience do you have and in which industry?" },
+        { en: "My primary responsibility is to protect the corporate network.", fr: "Ma responsabilité principale est de protéger le réseau d'entreprise.", question: "What is your primary responsibility?" },
+        { en: "I am currently preparing for the NSE 4 certification.", fr: "Je prépare actuellement la certification NSE 4.", question: "What are you currently preparing for?" },
+        { en: "I work closely with the security operations center.", fr: "Je travaille en étroite collaboration avec le centre des opérations de sécurité.", question: "Who do you work closely with?" },
+        { en: "I enjoy troubleshooting complex network issues.", fr: "J'aime résoudre des problèmes réseau complexes.", question: "What do you enjoy doing?" },
+        { en: "My goal is to become a certified Fortinet specialist.", fr: "Mon objectif est de devenir un spécialiste certifié Fortinet.", question: "What is your career goal?" },
+        { en: "I am proficient in configuring firewall policies.", fr: "Je maîtrise la configuration des politiques de pare-feu.", question: "What are you proficient in?" },
+        { en: "I collaborate with my team to implement security measures.", fr: "Je collabore avec mon équipe pour mettre en œuvre les mesures de sécurité.", question: "What do you collaborate with your team to do?" },
+        { en: "I am responsible for maintaining high availability.", fr: "Je suis responsable du maintien de la haute disponibilité.", question: "What are you responsible for?" },
+        { en: "I regularly conduct security assessments.", fr: "Je réalise régulièrement des évaluations de sécurité.", question: "What do you regularly conduct?" },
+        { en: "I believe in continuous learning and professional development.", fr: "Je crois en l'apprentissage continu et au développement professionnel.", question: "What do you believe in?" },
+        { en: "I communicate with stakeholders about security risks.", fr: "Je communique avec les parties prenantes sur les risques de sécurité.", question: "What do you communicate with stakeholders about?" },
+        { en: "I am excited to start this training programme.", fr: "Je suis ravi de commencer ce programme de formation.", question: "What are you excited about?" },
+        { en: "I work in a fast-paced and dynamic environment.", fr: "Je travaille dans un environnement dynamique et en constante évolution.", question: "What kind of environment do you work in?" },
+        { en: "I use various tools to monitor network traffic.", fr: "J'utilise divers outils pour surveiller le trafic réseau.", question: "What do you use various tools for?" },
+        { en: "I document all configurations for audit purposes.", fr: "Je documente toutes les configurations à des fins d'audit.", question: "Why do you document all configurations?" },
+        { en: "I often participate in incident response meetings.", fr: "Je participe souvent à des réunions de réponse aux incidents.", question: "What do you often participate in?" },
+        { en: "I look forward to learning from this course.", fr: "Je me réjouis d'apprendre grâce à ce cours.", question: "What do you look forward to?" }
       ]
     },
-    unit1: { title: "Firewall Policies & NAT", tag: "🔐 Security", sentences: [
-      { en: "I configure a firewall policy to allow traffic.", fr: "Je configure une politique de pare-feu pour autoriser le trafic." },
-      { en: "We set the source and destination addresses.", fr: "Nous définissons les adresses source et destination." },
-      { en: "The firewall denies any traffic by default.", fr: "Le pare-feu refuse tout trafic par défaut." },
-      { en: "We enable NAT to translate private IP addresses.", fr: "Nous activons le NAT pour traduire les adresses IP privées." },
-      { en: "I create an IPv4 policy for internal users.", fr: "Je crée une politique IPv4 pour les utilisateurs internes." },
-      { en: "We place the policy above the implicit deny rule.", fr: "Nous plaçons la politique au-dessus de la règle de refus implicite." },
-      { en: "The administrator edits the policy sequence.", fr: "L'administrateur modifie la séquence des politiques." },
-      { en: "We disable NAT for this specific interface.", fr: "Nous désactivons le NAT pour cette interface spécifique." },
-      { en: "I add a comment to explain the policy purpose.", fr: "J'ajoute un commentaire pour expliquer le but de la politique." },
-      { en: "The policy matches the traffic based on the service.", fr: "La politique correspond au trafic en fonction du service." },
-      { en: "We enable logging to monitor denied connections.", fr: "Nous activons la journalisation pour surveiller les connexions refusées." },
-      { en: "I need to clone this policy for another VLAN.", fr: "Je dois cloner cette politique pour un autre VLAN." },
-      { en: "The firewall processes policies from top to bottom.", fr: "Le pare-feu traite les politiques de haut en bas." },
-      { en: "We use central NAT to simplify address translation.", fr: "Nous utilisons le NAT central pour simplifier la traduction d'adresses." },
-      { en: "I verify the policy hit count to check usage.", fr: "Je vérifie le nombre de hits de la politique pour vérifier l'utilisation." }
-    ]},
-    unit2: { title: "Routing & Static Routes", tag: "🌐 Networking", sentences: [
-      { en: "We configure a default route to the internet gateway.", fr: "Nous configurons une route par défaut vers la passerelle internet." },
-      { en: "The static route points to the next-hop IP address.", fr: "La route statique pointe vers l'adresse IP du prochain saut." },
-      { en: "We set the administrative distance to influence routing.", fr: "Nous définissons la distance administrative pour influencer le routage." },
-      { en: "I add a policy route to override the routing table.", fr: "J'ajoute une route politique pour outrepasser la table de routage." },
-      { en: "The device uses the routing table to forward packets.", fr: "L'appareil utilise la table de routage pour transférer les paquets." },
-      { en: "We verify the route is active in the forwarding table.", fr: "Nous vérifions que la route est active dans la table de transfert." },
-      { en: "I configure the interface IP address for the LAN.", fr: "Je configure l'adresse IP de l'interface pour le LAN." },
-      { en: "The gateway is unreachable, so we check the physical link.", fr: "La passerelle est inaccessible, alors nous vérifions le lien physique." },
-      { en: "We enable routing on the virtual domain (VDOM).", fr: "Nous activons le routage sur le domaine virtuel (VDOM)." },
-      { en: "I delete the old static route to avoid conflicts.", fr: "Je supprime l'ancienne route statique pour éviter les conflits." },
-      { en: "The routing protocol learns dynamic routes automatically.", fr: "Le protocole de routage apprend les routes dynamiques automatiquement." },
-      { en: "We use a default route for all unknown destinations.", fr: "Nous utilisons une route par défaut pour toutes les destinations inconnues." },
-      { en: "I check the route cache for performance issues.", fr: "Je vérifie le cache de routage pour les problèmes de performance." },
-      { en: "The network administrator manages the routing table.", fr: "L'administrateur réseau gère la table de routage." },
-      { en: "We prioritize the static route over the dynamic one.", fr: "Nous priorisons la route statique par rapport à la route dynamique." }
-    ]},
-    unit3: { title: "User Authentication", tag: "👤 Identity", sentences: [
-      { en: "We authenticate users before granting network access.", fr: "Nous authentifions les utilisateurs avant d'accorder l'accès réseau." },
-      { en: "The FortiGate connects to an LDAP server for verification.", fr: "Le FortiGate se connecte à un serveur LDAP pour la vérification." },
-      { en: "I configure two-factor authentication for VPN users.", fr: "Je configure l'authentification à deux facteurs pour les utilisateurs VPN." },
-      { en: "The local user database stores credentials securely.", fr: "La base de données utilisateur locale stocke les identifiants de manière sécurisée." },
-      { en: "We enable certificate-based authentication for clients.", fr: "Nous activons l'authentification par certificat pour les clients." },
-      { en: "The user fails to authenticate because of an invalid password.", fr: "L'utilisateur échoue à s'authentifier en raison d'un mot de passe invalide." },
-      { en: "I set up a RADIUS server for centralized authentication.", fr: "Je configure un serveur RADIUS pour l'authentification centralisée." },
-      { en: "The firewall prompts for credentials on the login page.", fr: "Le pare-feu demande les identifiants sur la page de connexion." },
-      { en: "We define authentication rules for different user groups.", fr: "Nous définissons des règles d'authentification pour différents groupes d'utilisateurs." },
-      { en: "The session expires after a period of inactivity.", fr: "La session expire après une période d'inactivité." },
-      { en: "I test the LDAP connection using the CLI command.", fr: "Je teste la connexion LDAP à l'aide de la commande CLI." },
-      { en: "We sync user accounts from Active Directory.", fr: "Nous synchronisons les comptes utilisateur depuis Active Directory." },
-      { en: "The user identity is used for policy matching.", fr: "L'identité de l'utilisateur est utilisée pour la correspondance des politiques." },
-      { en: "I forgot my password and need to reset it.", fr: "J'ai oublié mon mot de passe et je dois le réinitialiser." },
-      { en: "We implement guest access with limited privileges.", fr: "Nous mettons en place un accès invité avec des privilèges limités." }
-    ]},
-    unit4: { title: "SSL VPN", tag: "🔒 VPN", sentences: [
-      { en: "We configure SSL VPN to provide remote access.", fr: "Nous configurons le SSL VPN pour fournir un accès à distance." },
-      { en: "The SSL VPN portal hosts the web applications.", fr: "Le portail SSL VPN héberge les applications web." },
-      { en: "I create a tunnel mode for full network access.", fr: "Je crée un mode tunnel pour un accès réseau complet." },
-      { en: "The client downloads the VPN client from the portal.", fr: "Le client télécharge le client VPN depuis le portail." },
-      { en: "We enable split tunneling to optimize bandwidth.", fr: "Nous activons le split tunneling pour optimiser la bande passante." },
-      { en: "The SSL certificate is trusted by the client browser.", fr: "Le certificat SSL est approuvé par le navigateur client." },
-      { en: "I restrict access to specific subnet via SSL VPN.", fr: "Je restreins l'accès à un sous-réseau spécifique via SSL VPN." },
-      { en: "The session uses TLS 1.2 for encryption.", fr: "La session utilise TLS 1.2 pour le chiffrement." },
-      { en: "We check the SSL VPN logs for user connections.", fr: "Nous vérifions les journaux SSL VPN pour les connexions utilisateur." },
-      { en: "The user connects successfully from their laptop.", fr: "L'utilisateur se connecte avec succès depuis son ordinateur portable." },
-      { en: "I configure the portal to display bookmarks.", fr: "Je configure le portail pour afficher les signets." },
-      { en: "The security policy enforces MFA for VPN users.", fr: "La politique de sécurité impose l'authentification multifacteur pour les utilisateurs VPN." },
-      { en: "We test the VPN connection before going live.", fr: "Nous testons la connexion VPN avant la mise en production." },
-      { en: "The VPN tunnel drops due to a timeout.", fr: "Le tunnel VPN se déconnecte en raison d'un délai d'attente." },
-      { en: "I assign IP pools to SSL VPN clients.", fr: "J'attribue des pools IP aux clients SSL VPN." }
-    ]},
-    unit5: { title: "IPsec VPN", tag: "🔐 IPSec", sentences: [
-      { en: "We configure IPsec VPN for site-to-site connectivity.", fr: "Nous configurons le VPN IPsec pour la connectivité site à site." },
-      { en: "Phase 1 establishes the secure channel between peers.", fr: "La phase 1 établit le canal sécurisé entre les pairs." },
-      { en: "We use pre-shared keys to authenticate the tunnel.", fr: "Nous utilisons des clés pré-partagées pour authentifier le tunnel." },
-      { en: "Phase 2 negotiates the encryption algorithms.", fr: "La phase 2 négocie les algorithmes de chiffrement." },
-      { en: "The IKE version is set to version 2 for better security.", fr: "La version IKE est définie sur la version 2 pour une meilleure sécurité." },
-      { en: "We define the local and remote subnets for the VPN.", fr: "Nous définissons les sous-réseaux local et distant pour le VPN." },
-      { en: "The VPN tunnel fails because of a mismatch in pre-shared keys.", fr: "Le tunnel VPN échoue en raison d'une non-concordance des clés pré-partagées." },
-      { en: "I debug the IPsec tunnel using the CLI.", fr: "Je débogue le tunnel IPsec à l'aide de la CLI." },
-      { en: "The security association is established successfully.", fr: "L'association de sécurité est établie avec succès." },
-      { en: "We enable dead peer detection to monitor the tunnel.", fr: "Nous activons la détection des pairs morts pour surveiller le tunnel." },
-      { en: "The traffic is encrypted using AES-256.", fr: "Le trafic est chiffré à l'aide d'AES-256." },
-      { en: "I configure the VPN interface for routing.", fr: "Je configure l'interface VPN pour le routage." },
-      { en: "The remote gateway is behind a dynamic IP address.", fr: "La passerelle distante est derrière une adresse IP dynamique." },
-      { en: "We use digital certificates for stronger authentication.", fr: "Nous utilisons des certificats numériques pour une authentification plus forte." },
-      { en: "The VPN policy must allow traffic to traverse the tunnel.", fr: "La politique VPN doit autoriser le trafic à traverser le tunnel." }
-    ]},
-    unit6: { title: "Intrusion Prevention (IPS)", tag: "🛡️ Security", sentences: [
-      { en: "IPS protects the network from known exploits.", fr: "L'IPS protège le réseau contre les exploits connus." },
-      { en: "We enable IPS on the firewall policy to scan traffic.", fr: "Nous activons l'IPS sur la politique de pare-feu pour analyser le trafic." },
-      { en: "The IPS signature database is updated regularly.", fr: "La base de données des signatures IPS est mise à jour régulièrement." },
-      { en: "I configure a custom signature for a specific threat.", fr: "Je configure une signature personnalisée pour une menace spécifique." },
-      { en: "The sensor detects a brute force attack on SSH.", fr: "Le capteur détecte une attaque par force brute sur SSH." },
-      { en: "We set the IPS action to block and log the traffic.", fr: "Nous définissons l'action IPS pour bloquer et journaliser le trafic." },
-      { en: "The DoS policy prevents flooding attacks.", fr: "La politique DoS prévient les attaques par inondation." },
-      { en: "I analyze the IPS logs to identify false positives.", fr: "J'analyse les journaux IPS pour identifier les faux positifs." },
-      { en: "The security profile is applied to inbound traffic.", fr: "Le profil de sécurité est appliqué au trafic entrant." },
-      { en: "We enable anomaly detection for unusual patterns.", fr: "Nous activons la détection d'anomalies pour les modèles inhabituels." },
-      { en: "The IPS engine is updated to the latest version.", fr: "Le moteur IPS est mis à jour vers la dernière version." },
-      { en: "I exclude internal IPs from IPS scanning.", fr: "J'exclus les IP internes de l'analyse IPS." },
-      { en: "The firewall drops the packet when a signature matches.", fr: "Le pare-feu abandonne le paquet lorsqu'une signature correspond." },
-      { en: "We use the IPS to protect our web servers.", fr: "Nous utilisons l'IPS pour protéger nos serveurs web." },
-      { en: "The system generates an alert for critical vulnerabilities.", fr: "Le système génère une alerte pour les vulnérabilités critiques." }
-    ]},
-    unit7: { title: "Web & Application Control", tag: "🌐 Filtering", sentences: [
-      { en: "We configure web filtering to block malicious sites.", fr: "Nous configurons le filtrage web pour bloquer les sites malveillants." },
-      { en: "The URL filter blocks access to social media.", fr: "Le filtre URL bloque l'accès aux réseaux sociaux." },
-      { en: "We enable application control to manage cloud apps.", fr: "Nous activons le contrôle des applications pour gérer les applications cloud." },
-      { en: "The web rating overrides the default category.", fr: "L'évaluation web remplace la catégorie par défaut." },
-      { en: "I create a profile to block file sharing applications.", fr: "Je crée un profil pour bloquer les applications de partage de fichiers." },
-      { en: "The firewall inspects HTTPS traffic using certificate inspection.", fr: "Le pare-feu inspecte le trafic HTTPS à l'aide de l'inspection des certificats." },
-      { en: "We allow streaming services only during off-peak hours.", fr: "Nous autorisons les services de streaming uniquement pendant les heures creuses." },
-      { en: "The application control signature identifies the protocol.", fr: "La signature du contrôle des applications identifie le protocole." },
-      { en: "I whitelist trusted domains for research.", fr: "Je mets sur liste blanche les domaines de confiance pour la recherche." },
-      { en: "The web filter sends a warning to the user.", fr: "Le filtre web envoie un avertissement à l'utilisateur." },
-      { en: "We combine web filtering with application control.", fr: "Nous combinons le filtrage web avec le contrôle des applications." },
-      { en: "The administrator monitors web usage statistics.", fr: "L'administrateur surveille les statistiques d'utilisation du web." },
-      { en: "I configure a quota for social media usage.", fr: "Je configure un quota pour l'utilisation des réseaux sociaux." },
-      { en: "The system blocks access to gambling websites.", fr: "Le système bloque l'accès aux sites de jeux d'argent." },
-      { en: "We update the web filter database daily.", fr: "Nous mettons à jour la base de données du filtre web quotidiennement." }
-    ]},
-    unit8: { title: "SD-WAN", tag: "⚡ WAN", sentences: [
-      { en: "We configure SD-WAN to improve network reliability.", fr: "Nous configurons le SD-WAN pour améliorer la fiabilité du réseau." },
-      { en: "The SD-WAN interface combines multiple WAN links.", fr: "L'interface SD-WAN combine plusieurs liens WAN." },
-      { en: "We set the load balancing method to optimal performance.", fr: "Nous définissons la méthode d'équilibrage de charge pour des performances optimales." },
-      { en: "The SLA monitoring ensures link quality.", fr: "La surveillance SLA garantit la qualité des liens." },
-      { en: "I create a performance SLA for latency and jitter.", fr: "Je crée un SLA de performance pour la latence et la gigue." },
-      { en: "The SD-WAN rules route traffic based on priority.", fr: "Les règles SD-WAN acheminent le trafic en fonction de la priorité." },
-      { en: "We enable health check probes to detect failures.", fr: "Nous activons les sondes de contrôle de santé pour détecter les pannes." },
-      { en: "The link fails over to the backup connection.", fr: "Le lien bascule vers la connexion de secours." },
-      { en: "I adjust the bandwidth thresholds for traffic shaping.", fr: "J'ajuste les seuils de bande passante pour la mise en forme du trafic." },
-      { en: "The SD-WAN zone includes three physical interfaces.", fr: "La zone SD-WAN comprend trois interfaces physiques." },
-      { en: "We monitor the SD-WAN performance on the dashboard.", fr: "Nous surveillons les performances SD-WAN sur le tableau de bord." },
-      { en: "The algorithm selects the best path for VoIP traffic.", fr: "L'algorithme sélectionne le meilleur chemin pour le trafic VoIP." },
-      { en: "I add a static route using the SD-WAN interface.", fr: "J'ajoute une route statique utilisant l'interface SD-WAN." },
-      { en: "The connection latency is too high, so we switch links.", fr: "La latence de la connexion est trop élevée, donc nous changeons de lien." },
-      { en: "We configure SD-WAN rules based on application type.", fr: "Nous configurons des règles SD-WAN basées sur le type d'application." }
-    ]},
-    unit9: { title: "High Availability (HA)", tag: "🔄 Reliability", sentences: [
-      { en: "We configure HA to ensure network uptime.", fr: "Nous configurons la HA pour garantir la disponibilité du réseau." },
-      { en: "The FGCP cluster provides active-passive failover.", fr: "Le cluster FGCP fournit un basculement actif-passif." },
-      { en: "We synchronize the configuration between cluster members.", fr: "Nous synchronisons la configuration entre les membres du cluster." },
-      { en: "The heartbeat interface monitors peer availability.", fr: "L'interface de battement de cœur surveille la disponibilité du pair." },
-      { en: "I set the priority value to select the primary unit.", fr: "Je définis la valeur de priorité pour sélectionner l'unité principale." },
-      { en: "The secondary unit takes over when the primary fails.", fr: "L'unité secondaire prend le relais lorsque l'unité principale tombe en panne." },
-      { en: "We enable session synchronization to prevent disruption.", fr: "Nous activons la synchronisation des sessions pour éviter les interruptions." },
-      { en: "The failover time is under one second.", fr: "Le temps de basculement est inférieur à une seconde." },
-      { en: "I check the HA status using the CLI.", fr: "Je vérifie l'état de la HA à l'aide de la CLI." },
-      { en: "The cluster uses virtual MAC addresses.", fr: "Le cluster utilise des adresses MAC virtuelles." },
-      { en: "We test the failover during maintenance windows.", fr: "Nous testons le basculement pendant les fenêtres de maintenance." },
-      { en: "The configuration must be identical on all nodes.", fr: "La configuration doit être identique sur tous les nœuds." },
-      { en: "I add a third unit to the HA cluster.", fr: "J'ajoute une troisième unité au cluster HA." },
-      { en: "The HA link requires a dedicated network interface.", fr: "Le lien HA nécessite une interface réseau dédiée." },
-      { en: "We monitor the cluster health via SNMP.", fr: "Nous surveillons la santé du cluster via SNMP." }
-    ]},
-    unit10: { title: "Logging & Troubleshooting", tag: "📊 Monitoring", sentences: [
-      { en: "We send logs to the FortiAnalyzer for centralization.", fr: "Nous envoyons les journaux à FortiAnalyzer pour la centralisation." },
-      { en: "The syslog server receives real-time event data.", fr: "Le serveur syslog reçoit les données d'événements en temps réel." },
-      { en: "I enable debug mode to trace packet flow.", fr: "J'active le mode débogage pour tracer le flux des paquets." },
-      { en: "The log shows a denied connection from a suspicious IP.", fr: "Le journal montre une connexion refusée depuis une IP suspecte." },
-      { en: "We use the packet capture tool to analyze traffic.", fr: "Nous utilisons l'outil de capture de paquets pour analyser le trafic." },
-      { en: "The CLI command provides detailed system status.", fr: "La commande CLI fournit un état détaillé du système." },
-      { en: "I filter logs by severity level to reduce noise.", fr: "Je filtre les journaux par niveau de gravité pour réduire le bruit." },
-      { en: "The administrator checks the event logs daily.", fr: "L'administrateur vérifie les journaux d'événements quotidiennement." },
-      { en: "We troubleshoot connectivity issues using the diagnose command.", fr: "Nous résolvons les problèmes de connectivité à l'aide de la commande diagnose." },
-      { en: "The disk is full, so we rotate the log files.", fr: "Le disque est plein, alors nous faisons la rotation des fichiers journaux." },
-      { en: "I export the logs for external analysis.", fr: "J'exporte les journaux pour une analyse externe." },
-      { en: "The system alerts me to high CPU usage.", fr: "Le système m'alerte sur une utilisation élevée du CPU." },
-      { en: "We verify the logging settings in the configuration.", fr: "Nous vérifions les paramètres de journalisation dans la configuration." },
-      { en: "The troubleshooting guide helps fix common errors.", fr: "Le guide de dépannage aide à corriger les erreurs courantes." },
-      { en: "I test the connectivity using the ping command.", fr: "Je teste la connectivité à l'aide de la commande ping." }
-    ]}
+    unit1: {
+      title: "Firewall Policies & NAT",
+      tag: "🔐 Security",
+      sentences: [
+        { en: "I configure a firewall policy to allow traffic.", fr: "Je configure une politique de pare-feu pour autoriser le trafic.", question: "What do you configure a firewall policy to do?" },
+        { en: "We set the source and destination addresses.", fr: "Nous définissons les adresses source et destination.", question: "What do you set?" },
+        { en: "The firewall denies any traffic by default.", fr: "Le pare-feu refuse tout trafic par défaut.", question: "What does the firewall do by default?" },
+        { en: "We enable NAT to translate private IP addresses.", fr: "Nous activons le NAT pour traduire les adresses IP privées.", question: "Why do you enable NAT?" },
+        { en: "I create an IPv4 policy for internal users.", fr: "Je crée une politique IPv4 pour les utilisateurs internes.", question: "What kind of policy do you create and for whom?" },
+        { en: "We place the policy above the implicit deny rule.", fr: "Nous plaçons la politique au-dessus de la règle de refus implicite.", question: "Where do you place the policy?" },
+        { en: "The administrator edits the policy sequence.", fr: "L'administrateur modifie la séquence des politiques.", question: "What does the administrator edit?" },
+        { en: "We disable NAT for this specific interface.", fr: "Nous désactivons le NAT pour cette interface spécifique.", question: "What do you disable for this specific interface?" },
+        { en: "I add a comment to explain the policy purpose.", fr: "J'ajoute un commentaire pour expliquer le but de la politique.", question: "What do you add to explain the policy purpose?" },
+        { en: "The policy matches the traffic based on the service.", fr: "La politique correspond au trafic en fonction du service.", question: "How does the policy match traffic?" },
+        { en: "We enable logging to monitor denied connections.", fr: "Nous activons la journalisation pour surveiller les connexions refusées.", question: "Why do you enable logging?" },
+        { en: "I need to clone this policy for another VLAN.", fr: "Je dois cloner cette politique pour un autre VLAN.", question: "What do you need to clone and why?" },
+        { en: "The firewall processes policies from top to bottom.", fr: "Le pare-feu traite les politiques de haut en bas.", question: "How does the firewall process policies?" },
+        { en: "We use central NAT to simplify address translation.", fr: "Nous utilisons le NAT central pour simplifier la traduction d'adresses.", question: "What do you use central NAT for?" },
+        { en: "I verify the policy hit count to check usage.", fr: "Je vérifie le nombre de hits de la politique pour vérifier l'utilisation.", question: "Why do you verify the policy hit count?" }
+      ]
+    },
+    unit2: {
+      title: "Routing & Static Routes",
+      tag: "🌐 Networking",
+      sentences: [
+        { en: "We configure a default route to the internet gateway.", fr: "Nous configurons une route par défaut vers la passerelle internet.", question: "What do you configure a default route to?" },
+        { en: "The static route points to the next-hop IP address.", fr: "La route statique pointe vers l'adresse IP du prochain saut.", question: "What does the static route point to?" },
+        { en: "We set the administrative distance to influence routing.", fr: "Nous définissons la distance administrative pour influencer le routage.", question: "What do you set to influence routing?" },
+        { en: "I add a policy route to override the routing table.", fr: "J'ajoute une route politique pour outrepasser la table de routage.", question: "What do you add to override the routing table?" },
+        { en: "The device uses the routing table to forward packets.", fr: "L'appareil utilise la table de routage pour transférer les paquets.", question: "What does the device use to forward packets?" },
+        { en: "We verify the route is active in the forwarding table.", fr: "Nous vérifions que la route est active dans la table de transfert.", question: "What do you verify?" },
+        { en: "I configure the interface IP address for the LAN.", fr: "Je configure l'adresse IP de l'interface pour le LAN.", question: "What do you configure for the LAN?" },
+        { en: "The gateway is unreachable, so we check the physical link.", fr: "La passerelle est inaccessible, alors nous vérifions le lien physique.", question: "What do you do when the gateway is unreachable?" },
+        { en: "We enable routing on the virtual domain (VDOM).", fr: "Nous activons le routage sur le domaine virtuel (VDOM).", question: "What do you enable on the virtual domain?" },
+        { en: "I delete the old static route to avoid conflicts.", fr: "Je supprime l'ancienne route statique pour éviter les conflits.", question: "Why do you delete the old static route?" },
+        { en: "The routing protocol learns dynamic routes automatically.", fr: "Le protocole de routage apprend les routes dynamiques automatiquement.", question: "How does the routing protocol learn dynamic routes?" },
+        { en: "We use a default route for all unknown destinations.", fr: "Nous utilisons une route par défaut pour toutes les destinations inconnues.", question: "What do you use for all unknown destinations?" },
+        { en: "I check the route cache for performance issues.", fr: "Je vérifie le cache de routage pour les problèmes de performance.", question: "What do you check for performance issues?" },
+        { en: "The network administrator manages the routing table.", fr: "L'administrateur réseau gère la table de routage.", question: "Who manages the routing table?" },
+        { en: "We prioritize the static route over the dynamic one.", fr: "Nous priorisons la route statique par rapport à la route dynamique.", question: "Which route do you prioritize?" }
+      ]
+    },
+    unit3: {
+      title: "User Authentication",
+      tag: "👤 Identity",
+      sentences: [
+        { en: "We authenticate users before granting network access.", fr: "Nous authentifions les utilisateurs avant d'accorder l'accès réseau.", question: "What do you do before granting network access?" },
+        { en: "The FortiGate connects to an LDAP server for verification.", fr: "Le FortiGate se connecte à un serveur LDAP pour la vérification.", question: "What does the FortiGate connect to for verification?" },
+        { en: "I configure two-factor authentication for VPN users.", fr: "Je configure l'authentification à deux facteurs pour les utilisateurs VPN.", question: "What do you configure for VPN users?" },
+        { en: "The local user database stores credentials securely.", fr: "La base de données utilisateur locale stocke les identifiants de manière sécurisée.", question: "What does the local user database store securely?" },
+        { en: "We enable certificate-based authentication for clients.", fr: "Nous activons l'authentification par certificat pour les clients.", question: "What do you enable for clients?" },
+        { en: "The user fails to authenticate because of an invalid password.", fr: "L'utilisateur échoue à s'authentifier en raison d'un mot de passe invalide.", question: "Why does the user fail to authenticate?" },
+        { en: "I set up a RADIUS server for centralized authentication.", fr: "Je configure un serveur RADIUS pour l'authentification centralisée.", question: "What do you set up for centralized authentication?" },
+        { en: "The firewall prompts for credentials on the login page.", fr: "Le pare-feu demande les identifiants sur la page de connexion.", question: "What does the firewall prompt for?" },
+        { en: "We define authentication rules for different user groups.", fr: "Nous définissons des règles d'authentification pour différents groupes d'utilisateurs.", question: "What do you define for different user groups?" },
+        { en: "The session expires after a period of inactivity.", fr: "La session expire après une période d'inactivité.", question: "What happens after a period of inactivity?" },
+        { en: "I test the LDAP connection using the CLI command.", fr: "Je teste la connexion LDAP à l'aide de la commande CLI.", question: "What do you test using the CLI command?" },
+        { en: "We sync user accounts from Active Directory.", fr: "Nous synchronisons les comptes utilisateur depuis Active Directory.", question: "Where do you sync user accounts from?" },
+        { en: "The user identity is used for policy matching.", fr: "L'identité de l'utilisateur est utilisée pour la correspondance des politiques.", question: "What is the user identity used for?" },
+        { en: "I forgot my password and need to reset it.", fr: "J'ai oublié mon mot de passe et je dois le réinitialiser.", question: "What do you need to do if you forget your password?" },
+        { en: "We implement guest access with limited privileges.", fr: "Nous mettons en place un accès invité avec des privilèges limités.", question: "What do you implement with limited privileges?" }
+      ]
+    },
+    unit4: {
+      title: "SSL VPN",
+      tag: "🔒 VPN",
+      sentences: [
+        { en: "We configure SSL VPN to provide remote access.", fr: "Nous configurons le SSL VPN pour fournir un accès à distance.", question: "What do you configure to provide remote access?" },
+        { en: "The SSL VPN portal hosts the web applications.", fr: "Le portail SSL VPN héberge les applications web.", question: "What does the SSL VPN portal host?" },
+        { en: "I create a tunnel mode for full network access.", fr: "Je crée un mode tunnel pour un accès réseau complet.", question: "What do you create for full network access?" },
+        { en: "The client downloads the VPN client from the portal.", fr: "Le client télécharge le client VPN depuis le portail.", question: "What does the client download from the portal?" },
+        { en: "We enable split tunneling to optimize bandwidth.", fr: "Nous activons le split tunneling pour optimiser la bande passante.", question: "Why do you enable split tunneling?" },
+        { en: "The SSL certificate is trusted by the client browser.", fr: "Le certificat SSL est approuvé par le navigateur client.", question: "What is trusted by the client browser?" },
+        { en: "I restrict access to specific subnet via SSL VPN.", fr: "Je restreins l'accès à un sous-réseau spécifique via SSL VPN.", question: "What do you restrict via SSL VPN?" },
+        { en: "The session uses TLS 1.2 for encryption.", fr: "La session utilise TLS 1.2 pour le chiffrement.", question: "What does the session use for encryption?" },
+        { en: "We check the SSL VPN logs for user connections.", fr: "Nous vérifions les journaux SSL VPN pour les connexions utilisateur.", question: "What do you check for user connections?" },
+        { en: "The user connects successfully from their laptop.", fr: "L'utilisateur se connecte avec succès depuis son ordinateur portable.", question: "Where does the user connect successfully from?" },
+        { en: "I configure the portal to display bookmarks.", fr: "Je configure le portail pour afficher les signets.", question: "What do you configure the portal to display?" },
+        { en: "The security policy enforces MFA for VPN users.", fr: "La politique de sécurité impose l'authentification multifacteur pour les utilisateurs VPN.", question: "What does the security policy enforce for VPN users?" },
+        { en: "We test the VPN connection before going live.", fr: "Nous testons la connexion VPN avant la mise en production.", question: "When do you test the VPN connection?" },
+        { en: "The VPN tunnel drops due to a timeout.", fr: "Le tunnel VPN se déconnecte en raison d'un délai d'attente.", question: "Why does the VPN tunnel drop?" },
+        { en: "I assign IP pools to SSL VPN clients.", fr: "J'attribue des pools IP aux clients SSL VPN.", question: "What do you assign to SSL VPN clients?" }
+      ]
+    },
+    unit5: {
+      title: "IPsec VPN",
+      tag: "🔐 IPSec",
+      sentences: [
+        { en: "We configure IPsec VPN for site-to-site connectivity.", fr: "Nous configurons le VPN IPsec pour la connectivité site à site.", question: "What do you configure for site-to-site connectivity?" },
+        { en: "Phase 1 establishes the secure channel between peers.", fr: "La phase 1 établit le canal sécurisé entre les pairs.", question: "What does phase 1 establish?" },
+        { en: "We use pre-shared keys to authenticate the tunnel.", fr: "Nous utilisons des clés pré-partagées pour authentifier le tunnel.", question: "What do you use to authenticate the tunnel?" },
+        { en: "Phase 2 negotiates the encryption algorithms.", fr: "La phase 2 négocie les algorithmes de chiffrement.", question: "What does phase 2 negotiate?" },
+        { en: "The IKE version is set to version 2 for better security.", fr: "La version IKE est définie sur la version 2 pour une meilleure sécurité.", question: "What is the IKE version set to and why?" },
+        { en: "We define the local and remote subnets for the VPN.", fr: "Nous définissons les sous-réseaux local et distant pour le VPN.", question: "What do you define for the VPN?" },
+        { en: "The VPN tunnel fails because of a mismatch in pre-shared keys.", fr: "Le tunnel VPN échoue en raison d'une non-concordance des clés pré-partagées.", question: "Why does the VPN tunnel fail?" },
+        { en: "I debug the IPsec tunnel using the CLI.", fr: "Je débogue le tunnel IPsec à l'aide de la CLI.", question: "What do you debug using the CLI?" },
+        { en: "The security association is established successfully.", fr: "L'association de sécurité est établie avec succès.", question: "What is established successfully?" },
+        { en: "We enable dead peer detection to monitor the tunnel.", fr: "Nous activons la détection des pairs morts pour surveiller le tunnel.", question: "Why do you enable dead peer detection?" },
+        { en: "The traffic is encrypted using AES-256.", fr: "Le trafic est chiffré à l'aide d'AES-256.", question: "What encryption is used for traffic?" },
+        { en: "I configure the VPN interface for routing.", fr: "Je configure l'interface VPN pour le routage.", question: "What do you configure for routing?" },
+        { en: "The remote gateway is behind a dynamic IP address.", fr: "La passerelle distante est derrière une adresse IP dynamique.", question: "What is the remote gateway behind?" },
+        { en: "We use digital certificates for stronger authentication.", fr: "Nous utilisons des certificats numériques pour une authentification plus forte.", question: "What do you use for stronger authentication?" },
+        { en: "The VPN policy must allow traffic to traverse the tunnel.", fr: "La politique VPN doit autoriser le trafic à traverser le tunnel.", question: "What must the VPN policy allow?" }
+      ]
+    },
+    unit6: {
+      title: "Intrusion Prevention (IPS)",
+      tag: "🛡️ Security",
+      sentences: [
+        { en: "IPS protects the network from known exploits.", fr: "L'IPS protège le réseau contre les exploits connus.", question: "What does IPS protect the network from?" },
+        { en: "We enable IPS on the firewall policy to scan traffic.", fr: "Nous activons l'IPS sur la politique de pare-feu pour analyser le trafic.", question: "What do you enable on the firewall policy to scan traffic?" },
+        { en: "The IPS signature database is updated regularly.", fr: "La base de données des signatures IPS est mise à jour régulièrement.", question: "What is updated regularly?" },
+        { en: "I configure a custom signature for a specific threat.", fr: "Je configure une signature personnalisée pour une menace spécifique.", question: "What do you configure for a specific threat?" },
+        { en: "The sensor detects a brute force attack on SSH.", fr: "Le capteur détecte une attaque par force brute sur SSH.", question: "What does the sensor detect on SSH?" },
+        { en: "We set the IPS action to block and log the traffic.", fr: "Nous définissons l'action IPS pour bloquer et journaliser le trafic.", question: "What action do you set the IPS to?" },
+        { en: "The DoS policy prevents flooding attacks.", fr: "La politique DoS prévient les attaques par inondation.", question: "What does the DoS policy prevent?" },
+        { en: "I analyze the IPS logs to identify false positives.", fr: "J'analyse les journaux IPS pour identifier les faux positifs.", question: "What do you analyze to identify false positives?" },
+        { en: "The security profile is applied to inbound traffic.", fr: "Le profil de sécurité est appliqué au trafic entrant.", question: "What is applied to inbound traffic?" },
+        { en: "We enable anomaly detection for unusual patterns.", fr: "Nous activons la détection d'anomalies pour les modèles inhabituels.", question: "What do you enable for unusual patterns?" },
+        { en: "The IPS engine is updated to the latest version.", fr: "Le moteur IPS est mis à jour vers la dernière version.", question: "What is updated to the latest version?" },
+        { en: "I exclude internal IPs from IPS scanning.", fr: "J'exclus les IP internes de l'analyse IPS.", question: "What do you exclude from IPS scanning?" },
+        { en: "The firewall drops the packet when a signature matches.", fr: "Le pare-feu abandonne le paquet lorsqu'une signature correspond.", question: "What does the firewall do when a signature matches?" },
+        { en: "We use the IPS to protect our web servers.", fr: "Nous utilisons l'IPS pour protéger nos serveurs web.", question: "What do you use the IPS for?" },
+        { en: "The system generates an alert for critical vulnerabilities.", fr: "Le système génère une alerte pour les vulnérabilités critiques.", question: "What does the system generate for critical vulnerabilities?" }
+      ]
+    },
+    unit7: {
+      title: "Web & Application Control",
+      tag: "🌐 Filtering",
+      sentences: [
+        { en: "We configure web filtering to block malicious sites.", fr: "Nous configurons le filtrage web pour bloquer les sites malveillants.", question: "What do you configure to block malicious sites?" },
+        { en: "The URL filter blocks access to social media.", fr: "Le filtre URL bloque l'accès aux réseaux sociaux.", question: "What does the URL filter block?" },
+        { en: "We enable application control to manage cloud apps.", fr: "Nous activons le contrôle des applications pour gérer les applications cloud.", question: "What do you enable to manage cloud apps?" },
+        { en: "The web rating overrides the default category.", fr: "L'évaluation web remplace la catégorie par défaut.", question: "What overrides the default category?" },
+        { en: "I create a profile to block file sharing applications.", fr: "Je crée un profil pour bloquer les applications de partage de fichiers.", question: "What do you create to block file sharing applications?" },
+        { en: "The firewall inspects HTTPS traffic using certificate inspection.", fr: "Le pare-feu inspecte le trafic HTTPS à l'aide de l'inspection des certificats.", question: "How does the firewall inspect HTTPS traffic?" },
+        { en: "We allow streaming services only during off-peak hours.", fr: "Nous autorisons les services de streaming uniquement pendant les heures creuses.", question: "When do you allow streaming services?" },
+        { en: "The application control signature identifies the protocol.", fr: "La signature du contrôle des applications identifie le protocole.", question: "What does the application control signature identify?" },
+        { en: "I whitelist trusted domains for research.", fr: "Je mets sur liste blanche les domaines de confiance pour la recherche.", question: "What do you whitelist for research?" },
+        { en: "The web filter sends a warning to the user.", fr: "Le filtre web envoie un avertissement à l'utilisateur.", question: "What does the web filter send to the user?" },
+        { en: "We combine web filtering with application control.", fr: "Nous combinons le filtrage web avec le contrôle des applications.", question: "What do you combine?" },
+        { en: "The administrator monitors web usage statistics.", fr: "L'administrateur surveille les statistiques d'utilisation du web.", question: "What does the administrator monitor?" },
+        { en: "I configure a quota for social media usage.", fr: "Je configure un quota pour l'utilisation des réseaux sociaux.", question: "What do you configure for social media usage?" },
+        { en: "The system blocks access to gambling websites.", fr: "Le système bloque l'accès aux sites de jeux d'argent.", question: "What does the system block access to?" },
+        { en: "We update the web filter database daily.", fr: "Nous mettons à jour la base de données du filtre web quotidiennement.", question: "How often do you update the web filter database?" }
+      ]
+    },
+    unit8: {
+      title: "SD-WAN",
+      tag: "⚡ WAN",
+      sentences: [
+        { en: "We configure SD-WAN to improve network reliability.", fr: "Nous configurons le SD-WAN pour améliorer la fiabilité du réseau.", question: "What do you configure to improve network reliability?" },
+        { en: "The SD-WAN interface combines multiple WAN links.", fr: "L'interface SD-WAN combine plusieurs liens WAN.", question: "What does the SD-WAN interface combine?" },
+        { en: "We set the load balancing method to optimal performance.", fr: "Nous définissons la méthode d'équilibrage de charge pour des performances optimales.", question: "What do you set to optimal performance?" },
+        { en: "The SLA monitoring ensures link quality.", fr: "La surveillance SLA garantit la qualité des liens.", question: "What does SLA monitoring ensure?" },
+        { en: "I create a performance SLA for latency and jitter.", fr: "Je crée un SLA de performance pour la latence et la gigue.", question: "What do you create for latency and jitter?" },
+        { en: "The SD-WAN rules route traffic based on priority.", fr: "Les règles SD-WAN acheminent le trafic en fonction de la priorité.", question: "How do SD-WAN rules route traffic?" },
+        { en: "We enable health check probes to detect failures.", fr: "Nous activons les sondes de contrôle de santé pour détecter les pannes.", question: "What do you enable to detect failures?" },
+        { en: "The link fails over to the backup connection.", fr: "Le lien bascule vers la connexion de secours.", question: "What does the link fail over to?" },
+        { en: "I adjust the bandwidth thresholds for traffic shaping.", fr: "J'ajuste les seuils de bande passante pour la mise en forme du trafic.", question: "What do you adjust for traffic shaping?" },
+        { en: "The SD-WAN zone includes three physical interfaces.", fr: "La zone SD-WAN comprend trois interfaces physiques.", question: "What does the SD-WAN zone include?" },
+        { en: "We monitor the SD-WAN performance on the dashboard.", fr: "Nous surveillons les performances SD-WAN sur le tableau de bord.", question: "Where do you monitor SD-WAN performance?" },
+        { en: "The algorithm selects the best path for VoIP traffic.", fr: "L'algorithme sélectionne le meilleur chemin pour le trafic VoIP.", question: "What does the algorithm select for VoIP traffic?" },
+        { en: "I add a static route using the SD-WAN interface.", fr: "J'ajoute une route statique utilisant l'interface SD-WAN.", question: "What do you add using the SD-WAN interface?" },
+        { en: "The connection latency is too high, so we switch links.", fr: "La latence de la connexion est trop élevée, donc nous changeons de lien.", question: "What do you do when connection latency is too high?" },
+        { en: "We configure SD-WAN rules based on application type.", fr: "Nous configurons des règles SD-WAN basées sur le type d'application.", question: "What are SD-WAN rules based on?" }
+      ]
+    },
+    unit9: {
+      title: "High Availability (HA)",
+      tag: "🔄 Reliability",
+      sentences: [
+        { en: "We configure HA to ensure network uptime.", fr: "Nous configurons la HA pour garantir la disponibilité du réseau.", question: "What do you configure to ensure network uptime?" },
+        { en: "The FGCP cluster provides active-passive failover.", fr: "Le cluster FGCP fournit un basculement actif-passif.", question: "What does the FGCP cluster provide?" },
+        { en: "We synchronize the configuration between cluster members.", fr: "Nous synchronisons la configuration entre les membres du cluster.", question: "What do you synchronize between cluster members?" },
+        { en: "The heartbeat interface monitors peer availability.", fr: "L'interface de battement de cœur surveille la disponibilité du pair.", question: "What does the heartbeat interface monitor?" },
+        { en: "I set the priority value to select the primary unit.", fr: "Je définis la valeur de priorité pour sélectionner l'unité principale.", question: "What do you set to select the primary unit?" },
+        { en: "The secondary unit takes over when the primary fails.", fr: "L'unité secondaire prend le relais lorsque l'unité principale tombe en panne.", question: "What happens when the primary fails?" },
+        { en: "We enable session synchronization to prevent disruption.", fr: "Nous activons la synchronisation des sessions pour éviter les interruptions.", question: "Why do you enable session synchronization?" },
+        { en: "The failover time is under one second.", fr: "Le temps de basculement est inférieur à une seconde.", question: "How fast is the failover time?" },
+        { en: "I check the HA status using the CLI.", fr: "Je vérifie l'état de la HA à l'aide de la CLI.", question: "What do you check using the CLI?" },
+        { en: "The cluster uses virtual MAC addresses.", fr: "Le cluster utilise des adresses MAC virtuelles.", question: "What does the cluster use?" },
+        { en: "We test the failover during maintenance windows.", fr: "Nous testons le basculement pendant les fenêtres de maintenance.", question: "When do you test the failover?" },
+        { en: "The configuration must be identical on all nodes.", fr: "La configuration doit être identique sur tous les nœuds.", question: "What must be identical on all nodes?" },
+        { en: "I add a third unit to the HA cluster.", fr: "J'ajoute une troisième unité au cluster HA.", question: "What do you add to the HA cluster?" },
+        { en: "The HA link requires a dedicated network interface.", fr: "Le lien HA nécessite une interface réseau dédiée.", question: "What does the HA link require?" },
+        { en: "We monitor the cluster health via SNMP.", fr: "Nous surveillons la santé du cluster via SNMP.", question: "How do you monitor the cluster health?" }
+      ]
+    },
+    unit10: {
+      title: "Logging & Troubleshooting",
+      tag: "📊 Monitoring",
+      sentences: [
+        { en: "We send logs to the FortiAnalyzer for centralization.", fr: "Nous envoyons les journaux à FortiAnalyzer pour la centralisation.", question: "Where do you send logs for centralization?" },
+        { en: "The syslog server receives real-time event data.", fr: "Le serveur syslog reçoit les données d'événements en temps réel.", question: "What does the syslog server receive?" },
+        { en: "I enable debug mode to trace packet flow.", fr: "J'active le mode débogage pour tracer le flux des paquets.", question: "What do you enable to trace packet flow?" },
+        { en: "The log shows a denied connection from a suspicious IP.", fr: "Le journal montre une connexion refusée depuis une IP suspecte.", question: "What does the log show?" },
+        { en: "We use the packet capture tool to analyze traffic.", fr: "Nous utilisons l'outil de capture de paquets pour analyser le trafic.", question: "What do you use to analyze traffic?" },
+        { en: "The CLI command provides detailed system status.", fr: "La commande CLI fournit un état détaillé du système.", question: "What does the CLI command provide?" },
+        { en: "I filter logs by severity level to reduce noise.", fr: "Je filtre les journaux par niveau de gravité pour réduire le bruit.", question: "What do you filter logs by?" },
+        { en: "The administrator checks the event logs daily.", fr: "L'administrateur vérifie les journaux d'événements quotidiennement.", question: "How often does the administrator check event logs?" },
+        { en: "We troubleshoot connectivity issues using the diagnose command.", fr: "Nous résolvons les problèmes de connectivité à l'aide de la commande diagnose.", question: "How do you troubleshoot connectivity issues?" },
+        { en: "The disk is full, so we rotate the log files.", fr: "Le disque est plein, alors nous faisons la rotation des fichiers journaux.", question: "What do you do when the disk is full?" },
+        { en: "I export the logs for external analysis.", fr: "J'exporte les journaux pour une analyse externe.", question: "What do you export for external analysis?" },
+        { en: "The system alerts me to high CPU usage.", fr: "Le système m'alerte sur une utilisation élevée du CPU.", question: "What does the system alert you to?" },
+        { en: "We verify the logging settings in the configuration.", fr: "Nous vérifions les paramètres de journalisation dans la configuration.", question: "What do you verify in the configuration?" },
+        { en: "The troubleshooting guide helps fix common errors.", fr: "Le guide de dépannage aide à corriger les erreurs courantes.", question: "What does the troubleshooting guide help with?" },
+        { en: "I test the connectivity using the ping command.", fr: "Je teste la connectivité à l'aide de la commande ping.", question: "How do you test connectivity?" }
+      ]
+    }
   };
 
   const grammarData = [
@@ -764,220 +802,6 @@
         "Use much / a lot of / less with these."
       ], tip: "\"We collect a lot of information\" is correct; \"many informations\" is not." }
   ];
-
-  // =============================================================
-  // QUESTION GENERATOR (creates a natural question from a sentence)
-  // =============================================================
-  function generateQuestion(sentence) {
-    const s = sentence.trim();
-    // Patterns (regex) and corresponding questions
-    const patterns = [
-      // Intro / professional
-      { re: /^my name is (.+?) and i am a (.+)$/i, q: (m) => `What is your name and what do you do?` },
-      { re: /^i am (.+)$/i, q: (m) => `Who are you?` },
-      { re: /^my name is (.+)$/i, q: (m) => `What is your name?` },
-      { re: /^i specialize in (.+)$/i, q: (m) => `What do you specialize in?` },
-      { re: /^i have over (.+) years of experience in the (.+) industry$/i, q: (m) => `How many years of experience do you have and in which industry?` },
-      { re: /^i have over (.+) years of experience$/i, q: (m) => `How many years of experience do you have?` },
-      { re: /^my primary responsibility is to (.+)$/i, q: (m) => `What is your primary responsibility?` },
-      { re: /^i am currently preparing for the (.+)$/i, q: (m) => `What are you currently preparing for?` },
-      { re: /^i work closely with the (.+)$/i, q: (m) => `Who do you work closely with?` },
-      { re: /^i enjoy (.+)$/i, q: (m) => `What do you enjoy?` },
-      { re: /^my goal is to (.+)$/i, q: (m) => `What is your goal?` },
-      { re: /^i am proficient in (.+)$/i, q: (m) => `What are you proficient in?` },
-      { re: /^i collaborate with my team to (.+)$/i, q: (m) => `What do you collaborate on with your team?` },
-      { re: /^i am responsible for (.+)$/i, q: (m) => `What are you responsible for?` },
-      { re: /^i regularly conduct (.+)$/i, q: (m) => `What do you regularly conduct?` },
-      { re: /^i believe in (.+)$/i, q: (m) => `What do you believe in?` },
-      { re: /^i communicate with stakeholders about (.+)$/i, q: (m) => `What do you communicate with stakeholders about?` },
-      { re: /^i am excited to (.+)$/i, q: (m) => `What are you excited to do?` },
-      { re: /^i work in a (.+) environment$/i, q: (m) => `What kind of environment do you work in?` },
-      { re: /^i use various tools to (.+)$/i, q: (m) => `What do you use various tools for?` },
-      { re: /^i document all configurations for (.+)$/i, q: (m) => `Why do you document all configurations?` },
-      { re: /^i often participate in (.+)$/i, q: (m) => `What do you often participate in?` },
-      { re: /^i look forward to (.+)$/i, q: (m) => `What do you look forward to?` },
-
-      // Firewall & NAT
-      { re: /^i configure a firewall policy to (.+)$/i, q: (m) => `What do you configure a firewall policy to do?` },
-      { re: /^we set the source and destination addresses$/i, q: () => `What do you set?` },
-      { re: /^the firewall denies any traffic by default$/i, q: () => `What does the firewall do by default?` },
-      { re: /^we enable nat to (.+)$/i, q: (m) => `Why do you enable NAT?` },
-      { re: /^i create an ipv4 policy for (.+)$/i, q: (m) => `What kind of policy do you create and for whom?` },
-      { re: /^we place the policy above the implicit deny rule$/i, q: () => `Where do you place the policy?` },
-      { re: /^the administrator edits the policy sequence$/i, q: () => `What does the administrator edit?` },
-      { re: /^we disable nat for this specific interface$/i, q: () => `What do you disable for this specific interface?` },
-      { re: /^i add a comment to explain the policy purpose$/i, q: () => `What do you add to explain the policy purpose?` },
-      { re: /^the policy matches the traffic based on the service$/i, q: () => `How does the policy match traffic?` },
-      { re: /^we enable logging to monitor denied connections$/i, q: () => `Why do you enable logging?` },
-      { re: /^i need to clone this policy for another vlan$/i, q: () => `What do you need to clone and why?` },
-      { re: /^the firewall processes policies from top to bottom$/i, q: () => `How does the firewall process policies?` },
-      { re: /^we use central nat to simplify address translation$/i, q: () => `What do you use central NAT for?` },
-      { re: /^i verify the policy hit count to check usage$/i, q: () => `Why do you verify the policy hit count?` },
-
-      // Routing
-      { re: /^we configure a default route to the internet gateway$/i, q: () => `What do you configure a default route to?` },
-      { re: /^the static route points to the next-hop ip address$/i, q: () => `What does the static route point to?` },
-      { re: /^we set the administrative distance to influence routing$/i, q: () => `What do you set to influence routing?` },
-      { re: /^i add a policy route to override the routing table$/i, q: () => `What do you add to override the routing table?` },
-      { re: /^the device uses the routing table to forward packets$/i, q: () => `What does the device use to forward packets?` },
-      { re: /^we verify the route is active in the forwarding table$/i, q: () => `What do you verify?` },
-      { re: /^i configure the interface ip address for the lan$/i, q: () => `What do you configure for the LAN?` },
-      { re: /^the gateway is unreachable, so we check the physical link$/i, q: () => `What do you do when the gateway is unreachable?` },
-      { re: /^we enable routing on the virtual domain \(vdom\)$/i, q: () => `What do you enable on the virtual domain?` },
-      { re: /^i delete the old static route to avoid conflicts$/i, q: () => `Why do you delete the old static route?` },
-      { re: /^the routing protocol learns dynamic routes automatically$/i, q: () => `How does the routing protocol learn dynamic routes?` },
-      { re: /^we use a default route for all unknown destinations$/i, q: () => `What do you use for all unknown destinations?` },
-      { re: /^i check the route cache for performance issues$/i, q: () => `What do you check for performance issues?` },
-      { re: /^the network administrator manages the routing table$/i, q: () => `Who manages the routing table?` },
-      { re: /^we prioritize the static route over the dynamic one$/i, q: () => `Which route do you prioritize?` },
-
-      // Authentication
-      { re: /^we authenticate users before granting network access$/i, q: () => `What do you do before granting network access?` },
-      { re: /^the fortigate connects to an ldap server for verification$/i, q: () => `What does the FortiGate connect to for verification?` },
-      { re: /^i configure two-factor authentication for vpn users$/i, q: () => `What do you configure for VPN users?` },
-      { re: /^the local user database stores credentials securely$/i, q: () => `What does the local user database store securely?` },
-      { re: /^we enable certificate-based authentication for clients$/i, q: () => `What do you enable for clients?` },
-      { re: /^the user fails to authenticate because of an invalid password$/i, q: () => `Why does the user fail to authenticate?` },
-      { re: /^i set up a radius server for centralized authentication$/i, q: () => `What do you set up for centralized authentication?` },
-      { re: /^the firewall prompts for credentials on the login page$/i, q: () => `What does the firewall prompt for?` },
-      { re: /^we define authentication rules for different user groups$/i, q: () => `What do you define for different user groups?` },
-      { re: /^the session expires after a period of inactivity$/i, q: () => `What happens after a period of inactivity?` },
-      { re: /^i test the ldap connection using the cli command$/i, q: () => `What do you test using the CLI command?` },
-      { re: /^we sync user accounts from active directory$/i, q: () => `Where do you sync user accounts from?` },
-      { re: /^the user identity is used for policy matching$/i, q: () => `What is the user identity used for?` },
-      { re: /^i forgot my password and need to reset it$/i, q: () => `What do you need to do if you forget your password?` },
-      { re: /^we implement guest access with limited privileges$/i, q: () => `What do you implement with limited privileges?` },
-
-      // SSL VPN
-      { re: /^we configure ssl vpn to provide remote access$/i, q: () => `What do you configure to provide remote access?` },
-      { re: /^the ssl vpn portal hosts the web applications$/i, q: () => `What does the SSL VPN portal host?` },
-      { re: /^i create a tunnel mode for full network access$/i, q: () => `What do you create for full network access?` },
-      { re: /^the client downloads the vpn client from the portal$/i, q: () => `What does the client download from the portal?` },
-      { re: /^we enable split tunneling to optimize bandwidth$/i, q: () => `Why do you enable split tunneling?` },
-      { re: /^the ssl certificate is trusted by the client browser$/i, q: () => `What is trusted by the client browser?` },
-      { re: /^i restrict access to specific subnet via ssl vpn$/i, q: () => `What do you restrict via SSL VPN?` },
-      { re: /^the session uses tls 1.2 for encryption$/i, q: () => `What does the session use for encryption?` },
-      { re: /^we check the ssl vpn logs for user connections$/i, q: () => `What do you check for user connections?` },
-      { re: /^the user connects successfully from their laptop$/i, q: () => `Where does the user connect successfully from?` },
-      { re: /^i configure the portal to display bookmarks$/i, q: () => `What do you configure the portal to display?` },
-      { re: /^the security policy enforces mfa for vpn users$/i, q: () => `What does the security policy enforce for VPN users?` },
-      { re: /^we test the vpn connection before going live$/i, q: () => `When do you test the VPN connection?` },
-      { re: /^the vpn tunnel drops due to a timeout$/i, q: () => `Why does the VPN tunnel drop?` },
-      { re: /^i assign ip pools to ssl vpn clients$/i, q: () => `What do you assign to SSL VPN clients?` },
-
-      // IPsec
-      { re: /^we configure ipsec vpn for site-to-site connectivity$/i, q: () => `What do you configure for site-to-site connectivity?` },
-      { re: /^phase 1 establishes the secure channel between peers$/i, q: () => `What does phase 1 establish?` },
-      { re: /^we use pre-shared keys to authenticate the tunnel$/i, q: () => `What do you use to authenticate the tunnel?` },
-      { re: /^phase 2 negotiates the encryption algorithms$/i, q: () => `What does phase 2 negotiate?` },
-      { re: /^the ike version is set to version 2 for better security$/i, q: () => `What is the IKE version set to and why?` },
-      { re: /^we define the local and remote subnets for the vpn$/i, q: () => `What do you define for the VPN?` },
-      { re: /^the vpn tunnel fails because of a mismatch in pre-shared keys$/i, q: () => `Why does the VPN tunnel fail?` },
-      { re: /^i debug the ipsec tunnel using the cli$/i, q: () => `What do you debug using the CLI?` },
-      { re: /^the security association is established successfully$/i, q: () => `What is established successfully?` },
-      { re: /^we enable dead peer detection to monitor the tunnel$/i, q: () => `Why do you enable dead peer detection?` },
-      { re: /^the traffic is encrypted using aes-256$/i, q: () => `What encryption is used for traffic?` },
-      { re: /^i configure the vpn interface for routing$/i, q: () => `What do you configure for routing?` },
-      { re: /^the remote gateway is behind a dynamic ip address$/i, q: () => `What is the remote gateway behind?` },
-      { re: /^we use digital certificates for stronger authentication$/i, q: () => `What do you use for stronger authentication?` },
-      { re: /^the vpn policy must allow traffic to traverse the tunnel$/i, q: () => `What must the VPN policy allow?` },
-
-      // IPS
-      { re: /^ips protects the network from known exploits$/i, q: () => `What does IPS protect the network from?` },
-      { re: /^we enable ips on the firewall policy to scan traffic$/i, q: () => `What do you enable on the firewall policy to scan traffic?` },
-      { re: /^the ips signature database is updated regularly$/i, q: () => `What is updated regularly?` },
-      { re: /^i configure a custom signature for a specific threat$/i, q: () => `What do you configure for a specific threat?` },
-      { re: /^the sensor detects a brute force attack on ssh$/i, q: () => `What does the sensor detect on SSH?` },
-      { re: /^we set the ips action to block and log the traffic$/i, q: () => `What action do you set the IPS to?` },
-      { re: /^the dos policy prevents flooding attacks$/i, q: () => `What does the DoS policy prevent?` },
-      { re: /^i analyze the ips logs to identify false positives$/i, q: () => `What do you analyze to identify false positives?` },
-      { re: /^the security profile is applied to inbound traffic$/i, q: () => `What is applied to inbound traffic?` },
-      { re: /^we enable anomaly detection for unusual patterns$/i, q: () => `What do you enable for unusual patterns?` },
-      { re: /^the ips engine is updated to the latest version$/i, q: () => `What is updated to the latest version?` },
-      { re: /^i exclude internal ips from ips scanning$/i, q: () => `What do you exclude from IPS scanning?` },
-      { re: /^the firewall drops the packet when a signature matches$/i, q: () => `What does the firewall do when a signature matches?` },
-      { re: /^we use the ips to protect our web servers$/i, q: () => `What do you use the IPS for?` },
-      { re: /^the system generates an alert for critical vulnerabilities$/i, q: () => `What does the system generate for critical vulnerabilities?` },
-
-      // Web & App Control
-      { re: /^we configure web filtering to block malicious sites$/i, q: () => `What do you configure to block malicious sites?` },
-      { re: /^the url filter blocks access to social media$/i, q: () => `What does the URL filter block?` },
-      { re: /^we enable application control to manage cloud apps$/i, q: () => `What do you enable to manage cloud apps?` },
-      { re: /^the web rating overrides the default category$/i, q: () => `What overrides the default category?` },
-      { re: /^i create a profile to block file sharing applications$/i, q: () => `What do you create to block file sharing applications?` },
-      { re: /^the firewall inspects https traffic using certificate inspection$/i, q: () => `How does the firewall inspect HTTPS traffic?` },
-      { re: /^we allow streaming services only during off-peak hours$/i, q: () => `When do you allow streaming services?` },
-      { re: /^the application control signature identifies the protocol$/i, q: () => `What does the application control signature identify?` },
-      { re: /^i whitelist trusted domains for research$/i, q: () => `What do you whitelist for research?` },
-      { re: /^the web filter sends a warning to the user$/i, q: () => `What does the web filter send to the user?` },
-      { re: /^we combine web filtering with application control$/i, q: () => `What do you combine?` },
-      { re: /^the administrator monitors web usage statistics$/i, q: () => `What does the administrator monitor?` },
-      { re: /^i configure a quota for social media usage$/i, q: () => `What do you configure for social media usage?` },
-      { re: /^the system blocks access to gambling websites$/i, q: () => `What does the system block access to?` },
-      { re: /^we update the web filter database daily$/i, q: () => `How often do you update the web filter database?` },
-
-      // SD-WAN
-      { re: /^we configure sd-wan to improve network reliability$/i, q: () => `What do you configure to improve network reliability?` },
-      { re: /^the sd-wan interface combines multiple wan links$/i, q: () => `What does the SD-WAN interface combine?` },
-      { re: /^we set the load balancing method to optimal performance$/i, q: () => `What do you set to optimal performance?` },
-      { re: /^the sla monitoring ensures link quality$/i, q: () => `What does SLA monitoring ensure?` },
-      { re: /^i create a performance sla for latency and jitter$/i, q: () => `What do you create for latency and jitter?` },
-      { re: /^the sd-wan rules route traffic based on priority$/i, q: () => `How do SD-WAN rules route traffic?` },
-      { re: /^we enable health check probes to detect failures$/i, q: () => `What do you enable to detect failures?` },
-      { re: /^the link fails over to the backup connection$/i, q: () => `What does the link fail over to?` },
-      { re: /^i adjust the bandwidth thresholds for traffic shaping$/i, q: () => `What do you adjust for traffic shaping?` },
-      { re: /^the sd-wan zone includes three physical interfaces$/i, q: () => `What does the SD-WAN zone include?` },
-      { re: /^we monitor the sd-wan performance on the dashboard$/i, q: () => `Where do you monitor SD-WAN performance?` },
-      { re: /^the algorithm selects the best path for voip traffic$/i, q: () => `What does the algorithm select for VoIP traffic?` },
-      { re: /^i add a static route using the sd-wan interface$/i, q: () => `What do you add using the SD-WAN interface?` },
-      { re: /^the connection latency is too high, so we switch links$/i, q: () => `What do you do when connection latency is too high?` },
-      { re: /^we configure sd-wan rules based on application type$/i, q: () => `What are SD-WAN rules based on?` },
-
-      // HA
-      { re: /^we configure ha to ensure network uptime$/i, q: () => `What do you configure to ensure network uptime?` },
-      { re: /^the fgcp cluster provides active-passive failover$/i, q: () => `What does the FGCP cluster provide?` },
-      { re: /^we synchronize the configuration between cluster members$/i, q: () => `What do you synchronize between cluster members?` },
-      { re: /^the heartbeat interface monitors peer availability$/i, q: () => `What does the heartbeat interface monitor?` },
-      { re: /^i set the priority value to select the primary unit$/i, q: () => `What do you set to select the primary unit?` },
-      { re: /^the secondary unit takes over when the primary fails$/i, q: () => `What happens when the primary fails?` },
-      { re: /^we enable session synchronization to prevent disruption$/i, q: () => `Why do you enable session synchronization?` },
-      { re: /^the failover time is under one second$/i, q: () => `How fast is the failover time?` },
-      { re: /^i check the ha status using the cli$/i, q: () => `What do you check using the CLI?` },
-      { re: /^the cluster uses virtual mac addresses$/i, q: () => `What does the cluster use?` },
-      { re: /^we test the failover during maintenance windows$/i, q: () => `When do you test the failover?` },
-      { re: /^the configuration must be identical on all nodes$/i, q: () => `What must be identical on all nodes?` },
-      { re: /^i add a third unit to the ha cluster$/i, q: () => `What do you add to the HA cluster?` },
-      { re: /^the ha link requires a dedicated network interface$/i, q: () => `What does the HA link require?` },
-      { re: /^we monitor the cluster health via snmp$/i, q: () => `How do you monitor the cluster health?` },
-
-      // Logging & Troubleshooting
-      { re: /^we send logs to the fortianalyzer for centralization$/i, q: () => `Where do you send logs for centralization?` },
-      { re: /^the syslog server receives real-time event data$/i, q: () => `What does the syslog server receive?` },
-      { re: /^i enable debug mode to trace packet flow$/i, q: () => `What do you enable to trace packet flow?` },
-      { re: /^the log shows a denied connection from a suspicious ip$/i, q: () => `What does the log show?` },
-      { re: /^we use the packet capture tool to analyze traffic$/i, q: () => `What do you use to analyze traffic?` },
-      { re: /^the cli command provides detailed system status$/i, q: () => `What does the CLI command provide?` },
-      { re: /^i filter logs by severity level to reduce noise$/i, q: () => `What do you filter logs by?` },
-      { re: /^the administrator checks the event logs daily$/i, q: () => `How often does the administrator check event logs?` },
-      { re: /^we troubleshoot connectivity issues using the diagnose command$/i, q: () => `How do you troubleshoot connectivity issues?` },
-      { re: /^the disk is full, so we rotate the log files$/i, q: () => `What do you do when the disk is full?` },
-      { re: /^i export the logs for external analysis$/i, q: () => `What do you export for external analysis?` },
-      { re: /^the system alerts me to high cpu usage$/i, q: () => `What does the system alert you to?` },
-      { re: /^we verify the logging settings in the configuration$/i, q: () => `What do you verify in the configuration?` },
-      { re: /^the troubleshooting guide helps fix common errors$/i, q: () => `What does the troubleshooting guide help with?` },
-      { re: /^i test the connectivity using the ping command$/i, q: () => `How do you test connectivity?` }
-    ];
-
-    // Try to match a pattern
-    for (const p of patterns) {
-      const match = s.match(p.re);
-      if (match) {
-        return p.q(match);
-      }
-    }
-    // Fallback
-    return "What would you say in this situation?";
-  }
 
   // =============================================================
   // STORAGE (same as before)
@@ -1103,6 +927,7 @@
   const stepRepeat = $('stepRepeatBtn');
   const stepDictation = $('stepDictationBtn');
   const stepQuiz = $('stepQuizBtn');
+  const nextBtn = $('nextBtn');
   const feedback = $('feedback');
   const progressFill = $('progressFill');
   const progressText = $('progressText');
@@ -1157,6 +982,53 @@
     sentenceBox.classList.remove('dictation-mode', 'quiz-mode');
   }
 
+  // =============================================================
+  // NEXT BUTTON LOGIC AND AUTO-SKIP
+  // =============================================================
+  function advanceToNextIncomplete() {
+    while (state.index < state.sentences.length && isComplete(state.index)) {
+      state.index++;
+    }
+    if (state.index >= state.sentences.length) {
+      const totalXP = state.stepProgress.reduce((sum, steps) => {
+        return sum + steps.reduce((s, done, i) => s + (done ? C.XP_PER_STEP[i] : 0), 0);
+      }, 0);
+      showCompletion(totalXP);
+      return false;
+    } else {
+      state.currentStep = getStepsDone(state.index);
+      if (state.currentStep > 3) state.currentStep = 3;
+      saveModuleState();
+      updateUI();
+      renderStep(state.currentStep);
+      return true;
+    }
+  }
+
+  function goToNextSentence() {
+    if (!isComplete(state.index)) {
+      showFeedback('Please complete all steps first.', 'warning');
+      return;
+    }
+    if (state.index + 1 >= state.sentences.length) {
+      const totalXP = state.stepProgress.reduce((sum, steps) => {
+        return sum + steps.reduce((s, done, i) => s + (done ? C.XP_PER_STEP[i] : 0), 0);
+      }, 0);
+      showCompletion(totalXP);
+    } else {
+      state.index++;
+      state.currentStep = 0;
+      activityArea.innerHTML = '';
+      restoreOriginalDisplay();
+      updateUI();
+      renderStep(0);
+      showFeedback('📖 Next sentence '+(state.index+1)+'/'+state.sentences.length, 'info');
+    }
+  }
+
+  // =============================================================
+  // UPDATE UI
+  // =============================================================
   function updateUI() {
     if (!state.sentences.length) return;
     const dots = stepDots.querySelectorAll('.step-dot');
@@ -1172,6 +1044,15 @@
     stepRepeat.disabled = (done < 1);
     stepDictation.disabled = (done < 2);
     stepQuiz.disabled = (done < 3);
+
+    const complete = isComplete(state.index);
+    nextBtn.disabled = !complete;
+    if (complete) {
+      nextBtn.textContent = (state.index + 1 >= state.sentences.length) ? '🎉 Finish' : 'Next →';
+      nextBtn.classList.add('success');
+    } else {
+      nextBtn.classList.remove('success');
+    }
 
     if (!sentenceBox.classList.contains('dictation-mode') && !sentenceBox.classList.contains('quiz-mode')) {
       if (state.sentences[state.index]) {
@@ -1299,14 +1180,14 @@
     setTimeout(() => input.focus(), 150);
   }
 
-  // ---- Dialogue Quiz (Q&A, no manual fallback) ----
+  // ---- Dialogue Quiz (now uses explicit question) ----
   function renderDialogueQuiz(s) {
     storeOriginalDisplay();
 
-    const question = generateQuestion(s.en);
+    // Use the explicit question – no regex fallback!
+    const question = s.question || "What would you say in this situation?";
     const expectedAnswer = s.en;
 
-    // Show question in the sentence box
     sentenceEl.textContent = question;
     translationEl.textContent = '💬 Answer in English';
     sentenceBox.classList.add('quiz-mode');
@@ -1394,26 +1275,17 @@
       if (sim >= C.SIMILARITY_GOOD) {
         showFeedback('✅ Excellent! '+pct+'% match — well done!', 'success');
         stopQuizListening();
-        setTimeout(() => {
-          restoreOriginalDisplay();
-          markStepDone(3);
-        }, 700);
+        markStepDone(3);
       } else {
         showFeedback('📚 '+pct+'% — not quite. Try again, or listen to the question again.', 'error');
         stopQuizListening();
-        // Re-enable speak button for another attempt
         speakBtn.textContent = '🎤 Speak';
         speakBtn.classList.remove('recording');
-        // Keep transcript but allow retry
-        setTimeout(() => {
-          // If still not done, keep the button active
-        }, 500);
       }
     }
 
     speakBtn.onclick = () => {
       if (state.isListening) { stopQuizListening(); return; }
-      // Clear previous transcript
       transcriptInput.value = '';
       startQuizListening();
     };
@@ -1422,7 +1294,6 @@
       speak(question, 'en-US', 0.7);
     };
 
-    // If speech recognition not supported, we disable the button and show a message
     if (!state.speechSupported) {
       speakBtn.disabled = true;
       speakBtn.textContent = '🚫 Not supported';
@@ -1557,7 +1428,7 @@
   }
 
   // =============================================================
-  // MARK STEP DONE & ADVANCE (same as before)
+  // MARK STEP DONE
   // =============================================================
   function markStepDone(step) {
     if (!state.stepProgress[state.index]) state.stepProgress[state.index] = [false,false,false,false];
@@ -1568,28 +1439,25 @@
     const earned = C.XP_PER_STEP[step] || 5;
     addXP(earned);
     saveModuleState();
-    showFeedback('✅ Step '+(step+1)+' done! +'+earned+' XP', 'success');
+    updateUI();
 
     if (isComplete(state.index)) {
-      const allDone = state.stepProgress.every(steps => steps.every(Boolean));
-      if (allDone) {
-        const totalXP = state.stepProgress.reduce((sum, steps) => {
-          return sum + steps.reduce((s, done, i) => s + (done ? C.XP_PER_STEP[i] : 0), 0);
-        }, 0);
-        showCompletion(totalXP);
-        return;
-      }
-
+      showFeedback('✅ Step '+(step+1)+' done! +'+earned+' XP — sentence mastered!', 'success');
       if (state.index + 1 < state.sentences.length) {
         setTimeout(() => {
-          state.index++;
-          state.currentStep = 0;
-          activityArea.innerHTML = '';
-          restoreOriginalDisplay();
-          updateUI();
-          renderStep(0);
-          showFeedback('📖 Next sentence '+(state.index+1)+'/'+state.sentences.length, 'info');
-        }, C.AUTO_ADVANCE);
+          if (state.index < state.sentences.length && isComplete(state.index)) {
+            goToNextSentence();
+          }
+        }, C.AUTO_ADVANCE_DELAY);
+      } else {
+        setTimeout(() => {
+          if (state.index < state.sentences.length && isComplete(state.index)) {
+            const totalXP = state.stepProgress.reduce((sum, steps) => {
+              return sum + steps.reduce((s, done, i) => s + (done ? C.XP_PER_STEP[i] : 0), 0);
+            }, 0);
+            showCompletion(totalXP);
+          }
+        }, C.AUTO_ADVANCE_DELAY);
       }
     } else {
       const done = getStepsDone(state.index);
@@ -1600,6 +1468,9 @@
     }
   }
 
+  // =============================================================
+  // COMPLETION
+  // =============================================================
   function showCompletion(totalXP) {
     const count = state.stepProgress.length;
     completeSentences.textContent = count;
@@ -1615,7 +1486,7 @@
   }
 
   // =============================================================
-  // REVIEW (adapted to use dialogue quiz as well)
+  // REVIEW (uses explicit question as well)
   // =============================================================
   function startReview(textId) {
     const data = loadModuleState(textId);
@@ -1661,6 +1532,8 @@
     stepRepeat.disabled = false;
     stepDictation.disabled = true;
     stepQuiz.disabled = true;
+    nextBtn.disabled = true;
+    nextBtn.textContent = '—';
   }
 
   function renderReviewCard() {
@@ -1678,7 +1551,6 @@
       `;
       $('reviewRepeatBtn').onclick = () => registerReviewResult(true);
     } else if (chosen === 'dictation') {
-      // Same as before
       storeOriginalDisplay();
       sentenceEl.textContent = '🎧 Listen and type the word';
       translationEl.textContent = s.fr;
@@ -1730,15 +1602,14 @@
       input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); checkReviewDictation(); } };
       setTimeout(() => input.focus(), 150);
     } else {
-      // Quiz in review – use the same dialogue quiz
+      // Quiz in review – uses explicit question
       renderDialogueQuizForReview(s);
     }
   }
 
-  // Dialogue quiz for review (same as main but calls registerReviewResult)
   function renderDialogueQuizForReview(s) {
     storeOriginalDisplay();
-    const question = generateQuestion(s.en);
+    const question = s.question || "What would you say in this situation?";
     const expectedAnswer = s.en;
 
     sentenceEl.textContent = question;
@@ -1851,7 +1722,7 @@
     if (state.reviewIndex >= state.sentences.length) {
       showFeedback('🏁 Review complete — '+state.reviewCorrect+'/'+state.sentences.length+' correct!', 'success');
       updateReviewUI();
-      setTimeout(() => exitToHome(), C.AUTO_ADVANCE+800);
+      setTimeout(() => exitToHome(), C.AUTO_ADVANCE_DELAY+800);
       return;
     }
     state.index++;
@@ -1871,6 +1742,9 @@
     state.stepProgress = saved.stepProgress;
     state.lastReviewed = saved.lastReviewed;
     state.index = Math.min(saved.index || 0, state.sentences.length-1);
+    const stillHasIncomplete = advanceToNextIncomplete();
+    if (!stillHasIncomplete) return;
+
     state.currentStep = getStepsDone(state.index);
     if (state.currentStep > 3) state.currentStep = 3;
 
@@ -2004,6 +1878,8 @@
     renderStep(3);
   };
 
+  nextBtn.onclick = goToNextSentence;
+
   playFrBtn.onclick = () => {
     if (state.sentences[state.index]) speak(state.sentences[state.index].fr, 'fr-FR', 0.75);
   };
@@ -2025,6 +1901,7 @@
     if (e.key === '2') { e.preventDefault(); stepRepeat.click(); }
     if (e.key === '3') { e.preventDefault(); stepDictation.click(); }
     if (e.key === '4') { e.preventDefault(); stepQuiz.click(); }
+    if (e.key === 'n' || e.key === 'N') { e.preventDefault(); if (!nextBtn.disabled) nextBtn.click(); }
   });
 
   // =============================================================
