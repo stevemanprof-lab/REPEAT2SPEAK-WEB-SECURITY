@@ -488,22 +488,24 @@
   // CONFIG
   // =============================================================
   const C = {
-    SIMILARITY_GOOD: 0.55,
+    SIMILARITY_GOOD: 0.60,         // raised from 0.55 to make pronunciation check stricter
     AUTO_ADVANCE_DELAY: 2000,
     RECOGNITION_TIMEOUT: 12000,
     XP_PER_STEP: [5, 10, 10, 15],
     XP_REVIEW: 4,
     REVIEW_SIZE: 8,
-    LEVEL_UP_XP: 100
+    LEVEL_UP_XP: 100,
+    MIN_CONTENT_WORDS_RATIO: 0.65   // require at least 65% of content words match
   };
 
   // =============================================================
-  // DATA WITH EXPLICIT QUESTIONS (no regex coupling)
+  // DATA WITH EXPLICIT QUESTIONS AND THEME WORDS
   // =============================================================
   const textsData = {
     intro: {
       title: "Professional Introductions",
       tag: "👔 Intro",
+      themeWords: ["name", "cyber", "security", "engineer", "specialize", "network", "firewall", "management", "experience", "industry", "responsibility", "protect", "corporate", "preparing", "certification", "operations", "troubleshooting", "Fortinet", "configure", "policies", "collaborate", "implement", "maintain", "availability", "assessments", "learning", "stakeholders", "training", "dynamic", "monitor", "traffic", "document", "audit", "incident", "response"],
       sentences: [
         { en: "My name is Paul and I am a cyber security engineer.", fr: "Je m'appelle Paul et je suis ingénieur en cybersécurité.", question: "What is your name and what do you do?" },
         { en: "I specialize in network security and firewall management.", fr: "Je me spécialise dans la sécurité réseau et la gestion des pare-feu.", question: "What do you specialize in?" },
@@ -530,6 +532,7 @@
     unit1: {
       title: "Firewall Policies & NAT",
       tag: "🔐 Security",
+      themeWords: ["firewall", "policy", "traffic", "source", "destination", "addresses", "deny", "NAT", "IPv4", "internal", "implicit", "deny", "administrator", "sequence", "disable", "comment", "service", "logging", "monitor", "connections", "clone", "VLAN", "process", "central", "translation", "hit", "count"],
       sentences: [
         { en: "I configure a firewall policy to allow traffic.", fr: "Je configure une politique de pare-feu pour autoriser le trafic.", question: "What do you configure a firewall policy to do?" },
         { en: "We set the source and destination addresses.", fr: "Nous définissons les adresses source et destination.", question: "What do you set?" },
@@ -551,6 +554,7 @@
     unit2: {
       title: "Routing & Static Routes",
       tag: "🌐 Networking",
+      themeWords: ["default", "route", "internet", "gateway", "static", "next-hop", "address", "administrative", "distance", "policy", "override", "routing", "table", "device", "forward", "packets", "forwarding", "verify", "interface", "LAN", "unreachable", "physical", "link", "VDOM", "delete", "conflicts", "protocol", "dynamic", "cache", "performance", "prioritize"],
       sentences: [
         { en: "We configure a default route to the internet gateway.", fr: "Nous configurons une route par défaut vers la passerelle internet.", question: "What do you configure a default route to?" },
         { en: "The static route points to the next-hop IP address.", fr: "La route statique pointe vers l'adresse IP du prochain saut.", question: "What does the static route point to?" },
@@ -572,6 +576,7 @@
     unit3: {
       title: "User Authentication",
       tag: "👤 Identity",
+      themeWords: ["authenticate", "users", "network", "access", "FortiGate", "LDAP", "server", "verification", "two-factor", "authentication", "VPN", "local", "database", "credentials", "certificate-based", "clients", "password", "RADIUS", "centralized", "login", "rules", "groups", "session", "expires", "inactivity", "CLI", "command", "Active Directory", "sync", "identity", "matching", "guest"],
       sentences: [
         { en: "We authenticate users before granting network access.", fr: "Nous authentifions les utilisateurs avant d'accorder l'accès réseau.", question: "What do you do before granting network access?" },
         { en: "The FortiGate connects to an LDAP server for verification.", fr: "Le FortiGate se connecte à un serveur LDAP pour la vérification.", question: "What does the FortiGate connect to for verification?" },
@@ -593,6 +598,7 @@
     unit4: {
       title: "SSL VPN",
       tag: "🔒 VPN",
+      themeWords: ["SSL", "VPN", "remote", "access", "portal", "web", "applications", "tunnel", "mode", "client", "download", "split", "tunneling", "bandwidth", "certificate", "trusted", "browser", "restrict", "subnet", "TLS", "encryption", "logs", "connections", "laptop", "bookmarks", "MFA", "test", "live", "drops", "timeout", "IP", "pools"],
       sentences: [
         { en: "We configure SSL VPN to provide remote access.", fr: "Nous configurons le SSL VPN pour fournir un accès à distance.", question: "What do you configure to provide remote access?" },
         { en: "The SSL VPN portal hosts the web applications.", fr: "Le portail SSL VPN héberge les applications web.", question: "What does the SSL VPN portal host?" },
@@ -614,6 +620,7 @@
     unit5: {
       title: "IPsec VPN",
       tag: "🔐 IPSec",
+      themeWords: ["IPsec", "VPN", "site-to-site", "connectivity", "Phase", "secure", "channel", "peers", "pre-shared", "keys", "authenticate", "tunnel", "negotiates", "encryption", "algorithms", "IKE", "version", "local", "remote", "subnets", "mismatch", "debug", "CLI", "security", "association", "established", "dead", "peer", "detection", "monitor", "AES-256", "interface", "dynamic", "IP", "certificates", "allow"],
       sentences: [
         { en: "We configure IPsec VPN for site-to-site connectivity.", fr: "Nous configurons le VPN IPsec pour la connectivité site à site.", question: "What do you configure for site-to-site connectivity?" },
         { en: "Phase 1 establishes the secure channel between peers.", fr: "La phase 1 établit le canal sécurisé entre les pairs.", question: "What does phase 1 establish?" },
@@ -635,6 +642,7 @@
     unit6: {
       title: "Intrusion Prevention (IPS)",
       tag: "🛡️ Security",
+      themeWords: ["IPS", "protects", "network", "exploits", "enable", "firewall", "policy", "scan", "traffic", "signature", "database", "updated", "custom", "signature", "threat", "sensor", "detects", "brute", "force", "SSH", "action", "block", "log", "DoS", "flooding", "prevent", "false", "positives", "profile", "inbound", "anomaly", "detection", "patterns", "engine", "exclude", "internal", "drops", "packet", "alert", "vulnerabilities"],
       sentences: [
         { en: "IPS protects the network from known exploits.", fr: "L'IPS protège le réseau contre les exploits connus.", question: "What does IPS protect the network from?" },
         { en: "We enable IPS on the firewall policy to scan traffic.", fr: "Nous activons l'IPS sur la politique de pare-feu pour analyser le trafic.", question: "What do you enable on the firewall policy to scan traffic?" },
@@ -656,6 +664,7 @@
     unit7: {
       title: "Web & Application Control",
       tag: "🌐 Filtering",
+      themeWords: ["web", "filtering", "block", "malicious", "URL", "filter", "social", "media", "application", "control", "cloud", "rating", "category", "profile", "file", "sharing", "HTTPS", "certificate", "inspection", "streaming", "off-peak", "hours", "signature", "protocol", "whitelist", "trusted", "domains", "warning", "combine", "statistics", "quota", "gambling", "database"],
       sentences: [
         { en: "We configure web filtering to block malicious sites.", fr: "Nous configurons le filtrage web pour bloquer les sites malveillants.", question: "What do you configure to block malicious sites?" },
         { en: "The URL filter blocks access to social media.", fr: "Le filtre URL bloque l'accès aux réseaux sociaux.", question: "What does the URL filter block?" },
@@ -677,6 +686,7 @@
     unit8: {
       title: "SD-WAN",
       tag: "⚡ WAN",
+      themeWords: ["SD-WAN", "improve", "network", "reliability", "interface", "combines", "WAN", "links", "load", "balancing", "optimal", "performance", "SLA", "monitoring", "link", "quality", "latency", "jitter", "rules", "priority", "health", "check", "probes", "failures", "fail", "backup", "bandwidth", "thresholds", "shaping", "zone", "physical", "dashboard", "algorithm", "VoIP", "traffic", "application"],
       sentences: [
         { en: "We configure SD-WAN to improve network reliability.", fr: "Nous configurons le SD-WAN pour améliorer la fiabilité du réseau.", question: "What do you configure to improve network reliability?" },
         { en: "The SD-WAN interface combines multiple WAN links.", fr: "L'interface SD-WAN combine plusieurs liens WAN.", question: "What does the SD-WAN interface combine?" },
@@ -698,6 +708,7 @@
     unit9: {
       title: "High Availability (HA)",
       tag: "🔄 Reliability",
+      themeWords: ["HA", "ensure", "network", "uptime", "FGCP", "cluster", "active-passive", "failover", "synchronize", "configuration", "members", "heartbeat", "interface", "monitor", "peer", "availability", "priority", "value", "primary", "secondary", "session", "synchronization", "disruption", "time", "CLI", "virtual", "MAC", "addresses", "maintenance", "windows", "identical", "nodes", "dedicated", "SNMP"],
       sentences: [
         { en: "We configure HA to ensure network uptime.", fr: "Nous configurons la HA pour garantir la disponibilité du réseau.", question: "What do you configure to ensure network uptime?" },
         { en: "The FGCP cluster provides active-passive failover.", fr: "Le cluster FGCP fournit un basculement actif-passif.", question: "What does the FGCP cluster provide?" },
@@ -719,6 +730,7 @@
     unit10: {
       title: "Logging & Troubleshooting",
       tag: "📊 Monitoring",
+      themeWords: ["logs", "FortiAnalyzer", "centralization", "syslog", "server", "real-time", "debug", "mode", "packet", "flow", "denied", "connection", "suspicious", "capture", "CLI", "detailed", "status", "filter", "severity", "event", "diagnose", "disk", "rotate", "export", "analysis", "alert", "CPU", "usage", "settings", "guide", "ping"],
       sentences: [
         { en: "We send logs to the FortiAnalyzer for centralization.", fr: "Nous envoyons les journaux à FortiAnalyzer pour la centralisation.", question: "Where do you send logs for centralization?" },
         { en: "The syslog server receives real-time event data.", fr: "Le serveur syslog reçoit les données d'événements en temps réel.", question: "What does the syslog server receive?" },
@@ -983,6 +995,56 @@
   }
 
   // =============================================================
+  // THEME WORD PICKER (shared for dictation)
+  // =============================================================
+  function pickThemeWord(sentence, moduleId) {
+    const themeWords = textsData[moduleId]?.themeWords || [];
+    if (!themeWords.length) return null;
+    // Split sentence into words, remove punctuation, lower case
+    const words = sentence.toLowerCase().replace(/[^a-z\s']/g, '').split(/\s+/);
+    // Find candidates that are in themeWords and have length > 2
+    const candidates = words.filter(w => themeWords.includes(w) && w.length > 2);
+    if (candidates.length > 0) {
+      // Prefer longer words (more challenging)
+      candidates.sort((a,b) => b.length - a.length);
+      return candidates[0];
+    }
+    // Fallback: pick any word longer than 3 chars, not in common stop list
+    const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by','my','me','you','he','she','we','they','am','be','was','were','have','has','had','do','does','did','will','would','could','should','may','can','very','too','all','some','any','more','most','such','no','nor','not','only','own','same','so','than','then','thence','these','they','this','those','through','until','up','upon','with','without']);
+    const fallback = words.filter(w => w.length > 3 && !stop.has(w));
+    if (fallback.length > 0) {
+      fallback.sort((a,b) => b.length - a.length);
+      return fallback[0];
+    }
+    // Last resort: any word with length > 2
+    const anyWord = words.find(w => w.length > 2);
+    return anyWord || null;
+  }
+
+  // =============================================================
+  // IMPROVED SIMILARITY (stricter, content-word focused)
+  // =============================================================
+  function similarity(spoken, target) {
+    const stopWords = new Set(['the','a','an','is','are','was','were','am','be','been','being','have','has','had','do','does','did','will','would','could','should','may','might','must','shall','can','to','of','for','on','at','in','by','with','without','about','against','between','through','during','within','upon','towards','etc']);
+    const norm = s => s.toLowerCase().replace(/[^\w\s']/g,'').trim();
+    const aWords = norm(spoken).split(/\s+/).filter(w => w.length > 1 && !stopWords.has(w));
+    const bWords = norm(target).split(/\s+/).filter(w => w.length > 1 && !stopWords.has(w));
+    if (aWords.length === 0 || bWords.length === 0) return 0;
+
+    // Count matches (word overlap)
+    let matches = 0;
+    for (const w of aWords) {
+      if (bWords.includes(w)) matches++;
+    }
+    // Compute ratio based on target length (we require most content words from target to appear)
+    const ratio = matches / bWords.length;
+    // Also penalize if spoken has significantly fewer words than target (less than 60% of target length)
+    const lengthRatio = aWords.length / bWords.length;
+    const finalScore = ratio * Math.min(1, lengthRatio / 0.6);
+    return Math.min(1, finalScore);
+  }
+
+  // =============================================================
   // NEXT BUTTON LOGIC AND AUTO-SKIP
   // =============================================================
   function advanceToNextIncomplete() {
@@ -1122,19 +1184,25 @@
     }
   }
 
-  // ---- Dictation (unchanged) ----
+  // ---- Dictation (uses theme word) ----
   function renderDictation(s) {
     storeOriginalDisplay();
     sentenceEl.textContent = '🎧 Listen and type the word';
     translationEl.textContent = s.fr;
     sentenceBox.classList.add('dictation-mode');
 
-    const words = s.en.replace(/[.,!?]/g,'').split(/\s+/);
-    const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by']);
-    let candidates = words.map((w,i) => ({ w, i })).filter(o => o.w.length > 3 && !stop.has(o.w.toLowerCase()));
-    if (candidates.length === 0) candidates = words.map((w,i) => ({ w, i }));
-    const pick = candidates[Math.floor(Math.random() * candidates.length)];
-    const targetWord = pick.w;
+    // Pick a theme word from the sentence
+    const moduleId = state.textId;
+    let targetWord = pickThemeWord(s.en, moduleId);
+    // If no theme word found, fallback to the old logic (any longer word)
+    if (!targetWord) {
+      const words = s.en.replace(/[.,!?]/g,'').split(/\s+/);
+      const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by']);
+      let candidates = words.map((w,i) => ({ w, i })).filter(o => o.w.length > 3 && !stop.has(o.w.toLowerCase()));
+      if (candidates.length === 0) candidates = words.map((w,i) => ({ w, i }));
+      const pick = candidates[Math.floor(Math.random() * candidates.length)];
+      targetWord = pick.w;
+    }
 
     activityArea.innerHTML = `
       <div class="oral-prompt">
@@ -1180,11 +1248,10 @@
     setTimeout(() => input.focus(), 150);
   }
 
-  // ---- Dialogue Quiz (now uses explicit question) ----
+  // ---- Dialogue Quiz (uses explicit question) ----
   function renderDialogueQuiz(s) {
     storeOriginalDisplay();
 
-    // Use the explicit question – no regex fallback!
     const question = s.question || "What would you say in this situation?";
     const expectedAnswer = s.en;
 
@@ -1415,18 +1482,6 @@
     stopListeningRepeat();
   }
 
-  function similarity(spoken, target) {
-    const norm = s => s.toLowerCase().replace(/[^\w\s']/g,'').trim();
-    const a = norm(spoken), b = norm(target);
-    if (a === b) return 1;
-    if (!a || !b) return 0;
-    const wa = a.split(/\s+/), wb = b.split(/\s+/);
-    let matches = 0;
-    for (const w of wa) { if (wb.includes(w)) matches++; }
-    const maxLen = Math.max(wa.length, wb.length);
-    return maxLen > 0 ? matches / maxLen : 0;
-  }
-
   // =============================================================
   // MARK STEP DONE
   // =============================================================
@@ -1556,12 +1611,17 @@
       translationEl.textContent = s.fr;
       sentenceBox.classList.add('dictation-mode');
 
-      const words = s.en.replace(/[.,!?]/g,'').split(/\s+/);
-      const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by']);
-      let candidates = words.map((w,i) => ({ w, i })).filter(o => o.w.length > 3 && !stop.has(o.w.toLowerCase()));
-      if (candidates.length === 0) candidates = words.map((w,i) => ({ w, i }));
-      const pick = candidates[Math.floor(Math.random() * candidates.length)];
-      const targetWord = pick.w;
+      // Pick theme word for review as well
+      const moduleId = state.textId;
+      let targetWord = pickThemeWord(s.en, moduleId);
+      if (!targetWord) {
+        const words = s.en.replace(/[.,!?]/g,'').split(/\s+/);
+        const stop = new Set(['the','a','an','is','are','i','we','to','of','and','for','on','in','at','it','this','that','by']);
+        let candidates = words.map((w,i) => ({ w, i })).filter(o => o.w.length > 3 && !stop.has(o.w.toLowerCase()));
+        if (candidates.length === 0) candidates = words.map((w,i) => ({ w, i }));
+        const pick = candidates[Math.floor(Math.random() * candidates.length)];
+        targetWord = pick.w;
+      }
 
       activityArea.innerHTML = `
         <div class="oral-prompt">🎧 Listen to the audio, then type the word.</div>
@@ -1602,7 +1662,6 @@
       input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); checkReviewDictation(); } };
       setTimeout(() => input.focus(), 150);
     } else {
-      // Quiz in review – uses explicit question
       renderDialogueQuizForReview(s);
     }
   }
