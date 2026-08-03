@@ -263,7 +263,7 @@
             color: #00d4ff;
         }
 
-        /* ===== GRAMMAR MODAL (unchanged) ===== */
+        /* ===== GRAMMAR MODAL (updated with exercise styles) ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -336,7 +336,7 @@
             padding-bottom: 6px;
         }
         details.grammar-block {
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             border: 1px solid #1a3144;
             border-radius: 8px;
             overflow: hidden;
@@ -408,7 +408,157 @@
             color: #00d4ff;
         }
 
-        /* ===== PRACTICE SCREEN ===== */
+        /* ---- Grammar exercise styles ---- */
+        .grammar-exercise {
+            margin-top: 10px;
+            border-top: 1px solid #1a3144;
+            padding-top: 8px;
+        }
+        .grammar-exercise h4 {
+            color: #ffaa33;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .grammar-exercise .question {
+            font-size: 0.8rem;
+            color: #d0dbea;
+            margin-bottom: 4px;
+        }
+        .grammar-exercise .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 4px 0;
+        }
+        .grammar-exercise .options button {
+            background: rgba(10, 18, 30, 0.6);
+            border: 1px solid #2a4058;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #b0cbe0;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+        .grammar-exercise .options button:hover {
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+        .grammar-exercise .options button.selected-correct {
+            border-color: #00e676;
+            background: rgba(0, 230, 118, 0.10);
+            color: #00e676;
+        }
+        .grammar-exercise .options button.selected-wrong {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.10);
+            color: #ff4444;
+        }
+        .grammar-exercise .options button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .grammar-exercise .feedback-msg {
+            font-size: 0.7rem;
+            margin-top: 2px;
+            color: #8ab4d0;
+        }
+        .grammar-exercise .feedback-msg.correct {
+            color: #00e676;
+        }
+        .grammar-exercise .feedback-msg.wrong {
+            color: #ff4444;
+        }
+
+        /* Speaking exercise */
+        .speaking-exercise .speaking-hint {
+            font-size: 0.75rem;
+            color: #7a96b0;
+            margin: 4px 0;
+        }
+        .speaking-exercise .speaking-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 4px 0;
+            padding: 4px 8px;
+            background: rgba(0, 212, 255, 0.03);
+            border-radius: 6px;
+            border: 1px dashed #2a5a7a;
+        }
+        .speaking-exercise .speaking-options span {
+            font-size: 0.75rem;
+            color: #b0cbe0;
+            background: rgba(10, 18, 30, 0.4);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid #1a3144;
+        }
+        .speaking-exercise .speaking-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .speaking-exercise .speaking-controls button {
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            border: 1px solid #2a4058;
+            background: rgba(10, 18, 30, 0.6);
+            color: #b0cbe0;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            min-height: 36px;
+        }
+        .speaking-exercise .speaking-controls button:hover {
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+        .speaking-exercise .speaking-controls button.primary {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+        .speaking-exercise .speaking-controls button.recording {
+            border-color: #ff4444;
+            color: #ff4444;
+            animation: pulse 1s infinite;
+            background: #220000;
+        }
+        .speaking-exercise .speaking-controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .speaking-exercise .speaking-transcript {
+            margin-top: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #2a4058;
+            background: rgba(8, 16, 26, 0.6);
+            color: #eef6fc;
+            font-size: 0.8rem;
+            min-height: 28px;
+            width: 100%;
+            font-family: inherit;
+        }
+        .speaking-exercise .speaking-feedback {
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+        .speaking-exercise .speaking-feedback.correct {
+            color: #00e676;
+        }
+        .speaking-exercise .speaking-feedback.wrong {
+            color: #ff4444;
+        }
+
+        /* ===== PRACTICE SCREEN (unchanged) ===== */
         .practice-screen {
             display: none;
         }
@@ -614,7 +764,7 @@
             min-height: 50px;
         }
 
-        /* ===== Dictation & Quiz shared styles ===== */
+        /* ===== Dictation & Quiz shared styles (unchanged) ===== */
         .oral-prompt {
             text-align: center;
             color: #7a96b0;
@@ -1734,71 +1884,360 @@
                 }
             };
 
-            const grammarData = [
-                { title: "Present Simple vs. Continuous", points: [
-                        "Simple for routines, facts: <em>I configure firewall policies weekly.</em>",
-                        "Continuous for now/temporary: <em>I am troubleshooting an outage.</em>"
-                    ], tip: "Use simple for job descriptions, continuous for live incidents." },
-                { title: "Present Perfect", points: [
-                        "Links past to present: <em>I have configured 50 policies this year.</em>",
-                        "Past simple for specific time: <em>I configured the policy yesterday.</em>"
-                    ], tip: "If a specific date appears, use past simple." },
-                { title: "Past Simple vs. Past Perfect", points: [
-                        "Past perfect is the earlier past: <em>The attacker had exploited the flaw before we patched.</em>"
-                    ], tip: "In incident reports, past perfect shows what went wrong first." },
-                { title: "Conditionals", points: [
-                        "Zero — general: <em>If a policy denies traffic, the firewall drops the packet.</em>",
-                        "First — real future: <em>If the tunnel fails, we switch to backup.</em>",
-                        "Second — hypothetical: <em>If I had admin rights, I would disable that account.</em>"
-                    ], tip: "Zero and first conditionals dominate documentation." },
-                { title: "Passive Voice", points: [
-                        "Common in security: <em>The traffic is inspected by the IPS.</em>",
-                        "Used when actor unknown: <em>Two vulnerabilities were identified.</em>"
-                    ], tip: "Don't overuse it — name the actor when accountability matters." },
-                { title: "Modal Verbs", points: [
-                        "must / have to — obligation: <em>Logs must be retained for 90 days.</em>",
-                        "should — recommendation: <em>You should enable MFA.</em>",
-                        "may / might — possibility: <em>The alert may be a false positive.</em>"
-                    ], tip: "\"Must\" is stronger than \"should\" — use for compliance." },
-                { title: "Prepositions", points: [
-                        "connect <em>to</em> a server", "protect <em>against</em> threats",
-                        "responsible <em>for</em> security"
-                    ], tip: "These pairings are fixed — memorize them as chunks." },
-                { title: "Articles", points: [
-                        "\"the\" for specific: <em>The firewall blocked the request.</em>",
-                        "\"a/an\" for first mention: <em>We deployed a new sensor.</em>",
-                        "No article for general concepts: <em>Security requires vigilance.</em>"
-                    ], tip: "Saying \"the security\" to mean the general concept is a common mistake." },
-                { title: "Relative Clauses", points: [
-                        "who for people: <em>The engineer who configured the VPN is on leave.</em>",
-                        "which/that for things: <em>A vulnerability that allows RCE is critical.</em>"
-                    ], tip: "Relative clauses let you define terms precisely." },
-                { title: "Future Forms", points: [
-                        "will — decisions/predictions: <em>We will patch tonight.</em>",
-                        "going to — plans: <em>We are going to migrate to IKEv2.</em>"
-                    ], tip: "In meetings, \"going to\" signals a decided plan." },
-                { title: "Phrasal Verbs", points: [
-                        "set up (configure)", "log in / out", "back up", "shut down", "roll out",
-                        "look into (investigate)"
-                    ], tip: "These are everyday spoken English in meetings." },
-                { title: "Questions", points: [
-                        "Yes/No: <em>Is the tunnel up?</em>",
-                        "Wh-: <em>Why did the policy fail?</em>",
-                        "Indirect: <em>Could you tell me why the policy failed?</em>"
-                    ], tip: "Indirect questions sound more professional with clients." },
-                { title: "Adverbs", points: [
-                        "Frequency: <em>We regularly update signatures.</em>",
-                        "Manner: <em>The system automatically blocks threats.</em>"
-                    ], tip: "Frequency adverbs go before the main verb." },
-                { title: "Comparatives & Superlatives", points: [
-                        "<em>This algorithm is more secure than the previous one.</em>",
-                        "<em>AES-256 is the strongest encryption.</em>"
-                    ], tip: "Useful for comparing configurations." },
-                { title: "Countable vs. Uncountable", points: [
-                        "Uncountable: <em>information, traffic, access, software, hardware, malware</em>.",
-                        "Use much / a lot of / less with these."
-                    ], tip: "\"We collect a lot of information\" is correct; \"many informations\" is not." }
-            ];
+            // =============================================================
+            // GRAMMAR DATA (with exercises)
+            // =============================================================
+            const grammarData = [{
+                title: "Present Simple vs. Continuous",
+                points: [
+                    "Simple for routines, facts: <em>I configure firewall policies weekly.</em>",
+                    "Continuous for now/temporary: <em>I am troubleshooting an outage.</em>"
+                ],
+                tip: "Use simple for job descriptions, continuous for live incidents.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence describes a routine?",
+                        options: ["I am configuring a policy now.", "I configure policies every Monday.",
+                            "I was configuring a policy."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You are explaining your daily work. What do you do every morning?",
+                        options: ["I am checking the firewall logs.", "I check the firewall logs.",
+                            "I checked the firewall logs."
+                        ],
+                        correct: 1
+                    }
+                }
+            }, {
+                title: "Present Perfect",
+                points: [
+                    "Links past to present: <em>I have configured 50 policies this year.</em>",
+                    "Past simple for specific time: <em>I configured the policy yesterday.</em>"
+                ],
+                tip: "If a specific date appears, use past simple.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence is correct for an action that happened at an unspecified time in the past?",
+                        options: ["I have updated the firewall.", "I updated the firewall yesterday.",
+                            "I am updating the firewall."
+                        ],
+                        correct: 0
+                    },
+                    speaking: {
+                        prompt: "A colleague asks: 'Have you ever worked with FortiGate?' How do you reply?",
+                        options: ["Yes, I have worked with it.", "Yes, I worked with it last year.",
+                            "Yes, I am working with it."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Past Simple vs. Past Perfect",
+                points: [
+                    "Past perfect is the earlier past: <em>The attacker had exploited the flaw before we patched.</em>"
+                ],
+                tip: "In incident reports, past perfect shows what went wrong first.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence shows two past actions in the correct order?",
+                        options: ["We patched before the attacker exploited.",
+                            "The attacker exploited before we had patched.",
+                            "The attacker had exploited before we patched."
+                        ],
+                        correct: 2
+                    },
+                    speaking: {
+                        prompt: "You are describing a security breach. Choose the correct statement:",
+                        options: ["We discovered the breach after the attacker had left.",
+                            "We discovered the breach after the attacker left.",
+                            "We have discovered the breach."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Conditionals",
+                points: [
+                    "Zero — general: <em>If a policy denies traffic, the firewall drops the packet.</em>",
+                    "First — real future: <em>If the tunnel fails, we switch to backup.</em>",
+                    "Second — hypothetical: <em>If I had admin rights, I would disable that account.</em>"
+                ],
+                tip: "Zero and first conditionals dominate documentation.",
+                exercises: {
+                    mc: {
+                        question: "Which conditional is used for a real future possibility?",
+                        options: ["If the link is down, we will use backup.",
+                            "If the link is down, we use backup.",
+                            "If the link were down, we would use backup."
+                        ],
+                        correct: 0
+                    },
+                    speaking: {
+                        prompt: "You are planning a network change. What if the primary router fails?",
+                        options: ["We would have switched to the secondary.",
+                            "We will switch to the secondary.",
+                            "We switch to the secondary."
+                        ],
+                        correct: 1
+                    }
+                }
+            }, {
+                title: "Passive Voice",
+                points: [
+                    "Common in security: <em>The traffic is inspected by the IPS.</em>",
+                    "Used when actor unknown: <em>Two vulnerabilities were identified.</em>"
+                ],
+                tip: "Don't overuse it — name the actor when accountability matters.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence is in passive voice?",
+                        options: ["The firewall blocks the traffic.", "The traffic is blocked by the firewall.",
+                            "The firewall is blocking the traffic."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You are reporting an incident. Choose the correct passive form:",
+                        options: ["An alert was generated by the system.",
+                            "The system generated an alert.",
+                            "The system has generated an alert."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Modal Verbs",
+                points: [
+                    "must / have to — obligation: <em>Logs must be retained for 90 days.</em>",
+                    "should — recommendation: <em>You should enable MFA.</em>",
+                    "may / might — possibility: <em>The alert may be a false positive.</em>"
+                ],
+                tip: "\"Must\" is stronger than \"should\" — use for compliance.",
+                exercises: {
+                    mc: {
+                        question: "Which modal expresses a strong obligation?",
+                        options: ["You should update the firmware.", "You must update the firmware.",
+                            "You may update the firmware."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "A colleague asks about a security best practice. What do you say?",
+                        options: ["You must use complex passwords.", "You may use complex passwords.",
+                            "You could use complex passwords."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Prepositions",
+                points: [
+                    "connect <em>to</em> a server", "protect <em>against</em> threats",
+                    "responsible <em>for</em> security"
+                ],
+                tip: "These pairings are fixed — memorize them as chunks.",
+                exercises: {
+                    mc: {
+                        question: "Which preposition completes the sentence: 'We are responsible ___ network security.'",
+                        options: ["for", "to", "against"],
+                        correct: 0
+                    },
+                    speaking: {
+                        prompt: "You are explaining your role. Choose the correct preposition: 'I connect ___ the VPN every day.'",
+                        options: ["to", "with", "for"],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Articles",
+                points: [
+                    "\"the\" for specific: <em>The firewall blocked the request.</em>",
+                    "\"a/an\" for first mention: <em>We deployed a new sensor.</em>",
+                    "No article for general concepts: <em>Security requires vigilance.</em>"
+                ],
+                tip: "Saying \"the security\" to mean the general concept is a common mistake.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence uses the article correctly for a general concept?",
+                        options: ["The security is important.", "Security is important.",
+                            "A security is important."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You are introducing a new device. Choose the correct sentence:",
+                        options: ["We installed a firewall.", "We installed the firewall.",
+                            "We installed firewall."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Relative Clauses",
+                points: [
+                    "who for people: <em>The engineer who configured the VPN is on leave.</em>",
+                    "which/that for things: <em>A vulnerability that allows RCE is critical.</em>"
+                ],
+                tip: "Relative clauses let you define terms precisely.",
+                exercises: {
+                    mc: {
+                        question: "Which relative pronoun is correct for a person?",
+                        options: ["The technician which fixed the issue.", "The technician who fixed the issue.",
+                            "The technician that fixed the issue."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You are describing a tool. Choose the correct relative clause:",
+                        options: ["A tool which monitors traffic.", "A tool who monitors traffic.",
+                            "A tool monitors traffic."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Future Forms",
+                points: [
+                    "will — decisions/predictions: <em>We will patch tonight.</em>",
+                    "going to — plans: <em>We are going to migrate to IKEv2.</em>"
+                ],
+                tip: "In meetings, \"going to\" signals a decided plan.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence expresses a planned action?",
+                        options: ["We will upgrade the firmware.", "We are going to upgrade the firmware.",
+                            "We upgrade the firmware."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You are in a planning meeting. What do you say about the next step?",
+                        options: ["We will discuss it later.", "We are going to discuss it now.",
+                            "We discuss it now."
+                        ],
+                        correct: 1
+                    }
+                }
+            }, {
+                title: "Phrasal Verbs",
+                points: [
+                    "set up (configure)", "log in / out", "back up", "shut down", "roll out",
+                    "look into (investigate)"
+                ],
+                tip: "These are everyday spoken English in meetings.",
+                exercises: {
+                    mc: {
+                        question: "Which phrasal verb means 'to configure'?",
+                        options: ["set up", "log in", "shut down"],
+                        correct: 0
+                    },
+                    speaking: {
+                        prompt: "You are discussing a problem. What do you say to your team?",
+                        options: ["Let's look into the issue.", "Let's set up the issue.",
+                            "Let's back up the issue."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Questions",
+                points: [
+                    "Yes/No: <em>Is the tunnel up?</em>",
+                    "Wh-: <em>Why did the policy fail?</em>",
+                    "Indirect: <em>Could you tell me why the policy failed?</em>"
+                ],
+                tip: "Indirect questions sound more professional with clients.",
+                exercises: {
+                    mc: {
+                        question: "Which is an indirect question?",
+                        options: ["Where is the firewall?", "Can you tell me where the firewall is?",
+                            "Do you know the firewall?"
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You need to ask a client about their network setup. Choose the most polite form:",
+                        options: ["What is your network topology?",
+                            "Could you describe your network topology?",
+                            "Describe your network topology."
+                        ],
+                        correct: 1
+                    }
+                }
+            }, {
+                title: "Adverbs",
+                points: [
+                    "Frequency: <em>We regularly update signatures.</em>",
+                    "Manner: <em>The system automatically blocks threats.</em>"
+                ],
+                tip: "Frequency adverbs go before the main verb.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence has the adverb in the correct position?",
+                        options: ["We update regularly the signatures.",
+                            "We regularly update the signatures.",
+                            "Regularly we update the signatures."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You want to say you check logs often. Choose the correct sentence:",
+                        options: ["I check often the logs.", "I often check the logs.",
+                            "Often I check the logs."
+                        ],
+                        correct: 1
+                    }
+                }
+            }, {
+                title: "Comparatives & Superlatives",
+                points: [
+                    "<em>This algorithm is more secure than the previous one.</em>",
+                    "<em>AES-256 is the strongest encryption.</em>"
+                ],
+                tip: "Useful for comparing configurations.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence uses a superlative?",
+                        options: ["This firewall is faster than the old one.",
+                            "This firewall is the fastest of all.", "This firewall is fast."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You are comparing two firewalls. Choose the correct comparative:",
+                        options: ["This model is more reliable than that one.",
+                            "This model is reliable than that one.",
+                            "This model is the most reliable."
+                        ],
+                        correct: 0
+                    }
+                }
+            }, {
+                title: "Countable vs. Uncountable",
+                points: [
+                    "Uncountable: <em>information, traffic, access, software, hardware, malware</em>.",
+                    "Use much / a lot of / less with these."
+                ],
+                tip: "\"We collect a lot of information\" is correct; \"many informations\" is not.",
+                exercises: {
+                    mc: {
+                        question: "Which sentence uses the uncountable noun correctly?",
+                        options: ["We have many informations.", "We have a lot of information.",
+                            "We have few informations."
+                        ],
+                        correct: 1
+                    },
+                    speaking: {
+                        prompt: "You are reporting on network traffic. Choose the correct statement:",
+                        options: ["There is much traffic today.", "There are many traffics today.",
+                            "There is traffic today."
+                        ],
+                        correct: 0
+                    }
+                }
+            }];
 
             // =============================================================
             // STORAGE
@@ -2678,18 +3117,209 @@
             }
 
             // =============================================================
-            // GRAMMAR
+            // GRAMMAR (with speaking voice exercises)
             // =============================================================
             function buildGrammar() {
-                grammarContent.innerHTML = grammarData.map((b, i) =>
-                    `<details class="grammar-block">
-                        <summary>${i+1}. ${b.title}</summary>
+                grammarContent.innerHTML = grammarData.map((b, idx) => {
+                    let exHtml = '';
+                    if (b.exercises) {
+                        const mc = b.exercises.mc;
+                        const sp = b.exercises.speaking;
+                        // speaking exercise – voice recognition
+                        const speakingId = 'sp-ex-' + idx;
+                        exHtml = `
+                          <div class="grammar-exercise">
+                            <h4>📝 Multiple Choice</h4>
+                            <div class="question">${mc.question}</div>
+                            <div class="options" data-topic="${idx}" data-type="mc" data-correct="${mc.correct}">
+                              ${mc.options.map((opt, i) => `<button data-opt="${i}">${opt}</button>`).join('')}
+                            </div>
+                            <div class="feedback-msg" id="mc-feedback-${idx}"></div>
+                          </div>
+                          <div class="grammar-exercise speaking-exercise" id="${speakingId}">
+                            <h4>💬 Speaking Exercise</h4>
+                            <div class="question">Say the correct response to: <strong>${sp.prompt}</strong></div>
+                            <div class="speaking-hint">Choose the correct answer in your mind, then click the button and speak it aloud.</div>
+                            <div class="speaking-options">
+                              ${sp.options.map((opt, i) => `<span>${i+1}. ${opt}</span>`).join('')}
+                            </div>
+                            <div class="speaking-controls">
+                              <button class="primary speak-record-btn" data-topic="${idx}" data-correct="${sp.correct}" data-options='${JSON.stringify(sp.options)}'>🎤 Record</button>
+                              <button class="speak-stop-btn" style="display:none;">⏹️ Stop</button>
+                            </div>
+                            <input type="text" class="speaking-transcript" placeholder="Your spoken answer will appear here..." readonly>
+                            <div class="speaking-feedback" id="sp-feedback-${idx}"></div>
+                          </div>
+                        `;
+                    }
+                    return `<details class="grammar-block">
+                        <summary>${idx+1}. ${b.title}</summary>
                         <div class="body">
                           <ul>${b.points.map(p => '<li>'+p+'</li>').join('')}</ul>
                           ${b.tip ? '<div class="tip"><strong>Tip:</strong> '+b.tip+'</div>' : ''}
+                          ${exHtml}
                         </div>
-                      </details>`
-                ).join('');
+                      </details>`;
+                }).join('');
+
+                // Attach event listeners for multiple choice
+                grammarContent.querySelectorAll('.options').forEach(container => {
+                    const topicIdx = parseInt(container.dataset.topic);
+                    const type = container.dataset.type;
+                    const correct = parseInt(container.dataset.correct);
+                    const feedbackId = (type === 'mc') ? `mc-feedback-${topicIdx}` : `sp-feedback-${topicIdx}`;
+                    const feedbackEl = document.getElementById(feedbackId);
+
+                    container.querySelectorAll('button').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            const selected = parseInt(this.dataset.opt);
+                            const isCorrect = (selected === correct);
+                            container.querySelectorAll('button').forEach(b => b.disabled = true);
+                            if (isCorrect) {
+                                this.classList.add('selected-correct');
+                                feedbackEl.textContent = '✅ Correct!';
+                                feedbackEl.className = 'feedback-msg correct';
+                            } else {
+                                this.classList.add('selected-wrong');
+                                feedbackEl.textContent = '❌ Incorrect. The correct answer was: ' +
+                                    container.querySelectorAll('button')[correct].textContent;
+                                feedbackEl.className = 'feedback-msg wrong';
+                                container.querySelectorAll('button')[correct].classList.add(
+                                'selected-correct');
+                            }
+                        });
+                    });
+                });
+
+                // Attach event listeners for speaking exercises (voice recognition)
+                document.querySelectorAll('.speaking-exercise').forEach(exContainer => {
+                    const recordBtn = exContainer.querySelector('.speak-record-btn');
+                    const stopBtn = exContainer.querySelector('.speak-stop-btn');
+                    const transcriptInput = exContainer.querySelector('.speaking-transcript');
+                    const feedbackDiv = exContainer.querySelector('.speaking-feedback');
+                    const correctIdx = parseInt(recordBtn.dataset.correct);
+                    const options = JSON.parse(recordBtn.dataset.options);
+                    const correctText = options[correctIdx];
+
+                    let recognition = null;
+                    let isListening = false;
+
+                    function startSpeakingListening() {
+                        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        if (!SR) {
+                            feedbackDiv.textContent = '❌ Speech recognition not supported.';
+                            feedbackDiv.className = 'speaking-feedback wrong';
+                            return;
+                        }
+                        if (recognition) { try { recognition.stop(); } catch (e) {} }
+
+                        const rec = new SR();
+                        recognition = rec;
+                        rec.lang = 'en-US';
+                        rec.interimResults = false;
+
+                        rec.onstart = () => {
+                            isListening = true;
+                            recordBtn.textContent = '⏹️ Recording...';
+                            recordBtn.classList.add('recording');
+                            recordBtn.disabled = true;
+                            stopBtn.style.display = 'inline-block';
+                            feedbackDiv.textContent = '🎤 Speak now...';
+                            feedbackDiv.className = 'speaking-feedback';
+                        };
+
+                        rec.onresult = (event) => {
+                            const transcript = event.results[0][0].transcript;
+                            transcriptInput.value = transcript;
+                            evaluateSpoken(transcript, correctText);
+                        };
+
+                        rec.onerror = (event) => {
+                            if (event.error === 'not-allowed') {
+                                feedbackDiv.textContent = '❌ Microphone access denied.';
+                                feedbackDiv.className = 'speaking-feedback wrong';
+                            } else if (event.error === 'no-speech') {
+                                feedbackDiv.textContent = '❌ No sound detected. Try again.';
+                                feedbackDiv.className = 'speaking-feedback wrong';
+                            } else {
+                                feedbackDiv.textContent = '❌ Error: ' + event.error;
+                                feedbackDiv.className = 'speaking-feedback wrong';
+                            }
+                            stopSpeakingListening();
+                        };
+
+                        rec.onend = () => { stopSpeakingListening(); };
+
+                        try {
+                            rec.start();
+                            setTimeout(() => {
+                                if (recognition && isListening) { try { recognition.stop(); } catch (e) {} }
+                            }, C.RECOGNITION_TIMEOUT);
+                        } catch (e) {
+                            feedbackDiv.textContent = '❌ Could not start recording. Try again.';
+                            feedbackDiv.className = 'speaking-feedback wrong';
+                            stopSpeakingListening();
+                        }
+                    }
+
+                    function stopSpeakingListening() {
+                        isListening = false;
+                        if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
+                        recordBtn.textContent = '🎤 Record';
+                        recordBtn.classList.remove('recording');
+                        recordBtn.disabled = false;
+                        stopBtn.style.display = 'none';
+                        if (feedbackDiv.textContent === '🎤 Speak now...' || feedbackDiv.textContent === '') {
+                            // do nothing
+                        }
+                    }
+
+                    function evaluateSpoken(spoken, correct) {
+                        // Normalize both strings: lowercase, trim, remove punctuation
+                        const norm = s => s.toLowerCase().replace(/[^\w\s']/g, '').trim();
+                        const spokenNorm = norm(spoken);
+                        const correctNorm = norm(correct);
+                        // Simple exact match after normalization
+                        const isCorrect = (spokenNorm === correctNorm);
+                        if (isCorrect) {
+                            feedbackDiv.textContent = '✅ Perfect! You said the correct response.';
+                            feedbackDiv.className = 'speaking-feedback correct';
+                            recordBtn.disabled = true;
+                            stopBtn.style.display = 'none';
+                        } else {
+                            feedbackDiv.textContent = '❌ Not quite. The correct answer was: "' + correct + '". Try again.';
+                            feedbackDiv.className = 'speaking-feedback wrong';
+                            // Allow retry: reset button
+                            recordBtn.disabled = false;
+                            stopBtn.style.display = 'none';
+                        }
+                        stopSpeakingListening();
+                    }
+
+                    recordBtn.addEventListener('click', function(e) {
+                        if (isListening) return;
+                        transcriptInput.value = '';
+                        feedbackDiv.textContent = '';
+                        feedbackDiv.className = 'speaking-feedback';
+                        startSpeakingListening();
+                    });
+
+                    stopBtn.addEventListener('click', function(e) {
+                        if (isListening) {
+                            stopSpeakingListening();
+                            feedbackDiv.textContent = '⏹️ Stopped.';
+                            feedbackDiv.className = 'speaking-feedback';
+                        }
+                    });
+
+                    // If speech recognition not supported, show a message
+                    if (!state.speechSupported) {
+                        recordBtn.disabled = true;
+                        recordBtn.title = 'Speech recognition not supported in this browser.';
+                        feedbackDiv.textContent = '⚠️ Speech recognition not supported.';
+                        feedbackDiv.className = 'speaking-feedback wrong';
+                    }
+                });
             }
 
             // =============================================================
@@ -2747,13 +3377,41 @@
             };
 
             backBtn.onclick = exitToHome;
-            grammarBtn.onclick = () => grammarModal.classList.add('active');
-            grammarClose.onclick = () => grammarModal.classList.remove('active');
-            grammarModal.onclick = (e) => { if (e.target === grammarModal) grammarModal.classList.remove('active'); };
+            grammarBtn.onclick = () => {
+                grammarModal.classList.add('active');
+                // Rebuild grammar to ensure event listeners are fresh
+                buildGrammar();
+            };
+            grammarClose.onclick = () => {
+                grammarModal.classList.remove('active');
+                // Stop any ongoing recognition in grammar exercises
+                document.querySelectorAll('.speak-record-btn').forEach(btn => {
+                    if (btn.classList.contains('recording')) {
+                        btn.click(); // triggers stop
+                    }
+                });
+            };
+            grammarModal.onclick = (e) => {
+                if (e.target === grammarModal) {
+                    grammarModal.classList.remove('active');
+                    document.querySelectorAll('.speak-record-btn').forEach(btn => {
+                        if (btn.classList.contains('recording')) {
+                            btn.click();
+                        }
+                    });
+                }
+            };
 
             document.addEventListener('keydown', (e) => {
                 if (grammarModal.classList.contains('active')) {
-                    if (e.key === 'Escape') grammarModal.classList.remove('active');
+                    if (e.key === 'Escape') {
+                        grammarModal.classList.remove('active');
+                        document.querySelectorAll('.speak-record-btn').forEach(btn => {
+                            if (btn.classList.contains('recording')) {
+                                btn.click();
+                            }
+                        });
+                    }
                     return;
                 }
                 if (practiceScreen.style.display !== 'block') return;
