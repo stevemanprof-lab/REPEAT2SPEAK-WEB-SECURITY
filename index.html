@@ -263,7 +263,7 @@
             color: #00d4ff;
         }
 
-        /* ===== GRAMMAR MODAL (updated with exercise styles) ===== */
+        /* ===== GRAMMAR MODAL (updated) ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -408,7 +408,7 @@
             color: #00d4ff;
         }
 
-        /* ---- Grammar exercise styles ---- */
+        /* ---- Grammar exercises ---- */
         .grammar-exercise {
             margin-top: 10px;
             border-top: 1px solid #1a3144;
@@ -469,92 +469,6 @@
             color: #00e676;
         }
         .grammar-exercise .feedback-msg.wrong {
-            color: #ff4444;
-        }
-
-        /* Speaking exercise */
-        .speaking-exercise .speaking-hint {
-            font-size: 0.75rem;
-            color: #7a96b0;
-            margin: 4px 0;
-        }
-        .speaking-exercise .speaking-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin: 4px 0;
-            padding: 4px 8px;
-            background: rgba(0, 212, 255, 0.03);
-            border-radius: 6px;
-            border: 1px dashed #2a5a7a;
-        }
-        .speaking-exercise .speaking-options span {
-            font-size: 0.75rem;
-            color: #b0cbe0;
-            background: rgba(10, 18, 30, 0.4);
-            padding: 2px 8px;
-            border-radius: 12px;
-            border: 1px solid #1a3144;
-        }
-        .speaking-exercise .speaking-controls {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 4px;
-        }
-        .speaking-exercise .speaking-controls button {
-            padding: 4px 14px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            border: 1px solid #2a4058;
-            background: rgba(10, 18, 30, 0.6);
-            color: #b0cbe0;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-            min-height: 36px;
-        }
-        .speaking-exercise .speaking-controls button:hover {
-            border-color: #00d4ff;
-            color: #00d4ff;
-        }
-        .speaking-exercise .speaking-controls button.primary {
-            background: rgba(0, 212, 255, 0.08);
-            border-color: #00d4ff;
-            color: #00d4ff;
-        }
-        .speaking-exercise .speaking-controls button.recording {
-            border-color: #ff4444;
-            color: #ff4444;
-            animation: pulse 1s infinite;
-            background: #220000;
-        }
-        .speaking-exercise .speaking-controls button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .speaking-exercise .speaking-transcript {
-            margin-top: 4px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 1px solid #2a4058;
-            background: rgba(8, 16, 26, 0.6);
-            color: #eef6fc;
-            font-size: 0.8rem;
-            min-height: 28px;
-            width: 100%;
-            font-family: inherit;
-        }
-        .speaking-exercise .speaking-feedback {
-            font-size: 0.7rem;
-            margin-top: 2px;
-        }
-        .speaking-exercise .speaking-feedback.correct {
-            color: #00e676;
-        }
-        .speaking-exercise .speaking-feedback.wrong {
             color: #ff4444;
         }
 
@@ -1903,7 +1817,7 @@
                         correct: 1
                     },
                     speaking: {
-                        prompt: "You are explaining your daily work. What do you do every morning?",
+                        prompt: "You are explaining your daily work. Choose the correct response to: 'What do you do every morning?'",
                         options: ["I am checking the firewall logs.", "I check the firewall logs.",
                             "I checked the firewall logs."
                         ],
@@ -1975,7 +1889,7 @@
                         correct: 0
                     },
                     speaking: {
-                        prompt: "You are planning a network change. What if the primary router fails?",
+                        prompt: "You are planning a network change. Choose the best response to: 'What if the primary router fails?'",
                         options: ["We would have switched to the secondary.",
                             "We will switch to the secondary.",
                             "We switch to the secondary."
@@ -2328,23 +2242,19 @@
                     index: 0
                 };
                 Store.set(moduleKey(id), newState);
-                // If this was the last module, update lastModule
                 if (Store.get('lastModule') === id) {
                     Store.set('lastModule', null);
                 }
-                // If the module is currently loaded, reset the state
                 if (state.textId === id) {
                     state.stepProgress = newState.stepProgress;
                     state.lastReviewed = newState.lastReviewed;
                     state.index = 0;
                     state.currentStep = 0;
-                    // If practice screen is visible, reload the module
                     if (practiceScreen.style.display === 'block') {
                         loadText(id);
                     }
                 }
                 buildHomeScreen();
-                // Show a brief feedback (only if home screen is visible)
                 if (homeScreen.style.display !== 'none') {
                     const fb = document.getElementById('feedback');
                     if (fb) {
@@ -3117,7 +3027,7 @@
             }
 
             // =============================================================
-            // GRAMMAR (with speaking voice exercises)
+            // GRAMMAR
             // =============================================================
             function buildGrammar() {
                 grammarContent.innerHTML = grammarData.map((b, idx) => {
@@ -3125,8 +3035,6 @@
                     if (b.exercises) {
                         const mc = b.exercises.mc;
                         const sp = b.exercises.speaking;
-                        // speaking exercise – voice recognition
-                        const speakingId = 'sp-ex-' + idx;
                         exHtml = `
                           <div class="grammar-exercise">
                             <h4>📝 Multiple Choice</h4>
@@ -3136,19 +3044,13 @@
                             </div>
                             <div class="feedback-msg" id="mc-feedback-${idx}"></div>
                           </div>
-                          <div class="grammar-exercise speaking-exercise" id="${speakingId}">
+                          <div class="grammar-exercise">
                             <h4>💬 Speaking Exercise</h4>
-                            <div class="question">Say the correct response to: <strong>${sp.prompt}</strong></div>
-                            <div class="speaking-hint">Choose the correct answer in your mind, then click the button and speak it aloud.</div>
-                            <div class="speaking-options">
-                              ${sp.options.map((opt, i) => `<span>${i+1}. ${opt}</span>`).join('')}
+                            <div class="question">${sp.prompt}</div>
+                            <div class="options" data-topic="${idx}" data-type="speaking" data-correct="${sp.correct}">
+                              ${sp.options.map((opt, i) => `<button data-opt="${i}">${opt}</button>`).join('')}
                             </div>
-                            <div class="speaking-controls">
-                              <button class="primary speak-record-btn" data-topic="${idx}" data-correct="${sp.correct}" data-options='${JSON.stringify(sp.options)}'>🎤 Record</button>
-                              <button class="speak-stop-btn" style="display:none;">⏹️ Stop</button>
-                            </div>
-                            <input type="text" class="speaking-transcript" placeholder="Your spoken answer will appear here..." readonly>
-                            <div class="speaking-feedback" id="sp-feedback-${idx}"></div>
+                            <div class="feedback-msg" id="sp-feedback-${idx}"></div>
                           </div>
                         `;
                     }
@@ -3162,7 +3064,7 @@
                       </details>`;
                 }).join('');
 
-                // Attach event listeners for multiple choice
+                // Attach event listeners for grammar exercises
                 grammarContent.querySelectorAll('.options').forEach(container => {
                     const topicIdx = parseInt(container.dataset.topic);
                     const type = container.dataset.type;
@@ -3174,7 +3076,9 @@
                         btn.addEventListener('click', function(e) {
                             const selected = parseInt(this.dataset.opt);
                             const isCorrect = (selected === correct);
+                            // Disable all buttons in this group
                             container.querySelectorAll('button').forEach(b => b.disabled = true);
+                            // Mark selected
                             if (isCorrect) {
                                 this.classList.add('selected-correct');
                                 feedbackEl.textContent = '✅ Correct!';
@@ -3184,141 +3088,12 @@
                                 feedbackEl.textContent = '❌ Incorrect. The correct answer was: ' +
                                     container.querySelectorAll('button')[correct].textContent;
                                 feedbackEl.className = 'feedback-msg wrong';
+                                // Highlight correct answer
                                 container.querySelectorAll('button')[correct].classList.add(
                                 'selected-correct');
                             }
                         });
                     });
-                });
-
-                // Attach event listeners for speaking exercises (voice recognition)
-                document.querySelectorAll('.speaking-exercise').forEach(exContainer => {
-                    const recordBtn = exContainer.querySelector('.speak-record-btn');
-                    const stopBtn = exContainer.querySelector('.speak-stop-btn');
-                    const transcriptInput = exContainer.querySelector('.speaking-transcript');
-                    const feedbackDiv = exContainer.querySelector('.speaking-feedback');
-                    const correctIdx = parseInt(recordBtn.dataset.correct);
-                    const options = JSON.parse(recordBtn.dataset.options);
-                    const correctText = options[correctIdx];
-
-                    let recognition = null;
-                    let isListening = false;
-
-                    function startSpeakingListening() {
-                        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-                        if (!SR) {
-                            feedbackDiv.textContent = '❌ Speech recognition not supported.';
-                            feedbackDiv.className = 'speaking-feedback wrong';
-                            return;
-                        }
-                        if (recognition) { try { recognition.stop(); } catch (e) {} }
-
-                        const rec = new SR();
-                        recognition = rec;
-                        rec.lang = 'en-US';
-                        rec.interimResults = false;
-
-                        rec.onstart = () => {
-                            isListening = true;
-                            recordBtn.textContent = '⏹️ Recording...';
-                            recordBtn.classList.add('recording');
-                            recordBtn.disabled = true;
-                            stopBtn.style.display = 'inline-block';
-                            feedbackDiv.textContent = '🎤 Speak now...';
-                            feedbackDiv.className = 'speaking-feedback';
-                        };
-
-                        rec.onresult = (event) => {
-                            const transcript = event.results[0][0].transcript;
-                            transcriptInput.value = transcript;
-                            evaluateSpoken(transcript, correctText);
-                        };
-
-                        rec.onerror = (event) => {
-                            if (event.error === 'not-allowed') {
-                                feedbackDiv.textContent = '❌ Microphone access denied.';
-                                feedbackDiv.className = 'speaking-feedback wrong';
-                            } else if (event.error === 'no-speech') {
-                                feedbackDiv.textContent = '❌ No sound detected. Try again.';
-                                feedbackDiv.className = 'speaking-feedback wrong';
-                            } else {
-                                feedbackDiv.textContent = '❌ Error: ' + event.error;
-                                feedbackDiv.className = 'speaking-feedback wrong';
-                            }
-                            stopSpeakingListening();
-                        };
-
-                        rec.onend = () => { stopSpeakingListening(); };
-
-                        try {
-                            rec.start();
-                            setTimeout(() => {
-                                if (recognition && isListening) { try { recognition.stop(); } catch (e) {} }
-                            }, C.RECOGNITION_TIMEOUT);
-                        } catch (e) {
-                            feedbackDiv.textContent = '❌ Could not start recording. Try again.';
-                            feedbackDiv.className = 'speaking-feedback wrong';
-                            stopSpeakingListening();
-                        }
-                    }
-
-                    function stopSpeakingListening() {
-                        isListening = false;
-                        if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
-                        recordBtn.textContent = '🎤 Record';
-                        recordBtn.classList.remove('recording');
-                        recordBtn.disabled = false;
-                        stopBtn.style.display = 'none';
-                        if (feedbackDiv.textContent === '🎤 Speak now...' || feedbackDiv.textContent === '') {
-                            // do nothing
-                        }
-                    }
-
-                    function evaluateSpoken(spoken, correct) {
-                        // Normalize both strings: lowercase, trim, remove punctuation
-                        const norm = s => s.toLowerCase().replace(/[^\w\s']/g, '').trim();
-                        const spokenNorm = norm(spoken);
-                        const correctNorm = norm(correct);
-                        // Simple exact match after normalization
-                        const isCorrect = (spokenNorm === correctNorm);
-                        if (isCorrect) {
-                            feedbackDiv.textContent = '✅ Perfect! You said the correct response.';
-                            feedbackDiv.className = 'speaking-feedback correct';
-                            recordBtn.disabled = true;
-                            stopBtn.style.display = 'none';
-                        } else {
-                            feedbackDiv.textContent = '❌ Not quite. The correct answer was: "' + correct + '". Try again.';
-                            feedbackDiv.className = 'speaking-feedback wrong';
-                            // Allow retry: reset button
-                            recordBtn.disabled = false;
-                            stopBtn.style.display = 'none';
-                        }
-                        stopSpeakingListening();
-                    }
-
-                    recordBtn.addEventListener('click', function(e) {
-                        if (isListening) return;
-                        transcriptInput.value = '';
-                        feedbackDiv.textContent = '';
-                        feedbackDiv.className = 'speaking-feedback';
-                        startSpeakingListening();
-                    });
-
-                    stopBtn.addEventListener('click', function(e) {
-                        if (isListening) {
-                            stopSpeakingListening();
-                            feedbackDiv.textContent = '⏹️ Stopped.';
-                            feedbackDiv.className = 'speaking-feedback';
-                        }
-                    });
-
-                    // If speech recognition not supported, show a message
-                    if (!state.speechSupported) {
-                        recordBtn.disabled = true;
-                        recordBtn.title = 'Speech recognition not supported in this browser.';
-                        feedbackDiv.textContent = '⚠️ Speech recognition not supported.';
-                        feedbackDiv.className = 'speaking-feedback wrong';
-                    }
                 });
             }
 
@@ -3382,36 +3157,12 @@
                 // Rebuild grammar to ensure event listeners are fresh
                 buildGrammar();
             };
-            grammarClose.onclick = () => {
-                grammarModal.classList.remove('active');
-                // Stop any ongoing recognition in grammar exercises
-                document.querySelectorAll('.speak-record-btn').forEach(btn => {
-                    if (btn.classList.contains('recording')) {
-                        btn.click(); // triggers stop
-                    }
-                });
-            };
-            grammarModal.onclick = (e) => {
-                if (e.target === grammarModal) {
-                    grammarModal.classList.remove('active');
-                    document.querySelectorAll('.speak-record-btn').forEach(btn => {
-                        if (btn.classList.contains('recording')) {
-                            btn.click();
-                        }
-                    });
-                }
-            };
+            grammarClose.onclick = () => grammarModal.classList.remove('active');
+            grammarModal.onclick = (e) => { if (e.target === grammarModal) grammarModal.classList.remove('active'); };
 
             document.addEventListener('keydown', (e) => {
                 if (grammarModal.classList.contains('active')) {
-                    if (e.key === 'Escape') {
-                        grammarModal.classList.remove('active');
-                        document.querySelectorAll('.speak-record-btn').forEach(btn => {
-                            if (btn.classList.contains('recording')) {
-                                btn.click();
-                            }
-                        });
-                    }
+                    if (e.key === 'Escape') grammarModal.classList.remove('active');
                     return;
                 }
                 if (practiceScreen.style.display !== 'block') return;
